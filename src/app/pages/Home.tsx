@@ -2,12 +2,16 @@ import { Link } from "react-router"
 import { Building2, UserCircle2, ArrowRight } from "lucide-react"
 import { motion } from "motion/react"
 import vmtLogo from "../../imports/vmt-logo-01.svg"
+import vmtLogoNoSubline from "../../imports/vmt-logo-01_nosubline.svg"
 import employerBg from "../../imports/AdobeStock_232967360_Preview.jpg"
 import employeeBg from "../../imports/AdobeStock_497280944_Preview.jpeg"
 
 export default function Home() {
   return (
     <div className="min-h-screen w-full">
+      <div className="absolute top-4 left-4 z-20 lg:hidden bg-white/95 rounded-md px-2 py-1 shadow-sm">
+        <img src={vmtLogoNoSubline} alt="VMT Logo" className="h-8 w-auto" />
+      </div>
       <div className="flex flex-col lg:flex-row min-h-screen w-full">
       {/* Company Section */}
       <div className="relative flex-1 flex flex-col justify-center items-center p-8 lg:p-16 bg-[#003B79] text-white overflow-hidden group">
