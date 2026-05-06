@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button"
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
+import mapHeaderImg from "../../imports/map.png"
 
 // Mock Data
 type Partner = {
@@ -124,13 +125,9 @@ const userMarkerIcon = new L.DivIcon({
   iconAnchor: [14, 14],
 });
 
-const tracestrackKey = import.meta.env.VITE_TRACESTRACK_KEY;
-const tileUrl = tracestrackKey
-  ? `https://tile.tracestrack.com/topo__/{z}/{x}/{y}@1x.png?key=${tracestrackKey}`
-  : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-const tileAttribution = tracestrackKey
-  ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, map style by <a href="https://www.tracestrack.com/">Tracestrack</a>'
-  : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const tileAttribution =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 export default function Lookup() {
   const [searchParams] = useSearchParams();
@@ -217,8 +214,16 @@ export default function Lookup() {
   return (
     <div className="min-h-screen bg-slate-50 pb-24">
       {/* Form Header */}
-      <div className="bg-[#003B79] pt-16 pb-32 text-center px-4">
-        <div className="container mx-auto max-w-3xl">
+      <div className="bg-[#003B79] pt-16 pb-32 text-center px-4 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img
+            src={mapHeaderImg}
+            alt="Verbundpartner Karte"
+            className="w-full h-full object-cover opacity-55"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#003B79]/90 to-[#003B79]/60" />
+        </div>
+        <div className="container mx-auto max-w-3xl relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Finden Sie Ihren <span className="text-[#A3C410]">Verbundpartner</span>
           </h1>
