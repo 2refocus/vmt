@@ -1,7 +1,10 @@
 import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router"
-import { Search, MapPin, Phone, Mail, Globe, CheckCircle2, ArrowRight, Building2, User } from "lucide-react"
+import { Search, MapPin, Phone, Mail, Globe, CheckCircle2, ArrowRight, Building2, User, LocateFixed } from "lucide-react"
 import { Button } from "../components/ui/button"
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet"
+import L from "leaflet"
+import "leaflet/dist/leaflet.css"
 
 // Mock Data
 type Partner = {
@@ -13,6 +16,7 @@ type Partner = {
   email: string;
   website: string;
   plzPrefixes: string[];
+  coordinates: [number, number];
 };
 
 const MOCK_PARTNERS = [
@@ -24,7 +28,8 @@ const MOCK_PARTNERS = [
     phone: "0211 582-0",
     email: "jobticket@rheinbahn.de",
     website: "www.rheinbahn.de",
-    plzPrefixes: ["40", "41", "42"]
+    plzPrefixes: ["40", "41", "42"],
+    coordinates: [51.2217, 6.7762],
   },
   {
     id: 2,
@@ -34,7 +39,8 @@ const MOCK_PARTNERS = [
     phone: "0221 547-0",
     email: "grosskunden@kvb.koeln",
     website: "www.kvb.koeln",
-    plzPrefixes: ["50", "51"]
+    plzPrefixes: ["50", "51"],
+    coordinates: [50.9375, 6.9603],
   },
   {
     id: 3,
@@ -44,7 +50,8 @@ const MOCK_PARTNERS = [
     phone: "0228 711-1",
     email: "firmenkunden@swb-busundbahn.de",
     website: "www.swb-busundbahn.de",
-    plzPrefixes: ["53"]
+    plzPrefixes: ["53"],
+    coordinates: [50.7374, 7.0982],
   },
   {
     id: 4,
@@ -54,7 +61,8 @@ const MOCK_PARTNERS = [
     phone: "03641 414-0",
     email: "jobticket@nahverkehr-jena.de",
     website: "www.stadtwerke-jena.de",
-    plzPrefixes: ["07"]
+    plzPrefixes: ["07"],
+    coordinates: [50.9271, 11.5892],
   }
 ] satisfies Partner[];
 
@@ -68,6 +76,7 @@ const SAMPLE_PARTNERS_99085: Partner[] = [
     email: "service@evag-erfurt.de",
     website: "www.evag-erfurt.de",
     plzPrefixes: ["99"],
+    coordinates: [50.9848, 11.0299],
   },
   {
     id: 102,
@@ -78,6 +87,7 @@ const SAMPLE_PARTNERS_99085: Partner[] = [
     email: "geschaeftskunden@deutschebahn.com",
     website: "www.bahn.de",
     plzPrefixes: ["99"],
+    coordinates: [50.9795, 11.0358],
   },
   {
     id: 103,
@@ -88,17 +98,58 @@ const SAMPLE_PARTNERS_99085: Partner[] = [
     email: "service@vmt-thueringen.de",
     website: "www.vmt-thueringen.de",
     plzPrefixes: ["99"],
+    coordinates: [50.9583, 11.0289],
   },
 ];
+
+const markerIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
+const userMarkerIcon = new L.DivIcon({
+  className: "user-location-marker",
+  html: `
+    <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9999px;background:#ffffff;border:2px solid #A3C410;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#A3C410" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="6" r="4"></circle>
+        <path d="M7 22v-3.5c0-2.2 1.8-4 4-4h2c2.2 0 4 1.8 4 4V22h-3v-3h-4v3H7z"></path>
+      </svg>
+    </div>
+  `,
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
+});
+
+const tracestrackKey = import.meta.env.VITE_TRACESTRACK_KEY;
+const tileUrl = tracestrackKey
+  ? `https://tile.tracestrack.com/topo__/{z}/{x}/{y}@1x.png?key=${tracestrackKey}`
+  : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const tileAttribution = tracestrackKey
+  ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, map style by <a href="https://www.tracestrack.com/">Tracestrack</a>'
+  : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 export default function Lookup() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const initialPlz = searchParams.get("plz") || "";
+  const errorFromQuery = searchParams.get("error");
+  const initialSelectedPartners = (searchParams.get("partners") || "")
+    .split(",")
+    .map((id) => Number(id))
+    .filter((id) => !Number.isNaN(id));
   
   const [plz, setPlz] = useState(initialPlz);
   const [hasSearched, setHasSearched] = useState(!!initialPlz);
-  const [selectedPartnerIds, setSelectedPartnerIds] = useState<number[]>([]);
+  const [selectedPartnerIds, setSelectedPartnerIds] = useState<number[]>(initialSelectedPartners);
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
+  const [locationError, setLocationError] = useState("");
+  const [selectionError, setSelectionError] = useState(
+    errorFromQuery === "select_partner" ? "Bitte einen Verbundpartner auswählen." : ""
+  );
 
   const getPartners = (): Partner[] => {
     if (!plz || plz.length < 2) return [];
@@ -117,15 +168,48 @@ export default function Lookup() {
   };
 
   const handleSelect = (id: number) => {
+    setSelectionError("");
     setSelectedPartnerIds((prev) =>
       prev.includes(id) ? prev.filter((partnerId) => partnerId !== id) : [...prev, id]
     );
   };
 
   const handleSubmit = () => {
-    if (selectedPartnerIds.length > 0) {
-      navigate(`/success?partners=${selectedPartnerIds.join(",")}`);
+    const selectedForNextStep = selectedPartnerIds.filter((id) => id > 0);
+    if (selectedForNextStep.length === 0) {
+      setSelectionError("Bitte einen Verbundpartner auswählen.");
+      return;
     }
+    setSelectionError("");
+    navigate(`/apply?partners=${selectedForNextStep.join(",")}&plz=${plz}`);
+  };
+
+  const handleResetSearch = () => {
+    setPlz("");
+    setHasSearched(false);
+    setSelectedPartnerIds([]);
+    setUserPosition(null);
+    setLocationError("");
+    setSelectionError("");
+    navigate("/lookup", { replace: true });
+  };
+
+  const handleUseMyLocation = () => {
+    if (!("geolocation" in navigator)) {
+      setLocationError("Standortabfrage wird von diesem Browser nicht unterstützt.");
+      return;
+    }
+
+    setLocationError("");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserPosition([position.coords.latitude, position.coords.longitude]);
+      },
+      () => {
+        setLocationError("Standort konnte nicht ermittelt werden. Bitte Berechtigung prüfen.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
 
   const partners = getPartners();
@@ -148,13 +232,13 @@ export default function Lookup() {
       <div className="container mx-auto px-4 max-w-3xl -mt-20 relative z-10">
         <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
           <div className="flex bg-slate-50 border-b border-slate-100">
-            <div className="flex-1 py-4 text-center text-slate-400 font-medium flex items-center justify-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-500" />
-              Ihre Daten
-            </div>
             <div className="flex-1 py-4 text-center border-b-2 border-[#003B79] font-bold text-[#003B79] flex items-center justify-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-[#003B79] text-white text-xs flex items-center justify-center">2</span>
+              <span className="w-6 h-6 rounded-full bg-[#003B79] text-white text-xs flex items-center justify-center">1</span>
               Verbundpartner
+            </div>
+            <div className="flex-1 py-4 text-center text-slate-400 font-medium flex items-center justify-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-slate-200 text-slate-500 text-xs flex items-center justify-center">2</span>
+              Ihre Daten
             </div>
           </div>
 
@@ -190,7 +274,46 @@ export default function Lookup() {
                 </h3>
 
                 {partners.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
+                    <div className="relative rounded-xl overflow-hidden border border-slate-200">
+                      <MapContainer
+                        key={`${userPosition?.[0] ?? "p"}-${userPosition?.[1] ?? "p"}-${partners[0].id}`}
+                        center={userPosition ?? partners[0].coordinates}
+                        zoom={11}
+                        scrollWheelZoom={false}
+                        className="h-72 w-full"
+                      >
+                        <TileLayer
+                          attribution={tileAttribution}
+                          url={tileUrl}
+                        />
+                        {partners.map((partner) => (
+                          <Marker key={`marker-${partner.id}`} position={partner.coordinates} icon={markerIcon}>
+                            <Popup>
+                              <strong>{partner.name}</strong>
+                              <br />
+                              {partner.address}
+                            </Popup>
+                          </Marker>
+                        ))}
+                        {userPosition && (
+                          <Marker position={userPosition} icon={userMarkerIcon}>
+                            <Popup>Ihr Standort</Popup>
+                          </Marker>
+                        )}
+                      </MapContainer>
+                      <button
+                        type="button"
+                        onClick={handleUseMyLocation}
+                        className="absolute top-3 right-3 z-[1000] inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white/95 px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-white"
+                      >
+                        <LocateFixed className="h-4 w-4" />
+                        Mein Standort
+                      </button>
+                    </div>
+                    {locationError && <p className="text-sm text-red-600">{locationError}</p>}
+
+                    <div className="space-y-4">
                     {partners.map(partner => (
                       <div 
                         key={partner.id}
@@ -243,6 +366,7 @@ export default function Lookup() {
                         </div>
                       </div>
                     ))}
+                    </div>
                   </div>
                 ) : (
                   <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
@@ -252,26 +376,28 @@ export default function Lookup() {
                       Für diese Postleitzahl haben wir aktuell keinen direkten Verbundpartner hinterlegt. 
                       Bitte reichen Sie Ihre Anfrage trotzdem ein, unser zentrales Team wird sich umgehend bei Ihnen melden.
                     </p>
-                    <Button onClick={() => handleSelect(-1)} variant="outline" className={`border-2 ${selectedPartnerIds.includes(-1) ? 'border-[#003B79] bg-[#003B79]/5' : ''}`}>
+                    <Button onClick={() => handleSelect(999)} variant="outline" className={`border-2 ${selectedPartnerIds.includes(999) ? 'border-[#003B79] bg-[#003B79]/5' : ''}`}>
                       Anfrage zentral einreichen
                     </Button>
                   </div>
                 )}
 
                 <div className="mt-10 pt-8 border-t border-slate-100 flex justify-between items-center">
-                  <Button variant="ghost" onClick={() => navigate('/apply')} className="text-slate-500">
-                    Zurück
+                  <Button variant="ghost" onClick={handleResetSearch} className="text-slate-500">
+                    Suche zurücksetzen
                   </Button>
                   <Button 
                     onClick={handleSubmit} 
-                    disabled={selectedPartnerIds.length === 0}
                     size="lg" 
                     className="bg-[#A3C410] text-[#003B79] hover:bg-[#A3C410]/90 text-lg px-8 h-14"
                   >
-                    Anfrage an ausgewählte Partner senden
+                    Weiter zu Ihren Daten
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </div>
+                {selectionError && (
+                  <p className="mt-3 text-sm text-red-600 text-right">{selectionError}</p>
+                )}
               </div>
             )}
             

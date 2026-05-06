@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useEffect, useState } from "react"
+import { useNavigate, useSearchParams } from "react-router"
 import { Building2, User, Mail, Phone, MapPin, Users, ArrowRight, CheckCircle2 } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
@@ -7,6 +7,13 @@ import applyImg from "../../imports/AdobeStock_400849655_Preview.jpeg"
 
 export default function Apply() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const selectedPartners = searchParams.get("partners") || "";
+  const selectedPartnerIds = selectedPartners
+    .split(",")
+    .map((id) => Number(id))
+    .filter((id) => Number.isInteger(id) && id > 0);
+  const prefilledPlz = searchParams.get("plz") || "";
   const [formData, setFormData] = useState({
     salutation: "",
     firstName: "",
@@ -17,12 +24,22 @@ export default function Apply() {
     phone: "",
     email: "",
     street: "",
-    plz: "",
+    plz: prefilledPlz,
     city: "",
     interestPhone: false,
     interestContract: false,
     message: ""
   });
+
+  useEffect(() => {
+    // Enforce step order: partner selection first, then form data.
+    if (selectedPartnerIds.length === 0) {
+      const params = new URLSearchParams();
+      if (prefilledPlz) params.set("plz", prefilledPlz);
+      params.set("error", "select_partner");
+      navigate(`/lookup?${params.toString()}`, { replace: true });
+    }
+  }, [navigate, selectedPartnerIds.length, prefilledPlz]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -36,11 +53,14 @@ export default function Apply() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.plz) {
-      navigate(`/lookup?plz=${formData.plz}`);
-    } else {
-      navigate('/lookup');
-    }
+    navigate(`/success?partners=${selectedPartnerIds.join(",")}`);
+  };
+
+  const goToPartnerSelection = () => {
+    const params = new URLSearchParams();
+    if (formData.plz) params.set("plz", formData.plz);
+    if (selectedPartners) params.set("partners", selectedPartners);
+    navigate(`/lookup?${params.toString()}`);
   };
 
   return (
@@ -70,13 +90,17 @@ export default function Apply() {
       <div className="container mx-auto px-4 max-w-3xl -mt-20 relative z-20">
         <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
           <div className="flex bg-slate-50 border-b border-slate-100">
-            <div className="flex-1 py-4 text-center border-b-2 border-[#003B79] font-bold text-[#003B79] flex items-center justify-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-[#003B79] text-white text-xs flex items-center justify-center">1</span>
-              Ihre Daten
-            </div>
-            <div className="flex-1 py-4 text-center text-slate-400 font-medium flex items-center justify-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-slate-200 text-slate-500 text-xs flex items-center justify-center">2</span>
+            <button
+              type="button"
+              onClick={goToPartnerSelection}
+              className="flex-1 py-4 text-center text-slate-400 hover:text-[#003B79] font-medium flex items-center justify-center gap-2 transition-colors"
+            >
+              <CheckCircle2 className="w-5 h-5 text-green-500" />
               Verbundpartner
+            </button>
+            <div className="flex-1 py-4 text-center border-b-2 border-[#003B79] font-bold text-[#003B79] flex items-center justify-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#003B79] text-white text-xs flex items-center justify-center">2</span>
+              Ihre Daten
             </div>
           </div>
 
@@ -174,7 +198,7 @@ export default function Apply() {
                   </div>
                   <div className="col-span-1">
                     <label className="block text-sm font-medium text-slate-700 mb-1">PLZ *</label>
-                    <input type="text" name="plz" required onChange={handleChange} maxLength={5} pattern="[0-9]{5}" title="Bitte geben Sie eine gültige 5-stellige PLZ ein" placeholder="z.B. 50667" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="plz" required value={formData.plz} onChange={handleChange} maxLength={5} pattern="[0-9]{5}" title="Bitte geben Sie eine gültige 5-stellige PLZ ein" placeholder="z.B. 50667" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-slate-700 mb-1">Ort *</label>
@@ -210,9 +234,12 @@ export default function Apply() {
               </section>
             </div>
 
-            <div className="mt-10 flex justify-end">
+            <div className="mt-10 flex justify-between items-center">
+              <Button type="button" variant="ghost" onClick={goToPartnerSelection} className="text-slate-500">
+                Zurück zur Partnerauswahl
+              </Button>
               <Button type="submit" size="lg" className="bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8 w-full sm:w-auto">
-                Weiter zur Partnerauswahl
+                Anfrage verbindlich absenden
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>

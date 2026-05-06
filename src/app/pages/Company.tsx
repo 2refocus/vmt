@@ -39,7 +39,7 @@ export default function Company() {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="bg-[#A3C410] text-[#003B79] hover:bg-white text-lg h-14 px-8" asChild>
-                <Link to="/apply">
+                <Link to="/lookup">
                   Jetzt Jobticket beantragen
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
@@ -142,7 +142,7 @@ export default function Company() {
                 <p className="text-slate-600">Finden Sie den passenden Verbundpartner in Ihrer Region.</p>
               </div>
               <Button size="lg" className="bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8 w-full md:w-auto" asChild>
-                <Link to="/apply">
+                <Link to="/lookup">
                   Jetzt Verbundpartner finden
                   <MapPin className="ml-2 w-5 h-5" />
                 </Link>

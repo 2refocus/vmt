@@ -1,14 +1,18 @@
+import { useEffect } from "react"
 import { Outlet, Link, useLocation } from "react-router"
 import { Train, Info, Users, Briefcase } from "lucide-react"
 import { cn } from "../../../lib/utils"
 import { Button } from "../ui/button"
 import vmtLogo from "../../../imports/vmt-logo-01.svg"
 import logosVerbund from "../../../imports/logos_verbund.png"
-import jenaerStadtverkehr from "../../../imports/jenaer_stadtverkehr.png"
 
 export function Layout() {
   const location = useLocation();
   const isHome = location.pathname === "/";
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.pathname]);
 
   // Different headers depending on route
   const getNavColor = () => {
@@ -30,7 +34,6 @@ export function Layout() {
               <img src={vmtLogo} alt="VMT Logo" className="h-12 w-auto py-1" />
               <div className="hidden sm:flex items-center gap-4 self-center">
                 <img src={logosVerbund} alt="Logos Verbund" className="h-14 w-auto object-right rounded bg-white p-2" />
-                <img src={jenaerStadtverkehr} alt="Jenaer Stadtverkehr" className="h-14 w-auto rounded bg-white p-2" />
               </div>
             </Link>
             
@@ -81,7 +84,7 @@ export function Layout() {
                   <li><Link to="/company" className="hover:text-white transition-colors">Für Unternehmen</Link></li>
                   <li><Link to="/employee" className="hover:text-white transition-colors">Für Beschäftigte</Link></li>
                   <li><Link to="/faq" className="hover:text-white transition-colors">Häufige Fragen (FAQ)</Link></li>
-                  <li><Link to="/apply" className="hover:text-white transition-colors">Jobticket beantragen</Link></li>
+                  <li><Link to="/lookup" className="hover:text-white transition-colors">Jobticket beantragen</Link></li>
                 </ul>
               </div>
               
