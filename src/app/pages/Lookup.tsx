@@ -387,14 +387,14 @@ export default function Lookup() {
                   </div>
                 )}
 
-                <div className="mt-10 pt-8 border-t border-slate-100 flex justify-between items-center">
+                <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                   <Button variant="ghost" onClick={handleResetSearch} className="text-slate-500">
                     Suche zurücksetzen
                   </Button>
                   <Button 
                     onClick={handleSubmit} 
                     size="lg" 
-                    className="bg-[#A3C410] text-[#003B79] hover:bg-[#A3C410]/90 text-lg px-8 h-14"
+                    className="bg-[#A3C410] text-[#003B79] hover:bg-[#A3C410]/90 text-lg px-8 h-14 w-full sm:w-auto"
                   >
                     Weiter zu Ihren Daten
                     <ArrowRight className="ml-2 w-5 h-5" />
