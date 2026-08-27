@@ -145,7 +145,7 @@ export default function FAQ() {
         <div className="mt-8 bg-[#003B79]/5 rounded-2xl p-8 text-center border border-[#003B79]/10">
           <h3 className="text-lg font-bold text-[#003B79] mb-2">Ihre Frage war nicht dabei?</h3>
           <p className="text-slate-600 mb-6">Wir helfen Ihnen gerne persönlich weiter.</p>
-          <a href="mailto:support@deutschlandticket-job.de" className="inline-flex items-center justify-center bg-white text-[#003B79] border border-slate-200 hover:border-[#003B79] px-6 py-3 rounded-xl font-medium transition-colors shadow-sm">
+          <a href="mailto:service@vmt-thueringen.de" className="inline-flex items-center justify-center bg-white text-[#003B79] border border-slate-200 hover:border-[#003B79] px-6 py-3 rounded-xl font-medium transition-colors shadow-sm">
             Kontakt aufnehmen
           </a>
         </div>

@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2, Building, TrendingUp, HandCoins, PiggyBank, M
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
 import heroImg from "../../imports/AdobeStock_232967360_Preview.jpg"
+import dticketLogo from "../../imports/dticket.svg"
 
 const COMPANY_FAQS = [
   {
@@ -40,12 +41,18 @@ export default function Company() {
         </div>
         
         <div className="container relative z-10 mx-auto px-4 max-w-6xl">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
+            <img
+              src={dticketLogo}
+              alt="Deutschlandticket Job"
+              className="h-14 md:h-16 w-auto mb-6 md:hidden"
+            />
             <div className="inline-block px-4 py-1.5 bg-[#A3C410] text-[#003B79] font-bold rounded-full mb-6 text-sm">
               Für Unternehmen
             </div>
@@ -69,6 +76,19 @@ export default function Company() {
               </Button>
             </div>
           </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="hidden md:flex justify-end items-center"
+          >
+            <img
+              src={dticketLogo}
+              alt="Deutschlandticket Job"
+              className="max-w-md w-full h-auto"
+            />
+          </motion.div>
+          </div>
         </div>
       </section>
 
