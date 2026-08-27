@@ -26,11 +26,12 @@ export default function Employee() {
             className="max-w-3xl"
           >
             <div className="inline-block px-4 py-1.5 bg-[#003B79] text-white font-bold rounded-full mb-6 text-sm">
-              Für Beschäftigte (B2C)
+              Für Angestellte
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight tracking-tight">
-              Dein Chef zahlt.<br />
-              <span className="text-white">Du sparst.</span>
+              Clever pendeln<br />
+              und sparen.<br />
+              <span className="text-white">Kommt gut an.</span>
             </h1>
             <p className="text-xl md:text-2xl text-[#003B79]/80 mb-10 leading-relaxed font-medium">
               Mindestens 30 % günstiger fahren. Einfach einsteigen, ankommen und profitieren. 
@@ -55,8 +56,8 @@ export default function Employee() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl md:text-5xl font-bold text-[#003B79] mb-6">
-                100 % Einfacher.<br/>
-                <span className="text-[#A3C410]">30 % Günstiger.</span>
+                Deine Vorteile<br />
+                auf einen Blick
               </h2>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
                 Mit dem Deutschlandticket Job sparst du jeden Monat bares Geld und 
@@ -67,7 +68,6 @@ export default function Employee() {
                 {[
                   "Mindestens 30 % geringere Kosten im Vergleich zum normalen D-Ticket",
                   "Unabhängigkeit von steigenden Spritpreisen und Staus",
-                  "Komfortabler und entspannter Arbeitsweg",
                   "Deutschlandweit gültig im Nah- und Regionalverkehr"
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
@@ -110,9 +110,9 @@ export default function Employee() {
             <div className="hidden md:block absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
             
             {[
-              { step: "1", title: "Chef fragen", desc: "Sprich mit deiner HR-Abteilung oder deinem Arbeitgeber." },
+              { step: "1", title: "Chef fragen", desc: "Sprich mit deiner Personalabteilung oder deinem Chef." },
               { step: "2", title: "Zuschuss sichern", desc: "Arbeitgeber zahlt mindestens 25% vom Ticketpreis." },
-              { step: "3", title: "Losfahren", desc: "Ticket erhalten und in ganz Deutschland nutzen." }
+              { step: "3", title: "Losfahren", desc: "Ticket erhalten und deutschlandweit im Nah- und Regionalverkehr nutzen." }
             ].map((step, i) => (
               <div key={i} className="relative z-10 bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center">
                 <div className="w-12 h-12 bg-[#A3C410] text-[#003B79] rounded-full flex items-center justify-center font-bold text-xl mb-4 border-4 border-white shadow-sm">
@@ -125,9 +125,9 @@ export default function Employee() {
           </div>
           
           <div className="mt-16 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="text-xl font-bold text-[#003B79] mb-4">Dein Arbeitgeber macht noch nicht mit?</h3>
+            <h3 className="text-xl font-bold text-[#003B79] mb-4">Chef, wir müssen reden!</h3>
             <p className="text-slate-600 mb-6">
-              Teile diese Seite mit deinem Arbeitgeber, damit auch ihr von den Vorteilen des Deutschlandticket Job profitieren könnt.
+              Dein Unternehmen bietet das Deutschlandticket Job noch nicht an? Sprich das Thema einfach an und zeig, welche Vorteile das Deutschlandticket Job für Beschäftigte und Unternehmen bietet.
             </p>
             <Button className="bg-[#003B79] text-white hover:bg-[#003B79]/90" asChild>
               <Link to="/company">

@@ -4,7 +4,8 @@ import { Train, Info, Users, Briefcase } from "lucide-react"
 import { cn } from "../../../lib/utils"
 import { Button } from "../ui/button"
 import vmtLogo from "../../../imports/vmt-logo-01.svg"
-import logosVerbund from "../../../imports/logos_verbund.png"
+import dticketWhite from "../../../imports/dticket_white.svg"
+import logosVerbund from "../../../imports/logos_verbund_icon_only.png"
 
 export function Layout() {
   const location = useLocation();
@@ -33,7 +34,7 @@ export function Layout() {
             <Link to="/" className="flex items-center gap-8 group">
               <img src={vmtLogo} alt="VMT Logo" className="h-12 w-auto py-1" />
               <div className="hidden sm:flex items-center gap-4 self-center">
-                <img src={logosVerbund} alt="Logos Verbund" className="h-14 w-auto object-right rounded bg-white p-2" />
+                <img src={logosVerbund} alt="Logos Verbund" className="max-h-10 h-auto w-auto shrink-0 object-contain rounded bg-white p-2" />
               </div>
             </Link>
             
@@ -46,7 +47,7 @@ export function Layout() {
               <Link to="/employee" className={cn("flex items-center gap-2 transition-colors", 
                 location.pathname.startsWith('/employee') ? 'text-[#003B79] underline underline-offset-4' : 'text-slate-600 hover:text-[#003B79]')}>
                 <Users className="w-4 h-4" />
-                <span className="hidden sm:inline">Für Beschäftigte</span>
+                <span className="hidden sm:inline">Für Angestellte</span>
               </Link>
               <Link to="/faq" className={cn("flex items-center gap-2 transition-colors", 
                 location.pathname === '/faq' ? 'text-[#003B79] underline underline-offset-4' : 'text-slate-600 hover:text-[#003B79]')}>
@@ -69,9 +70,7 @@ export function Layout() {
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-start gap-8 mb-4">
                   <img src={vmtLogo} alt="VMT Logo" className="h-10 w-auto brightness-0 invert" />
-                  <span className="mt-0 font-bold text-lg tracking-tight">
-                    Deutschlandticket <span className="text-[#A3C410]">Job</span>
-                  </span>
+                  <img src={dticketWhite} alt="Deutschlandticket Job" className="h-10 w-auto shrink-0 object-contain" />
                 </div>
                 <p className="text-white/70 max-w-sm">
                   Die smarte Mobilitätslösung für Unternehmen und Beschäftigte. Einfach, nachhaltig und kosteneffizient.
@@ -82,7 +81,7 @@ export function Layout() {
                 <h4 className="font-bold mb-4 text-lg">Links</h4>
                 <ul className="space-y-2 text-white/70">
                   <li><Link to="/company" className="hover:text-white transition-colors">Für Unternehmen</Link></li>
-                  <li><Link to="/employee" className="hover:text-white transition-colors">Für Beschäftigte</Link></li>
+                  <li><Link to="/employee" className="hover:text-white transition-colors">Für Angestellte</Link></li>
                   <li><Link to="/faq" className="hover:text-white transition-colors">Häufige Fragen (FAQ)</Link></li>
                   <li><Link to="/lookup" className="hover:text-white transition-colors">Jobticket beantragen</Link></li>
                 </ul>
@@ -91,15 +90,15 @@ export function Layout() {
               <div>
                 <h4 className="font-bold mb-4 text-lg">Rechtliches</h4>
                 <ul className="space-y-2 text-white/70">
-                  <li><a href="#" className="hover:text-white transition-colors">Impressum</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Datenschutz</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">AGB</a></li>
+                  <li><a href="https://www.vmt-thueringen.de/impressum/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Impressum</a></li>
+                  <li><a href="https://www.vmt-thueringen.de/datenschutz/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Datenschutz</a></li>
+                  <li><a href="https://www.vmt-thueringen.de/barrierefreiheit/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Barrierefreiheit</a></li>
                 </ul>
               </div>
             </div>
             
             <div className="border-t border-white/20 mt-12 pt-8 text-center text-white/50 text-sm">
-              &copy; {new Date().getFullYear()} Deutschlandticket Job
+              &copy; {new Date().getFullYear()} VMT
             </div>
           </div>
         </footer>

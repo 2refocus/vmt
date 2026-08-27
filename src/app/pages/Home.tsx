@@ -1,7 +1,6 @@
 import { Link } from "react-router"
 import { Building2, UserCircle2, ArrowRight } from "lucide-react"
 import { motion } from "motion/react"
-import vmtLogo from "../../imports/vmt-logo-01.svg"
 import vmtLogoNoSubline from "../../imports/vmt-logo-01_nosubline.svg"
 import employerBg from "../../imports/AdobeStock_232967360_Preview.jpg"
 import employeeBg from "../../imports/AdobeStock_497280944_Preview.jpeg"
@@ -9,12 +8,15 @@ import employeeBg from "../../imports/AdobeStock_497280944_Preview.jpeg"
 export default function Home() {
   return (
     <div className="min-h-screen w-full">
-      <div className="absolute top-4 left-4 z-20 lg:hidden bg-white/95 rounded-md px-2 py-1 shadow-sm">
-        <img src={vmtLogoNoSubline} alt="VMT Logo" className="h-8 w-auto" />
+      <div className="absolute top-4 inset-x-4 z-20 lg:hidden bg-white/95 rounded-lg px-4 py-2 shadow-sm flex flex-row items-center justify-center gap-3">
+        <img src={vmtLogoNoSubline} alt="VMT Logo" className="h-8 w-auto shrink-0" />
+        <div className="font-bold text-[#003B79] leading-tight text-xs sm:text-sm tracking-tight text-center">
+          DAS DEUTSCHLANDTICKET <span className="text-[#A3C410]">JOB</span>
+        </div>
       </div>
       <div className="flex flex-col lg:flex-row min-h-screen w-full">
       {/* Company Section */}
-      <div className="relative flex-1 flex flex-col justify-center items-center p-8 lg:p-16 bg-[#003B79] text-white overflow-hidden group">
+      <div className="relative flex-1 flex flex-col justify-start lg:justify-center items-center pt-24 lg:pt-16 p-8 lg:p-16 bg-[#003B79] text-white overflow-hidden group">
         {/* Header background image with blue gradient overlay */}
         <div className="absolute inset-0 pointer-events-none">
           <img src={employerBg} alt="" className="h-full w-full object-cover object-center opacity-45" />
@@ -33,10 +35,13 @@ export default function Home() {
           className="relative z-10 max-w-lg w-full text-right"
         >
           <div className="mb-8">
-            <p className="text-5xl lg:text-6xl font-extrabold tracking-tight text-[#A3C410]">STEIG EIN.</p>
-            <p className="text-3xl lg:text-4xl font-bold leading-tight mt-1">INS DEUTSCHLANDTICKET JOB.</p>
+            <p className="text-5xl lg:text-6xl font-extrabold tracking-tight text-[#A3C410]">
+              Mitarbeiter<br />
+              Bonus
+            </p>
+            <p className="text-3xl lg:text-4xl font-bold leading-tight mt-1">Kommt gut an.</p>
             <p className="mt-3 text-base lg:text-lg text-white/85">
-              Für Unternehmen: Attraktivität steigern, Mitarbeitende entlasten und Mobilität einfach integrieren.
+              Bieten Sie Ihrem Team einen attraktiven Mobilitätsbenefit und stärken Sie gleichzeitig Ihre Arbeitgeberattraktivität.
             </p>
           </div>
           <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-white/20 ml-auto">
@@ -44,7 +49,7 @@ export default function Home() {
           </div>
           
           <h1 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
-            Für Ihr <br />
+            Für <br />
             <span className="text-[#A3C410]">Unternehmen</span>
           </h1>
           
@@ -84,10 +89,13 @@ export default function Home() {
           className="relative z-10 max-w-lg w-full"
         >
           <div className="mb-8">
-            <p className="text-5xl lg:text-6xl font-extrabold tracking-tight text-[#003B79]">SPAR EIN.</p>
-            <p className="text-3xl lg:text-4xl font-bold leading-tight mt-1">INS DEUTSCHLANDTICKET JOB.</p>
+            <p className="text-5xl lg:text-6xl font-extrabold tracking-tight text-[#003B79]">
+              Clever pendeln<br />
+              und sparen.
+            </p>
+            <p className="text-3xl lg:text-4xl font-bold leading-tight mt-1 text-white">Kommt gut an.</p>
             <p className="mt-3 text-base lg:text-lg text-[#003B79]/80">
-              Für Beschäftigte: Weniger zahlen, flexibel fahren und jeden Monat direkt profitieren.
+              Mit dem Zuschuss deines Unternehmens zahlst du weniger für dein Deutschlandticket und bist deutschlandweit mobil.
             </p>
           </div>
           <div className="w-20 h-20 bg-[#003B79]/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-[#003B79]/20">
@@ -96,13 +104,13 @@ export default function Home() {
           
           <h1 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
             Für <br />
-            <span className="text-white">Beschäftigte</span>
+            <span className="text-white">Angestellte</span>
           </h1>
           
           <p className="text-xl text-[#003B79]/80 mb-10 leading-relaxed font-medium">
             Dein Chef zahlt. Du sparst. <br/>
             Mindestens 30 % günstiger fahren. 
-            Einfach einsteigen, ankommen und profitieren.
+            Einfach einsteigen, ankommen & profitieren.
           </p>
 
           <Link 
@@ -117,10 +125,10 @@ export default function Home() {
 
       {/* Center Logo/Badge (Absolute on Desktop) */}
       <div className="absolute top-6 left-1/2 transform -translate-x-1/2 hidden lg:flex flex-col items-center justify-center pointer-events-none z-20">
-        <div className="bg-white p-6 rounded-3xl shadow-2xl flex flex-col items-center border border-slate-100">
-          <img src={vmtLogo} alt="VMT Logo" className="h-12 w-auto mb-3" />
-          <div className="text-center font-bold text-[#003B79] leading-tight">
-            DeutschlandTicket <span className="text-[#A3C410] text-sm">Job</span>
+        <div className="bg-white px-6 py-4 rounded-3xl shadow-2xl flex flex-row items-center gap-4 border border-slate-100">
+          <img src={vmtLogoNoSubline} alt="VMT Logo" className="h-12 w-auto shrink-0" />
+          <div className="font-bold text-[#003B79] leading-tight text-lg lg:text-xl tracking-tight">
+            DAS DEUTSCHLANDTICKET <span className="text-[#A3C410]">JOB</span>
           </div>
         </div>
       </div>
