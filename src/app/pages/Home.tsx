@@ -44,14 +44,15 @@ export default function Home() {
               Bieten Sie Ihrem Team einen attraktiven Mobilitätsbenefit und stärken Sie gleichzeitig Ihre Arbeitgeberattraktivität.
             </p>
           </div>
-          <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-white/20 ml-auto">
-            <Building2 className="w-10 h-10 text-[#A3C410]" />
+          <div className="flex items-center justify-end gap-4 mb-6">
+            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">
+              Für <br />
+              <span className="text-[#A3C410]">Unternehmen</span>
+            </h1>
+            <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20">
+              <Building2 className="w-10 h-10 text-[#A3C410]" />
+            </div>
           </div>
-          
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
-            Für <br />
-            <span className="text-[#A3C410]">Unternehmen</span>
-          </h1>
           
           <p className="text-xl text-white/80 mb-10 leading-relaxed font-light">
             Steigern Sie Ihre Arbeitgeberattraktivität. <br/>
@@ -98,14 +99,15 @@ export default function Home() {
               Mit dem Zuschuss deines Unternehmens zahlst du weniger für dein Deutschlandticket und bist deutschlandweit mobil.
             </p>
           </div>
-          <div className="w-20 h-20 bg-[#003B79]/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-[#003B79]/20">
-            <UserCircle2 className="w-10 h-10 text-[#003B79]" />
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-20 h-20 bg-[#003B79]/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-[#003B79]/20">
+              <UserCircle2 className="w-10 h-10 text-[#003B79]" />
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">
+              Für <br />
+              <span className="text-white">Angestellte</span>
+            </h1>
           </div>
-          
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
-            Für <br />
-            <span className="text-white">Angestellte</span>
-          </h1>
           
           <p className="text-xl text-[#003B79]/80 mb-10 leading-relaxed font-medium">
             Dein Chef zahlt. Du sparst. <br/>
