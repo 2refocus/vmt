@@ -16,7 +16,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col lg:flex-row min-h-screen w-full">
       {/* Company Section */}
-      <div className="relative flex-1 flex flex-col justify-start lg:justify-center items-center pt-24 lg:pt-16 p-8 lg:p-16 bg-[#003B79] text-white overflow-hidden group">
+      <div className="relative flex-1 flex flex-col justify-start items-center pt-24 lg:pt-32 p-8 lg:p-16 bg-[#003B79] text-white overflow-hidden group">
         {/* Header background image with blue gradient overlay */}
         <div className="absolute inset-0 pointer-events-none">
           <img src={employerBg} alt="" className="h-full w-full object-cover object-center opacity-45" />
@@ -70,7 +70,7 @@ export default function Home() {
       </div>
 
       {/* Employee Section */}
-      <div className="relative flex-1 flex flex-col justify-center items-center p-8 lg:p-16 bg-[#A3C410] text-[#003B79] overflow-hidden group">
+      <div className="relative flex-1 flex flex-col justify-start items-center pt-8 lg:pt-32 p-8 lg:p-16 bg-[#A3C410] text-[#003B79] overflow-hidden group">
         {/* Employee background image with green gradient overlay */}
         <div className="absolute inset-0 pointer-events-none">
           <img src={employeeBg} alt="" className="h-full w-full object-cover opacity-45" />
