@@ -68,9 +68,9 @@ export function Layout() {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="col-span-1 md:col-span-2">
-                <div className="flex items-start gap-8 mb-4">
+                <div className="flex items-start gap-8 mb-6">
                   <img src={vmtLogo} alt="VMT Logo" className="h-10 w-auto brightness-0 invert" />
-                  <img src={dticketWhite} alt="Deutschlandticket Job" className="h-10 w-auto shrink-0 object-contain" />
+                  <img src={dticketWhite} alt="Deutschlandticket Job" className="h-12 w-auto shrink-0 object-contain ml-4 mb-2" />
                 </div>
                 <p className="text-white/70 max-w-sm">
                   Die smarte Mobilitätslösung für Unternehmen und Beschäftigte. Einfach, nachhaltig und kosteneffizient.

@@ -227,7 +227,7 @@ export default function Company() {
               {
                 step: "3",
                 title: "Deutschlandticket Job einführen",
-                desc: "Gemeinsam mit Ihrem Ansprechpartner setzen Sie die nächsten Schritte um und können das Deutschlandticket Job anschließend Ihren Angestellten anbieten.",
+                desc: "Gemeinsam mit Ihrem Ansprechpartner setzen Sie die nächsten Schritte um und können das Deutschlandticket Job anschließend Ihren Mitarbeitern anbieten.",
               },
             ].map((item, i) => (
               <div
