@@ -123,13 +123,7 @@ export default function Company() {
               },
               {
                 icon: PiggyBank,
-                title: (
-                  <>
-                    Sozialabgaben
-                    <br />
-                    sparen
-                  </>
-                ),
+                title: "Sozialabgaben sparen",
                 desc: "Unter bestimmten Voraussetzungen kann der Zuschuss zum Deutschlandticket Job steuer- und sozialversicherungsfrei gewährt werden."
               }
             ].map((benefit, i) => (
@@ -164,7 +158,35 @@ export default function Company() {
                 So setzt sich der Preis zusammen:
               </p>
               
-              <div className="overflow-x-auto">
+              {/* Mobile: stacked rows */}
+              <div className="space-y-4 md:hidden">
+                {[
+                  { label: "Deutschlandticket", value: "63,00 €", valueClass: "text-slate-900" },
+                  { label: "Zuschuss Unternehmen", hint: "(mind. 25 %)", value: "15,75 €", valueClass: "text-[#003B79]" },
+                  { label: "5 % Rabatt", value: "3,15 €", valueClass: "text-[#A3C410]" },
+                  { label: "Preis für Mitarbeitende", hint: "pro Monat (max.)", value: "44,10 €", valueClass: "text-slate-900", highlight: true },
+                ].map((row) => (
+                  <div
+                    key={row.label}
+                    className={`flex items-start justify-between gap-4 py-4 ${
+                      row.highlight
+                        ? "border-t-2 border-slate-200 pt-5"
+                        : "border-b border-slate-100"
+                    }`}
+                  >
+                    <div>
+                      <p className="font-semibold text-slate-900">{row.label}</p>
+                      {row.hint && (
+                        <p className="text-sm font-normal text-slate-500 mt-0.5">{row.hint}</p>
+                      )}
+                    </div>
+                    <p className={`font-bold text-xl shrink-0 ${row.valueClass}`}>{row.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop: table */}
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b-2 border-slate-200">
