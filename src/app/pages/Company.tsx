@@ -24,8 +24,28 @@ const COMPANY_FAQS = [
   },
 ]
 
+const TICKET_PRICE = 63
+const DISCOUNT_RATE = 0.05
+const SUBSIDY_OPTIONS = [25, 50, 75] as const
+
+type SubsidyPercent = (typeof SUBSIDY_OPTIONS)[number]
+
+function formatEuro(value: number) {
+  return (
+    value.toLocaleString("de-DE", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + " €"
+  )
+}
+
 export default function Company() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
+  const [subsidyPercent, setSubsidyPercent] = useState<SubsidyPercent>(25)
+
+  const discountAmount = TICKET_PRICE * DISCOUNT_RATE
+  const subsidyAmount = TICKET_PRICE * (subsidyPercent / 100)
+  const employeePrice = TICKET_PRICE - subsidyAmount - discountAmount
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -153,18 +173,39 @@ export default function Company() {
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="p-8 md:p-12 border-b border-slate-100">
-              <h2 className="text-3xl font-bold text-[#003B79] mb-6">Das Rechenbeispiel (Stand 2026)</h2>
-              <p className="text-slate-600 mb-8">
-                So setzt sich der Preis zusammen:
+              <h2 className="text-3xl font-bold text-[#003B79] mb-2">Das Rechenbeispiel</h2>
+              <p className="text-sm text-slate-500 mb-6">Stand 2026</p>
+              <p className="text-slate-600 mb-6">
+                So setzt sich der Preis zusammen – wählen Sie Ihren Unternehmenszuschuss:
               </p>
+
+              <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label="Unternehmenszuschuss wählen">
+                {SUBSIDY_OPTIONS.map((percent) => {
+                  const isActive = subsidyPercent === percent
+                  return (
+                    <button
+                      key={percent}
+                      type="button"
+                      onClick={() => setSubsidyPercent(percent)}
+                      className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-colors ${
+                        isActive
+                          ? "bg-[#003B79] text-white shadow-sm"
+                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      }`}
+                    >
+                      {percent} % Zuschuss
+                    </button>
+                  )
+                })}
+              </div>
               
               {/* Mobile: stacked rows */}
               <div className="space-y-4 md:hidden">
                 {[
-                  { label: "Deutschlandticket", value: "63,00 €", valueClass: "text-slate-900" },
-                  { label: "Zuschuss Unternehmen", hint: "(mind. 25 %)", value: "15,75 €", valueClass: "text-[#003B79]" },
-                  { label: "5 % Rabatt", value: "3,15 €", valueClass: "text-[#A3C410]" },
-                  { label: "Preis für Mitarbeitende", hint: "pro Monat (max.)", value: "44,10 €", valueClass: "text-slate-900", highlight: true },
+                  { label: "Deutschlandticket", value: formatEuro(TICKET_PRICE), valueClass: "text-slate-900" },
+                  { label: "Zuschuss Unternehmen", hint: `(${subsidyPercent} %)`, value: formatEuro(subsidyAmount), valueClass: "text-[#003B79]" },
+                  { label: "5 % Rabatt", value: formatEuro(discountAmount), valueClass: "text-[#A3C410]" },
+                  { label: "Preis für Mitarbeitende", hint: "pro Monat (max.)", value: formatEuro(employeePrice), valueClass: "text-slate-900", highlight: true },
                 ].map((row) => (
                   <div
                     key={row.label}
@@ -180,7 +221,7 @@ export default function Company() {
                         <p className="text-sm font-normal text-slate-500 mt-0.5">{row.hint}</p>
                       )}
                     </div>
-                    <p className={`font-bold text-xl shrink-0 ${row.valueClass}`}>{row.value}</p>
+                    <p className={`font-bold text-xl shrink-0 tabular-nums ${row.valueClass}`}>{row.value}</p>
                   </div>
                 ))}
               </div>
@@ -191,17 +232,17 @@ export default function Company() {
                   <thead>
                     <tr className="border-b-2 border-slate-200">
                       <th className="pb-4 font-semibold text-slate-900 align-top">Deutschlandticket</th>
-                      <th className="pb-4 font-semibold text-slate-900 align-top">Zuschuss Unternehmen<br/><span className="text-sm font-normal text-slate-500">(mind. 25 %)</span></th>
+                      <th className="pb-4 font-semibold text-slate-900 align-top">Zuschuss Unternehmen<br/><span className="text-sm font-normal text-slate-500">({subsidyPercent} %)</span></th>
                       <th className="pb-4 font-semibold text-slate-900 align-top">5 % Rabatt</th>
                       <th className="pb-4 font-semibold text-slate-900 align-top">Preis für Mitarbeitende<br/><span className="text-sm font-normal text-slate-500">pro Monat (max.)</span></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b border-slate-100">
-                      <td className="py-6 font-bold text-xl text-slate-900">63,00 €</td>
-                      <td className="py-6 font-bold text-xl text-[#003B79]">15,75 €</td>
-                      <td className="py-6 font-bold text-xl text-[#A3C410]">3,15 €</td>
-                      <td className="py-6 font-bold text-xl text-slate-900">44,10 €</td>
+                      <td className="py-6 font-bold text-xl text-slate-900 tabular-nums">{formatEuro(TICKET_PRICE)}</td>
+                      <td className="py-6 font-bold text-xl text-[#003B79] tabular-nums">{formatEuro(subsidyAmount)}</td>
+                      <td className="py-6 font-bold text-xl text-[#A3C410] tabular-nums">{formatEuro(discountAmount)}</td>
+                      <td className="py-6 font-bold text-xl text-slate-900 tabular-nums">{formatEuro(employeePrice)}</td>
                     </tr>
                   </tbody>
                 </table>
