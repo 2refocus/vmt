@@ -2,7 +2,7 @@ import { Link } from "react-router"
 import { ArrowRight, Leaf, Train, PiggyBank, Smile, ChevronRight, CheckCircle2 } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
-import heroImg from "../../imports/AdobeStock_497280944_Preview.jpeg"
+import heroImg from "../../imports/vmt_visual_02_b2c.jpg"
 import dticketLogo from "../../imports/dticket.svg"
 
 export default function Employee() {
@@ -14,9 +14,9 @@ export default function Employee() {
            <img 
              src={heroImg} 
              alt="Mehr Mobilität. Weniger Kosten." 
-             className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+             className="w-full h-full object-cover object-[40%_30%] md:object-[85%_30%] opacity-60 mix-blend-overlay"
            />
-           <div className="absolute inset-0 bg-gradient-to-r from-[#A3C410] via-[#A3C410]/90 to-[#A3C410]/40" />
+           <div className="absolute inset-0 bg-gradient-to-r from-[#A3C410] via-[#A3C410]/95 to-[#A3C410]/50 md:via-[#A3C410]/80 md:to-[#A3C410]/35" />
         </div>
         
         <div className="container relative z-10 mx-auto px-4 max-w-6xl">

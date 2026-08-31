@@ -3,7 +3,7 @@ import { Link } from "react-router"
 import { ArrowRight, CheckCircle2, Building, TrendingUp, HandCoins, PiggyBank, MapPin, Phone, ChevronDown } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
-import heroImg from "../../imports/AdobeStock_232967360_Preview.jpg"
+import heroImg from "../../imports/vmt_visual_ma_bonus_b2b.jpg"
 import dticketLogo from "../../imports/dticket.svg"
 
 const COMPANY_FAQS = [
@@ -51,11 +51,11 @@ export default function Company() {
     <div className="flex flex-col min-h-screen bg-slate-50">
       {/* Hero Section */}
       <section className="relative pt-24 pb-32 overflow-hidden bg-[#003B79] text-white">
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 overflow-hidden">
            <img 
              src={heroImg} 
              alt="Mitarbeiterbonus. Kommt gut an." 
-             className="w-full h-full object-cover object-top md:object-right-bottom scale-105 opacity-60"
+             className="absolute top-0 h-full w-[145%] max-w-none object-cover object-[0%_40%] md:left-[10%] left-0 opacity-60"
            />
            <div className="absolute inset-0 bg-gradient-to-r from-[#003B79]/88 via-[#003B79]/72 to-[#003B79]/52" />
         </div>

@@ -2,8 +2,8 @@ import { Link } from "react-router"
 import { Building2, UserCircle2, ArrowRight } from "lucide-react"
 import { motion } from "motion/react"
 import vmtLogoNoSubline from "../../imports/vmt-logo-01_nosubline.svg"
-import employerBg from "../../imports/AdobeStock_232967360_Preview.jpg"
-import employeeBg from "../../imports/AdobeStock_497280944_Preview.jpeg"
+import employerBg from "../../imports/vmt_visual_ma_bonus_b2b.jpg"
+import employeeBg from "../../imports/vmt_visual_b2c.jpg"
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
       <div className="relative flex-1 flex flex-col justify-start items-center pt-24 lg:pt-32 p-8 lg:p-16 bg-[#003B79] text-white overflow-hidden group">
         {/* Header background image with blue gradient overlay */}
         <div className="absolute inset-0 pointer-events-none">
-          <img src={employerBg} alt="" className="h-full w-full object-cover object-center opacity-45" />
+          <img src={employerBg} alt="" className="h-full w-full object-cover object-[center_85%] opacity-45" />
           <div className="absolute inset-0 bg-gradient-to-br from-[#003B79]/80 via-[#003B79]/60 to-[#002a58]/80" />
         </div>
         {/* Background Pattern/Graphic */}
@@ -74,7 +74,7 @@ export default function Home() {
       <div className="relative flex-1 flex flex-col justify-start items-center pt-8 lg:pt-32 p-8 lg:p-16 bg-[#A3C410] text-[#003B79] overflow-hidden group">
         {/* Employee background image with green gradient overlay */}
         <div className="absolute inset-0 pointer-events-none">
-          <img src={employeeBg} alt="" className="h-full w-full object-cover opacity-45" />
+          <img src={employeeBg} alt="" className="h-full w-full object-cover object-[25%_5%] opacity-45" />
           <div className="absolute inset-0 bg-gradient-to-br from-[#A3C410]/80 via-[#A3C410]/60 to-[#7ea000]/80" />
         </div>
         {/* Background Pattern/Graphic */}
