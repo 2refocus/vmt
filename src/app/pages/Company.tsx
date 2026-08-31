@@ -50,7 +50,7 @@ export default function Company() {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 overflow-hidden bg-[#003B79] text-white">
+      <section className="relative pt-24 pb-32 overflow-hidden bg-[#003B79] text-white md:min-h-[787px] md:flex md:items-center">
         <div className="absolute inset-0 z-0 overflow-hidden">
            <img 
              src={heroImg} 
