@@ -35,7 +35,7 @@ export default function Employee() {
             <div className="inline-block px-4 py-1.5 bg-[#003B79] text-white font-bold rounded-full mb-4 text-sm">
               Für Angestellte
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight tracking-tight">
               Clever pendeln und sparen.<br />
               <span className="text-white">Kommt gut an.</span>
             </h1>
