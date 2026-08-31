@@ -10,11 +10,11 @@ export default function Employee() {
     <div className="flex flex-col min-h-screen bg-slate-50">
       {/* Hero Section */}
       <section className="relative pt-24 pb-32 overflow-hidden bg-[#A3C410] text-[#003B79]">
-        <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
            <img 
              src={heroImg} 
              alt="Mehr Mobilität. Weniger Kosten." 
-             className="w-full h-full object-cover object-[58%_30%] md:object-[95%_30%] opacity-60 mix-blend-overlay"
+             className="w-full h-full object-cover object-[46%_30%] md:absolute md:inset-y-0 md:-left-[22%] md:w-[145%] md:max-w-none md:object-[90%_30%] opacity-60 mix-blend-overlay"
            />
            <div className="absolute inset-0 bg-gradient-to-r from-[#A3C410] via-[#A3C410]/95 to-[#A3C410]/50 md:via-[#A3C410]/80 md:to-[#A3C410]/35" />
         </div>
