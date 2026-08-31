@@ -55,9 +55,9 @@ export default function Company() {
            <img 
              src={heroImg} 
              alt="Mitarbeiterbonus. Kommt gut an." 
-             className="absolute top-0 left-0 h-full w-full object-cover object-[28%_5%] md:left-[8%] md:w-[110%] md:max-w-none md:object-[0%_25%] lg:left-0 xl:-left-[6%] xl:w-[120%] opacity-60"
+             className="absolute top-0 left-0 h-full w-full object-cover object-[28%_5%] md:left-[10%] md:w-[110%] md:max-w-none md:object-[0%_25%] lg:left-[3%] xl:-left-[3%] xl:w-[118%] opacity-60"
            />
-           <div className="absolute inset-0 bg-gradient-to-r from-[#003B79] via-[#003B79]/80 to-[#003B79]/40 md:from-[#003B79] md:from-[0%] md:via-[#003B79] md:via-[18%] md:to-[#003B79]/35 md:to-[70%] lg:via-[22%] xl:via-[28%]" />
+           <div className="absolute inset-0 bg-gradient-to-r from-[#003B79] via-[#003B79]/80 to-[#003B79]/25 md:from-[#003B79] md:from-[0%] md:via-[#003B79] md:via-[18%] md:to-[#003B79]/15 md:to-[70%] lg:via-[22%] xl:via-[28%]" />
         </div>
         
         <div className="container relative z-10 mx-auto px-4 max-w-6xl">
