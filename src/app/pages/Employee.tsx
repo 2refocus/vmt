@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { ArrowRight, Leaf, Train, PiggyBank, Smile, ChevronRight } from "lucide-react"
+import { ArrowRight, Leaf, Train, PiggyBank, Smile, ChevronRight, CheckCircle2 } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
 import heroImg from "../../imports/AdobeStock_497280944_Preview.jpeg"
@@ -120,8 +120,53 @@ export default function Employee() {
         </div>
       </section>
 
-      {/* How to get it */}
+      {/* Conditions */}
       <section className="py-24 bg-slate-50">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
+              Die Konditionen des Deutschlandticket Job
+            </h2>
+            <p className="text-lg text-slate-600">
+              Mit dem Deutschlandticket Job bist du deutschlandweit im Nahverkehr unterwegs und du zahlst weniger als für das reguläre Deutschlandticket.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 md:p-12 space-y-10">
+            <div>
+              <h3 className="text-2xl font-bold text-[#003B79] mb-6">Deine Vorteile auf einen Blick</h3>
+              <ul className="space-y-4">
+                {[
+                  "maximal 44,10 € pro Monat statt regulär 63 €",
+                  "dein Arbeitgeber übernimmt mindestens 25 % des regulären Ticketpreises",
+                  "zusätzlich gibt es 5 % Rabatt auf das Deutschlandticket",
+                  "deutschlandweit im öffentlichen Nahverkehr gültig",
+                  "monatlich kündbar",
+                  "als digitales, personengebundenes Ticket erhältlich",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-[#A3C410] shrink-0 mt-0.5" />
+                    <span className="text-slate-700 leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pt-8 border-t border-slate-100">
+              <h3 className="text-2xl font-bold text-[#003B79] mb-4">Wo gilt das Deutschlandticket Job?</h3>
+              <p className="text-slate-600 leading-relaxed mb-4">
+                Du kannst deutschlandweit alle teilnehmenden Busse, Straßenbahnen, U-Bahnen sowie Nahverkehrszüge in der 2. Klasse nutzen, zum Beispiel S-Bahn, RB, RE und IRE.
+              </p>
+              <p className="text-slate-600 leading-relaxed">
+                Nicht enthalten sind grundsätzlich Fahrten im Fernverkehr wie IC, EC oder ICE sowie bestimmte touristische Verkehre. Auch die Mitnahme weiterer Personen, von Fahrrädern oder Hunden ist nicht automatisch enthalten.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How to get it */}
+      <section className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-12">Wie bekomme ich das Ticket?</h2>
           

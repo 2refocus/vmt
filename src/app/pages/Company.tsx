@@ -85,14 +85,13 @@ export default function Company() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 text-lg h-14 px-8" asChild>
+                <a href="#how-it-works">So funktioniert's</a>
+              </Button>
               <Button size="lg" className="bg-[#A3C410] text-[#003B79] hover:bg-white text-lg h-14 px-8" asChild>
                 <Link to="/lookup">
                   Jetzt Kontakt aufnehmen
-                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 text-lg h-14 px-8" asChild>
-                <a href="#how-it-works">So funktioniert's</a>
               </Button>
             </div>
           </motion.div>
@@ -168,8 +167,52 @@ export default function Company() {
         </div>
       </section>
 
+      {/* Conditions */}
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
+              Die Konditionen des Deutschlandticket Job
+            </h2>
+            <p className="text-lg text-slate-600">
+              Mit dem Deutschlandticket Job bieten Sie Ihren Angestellten deutschlandweite Mobilität zu vergünstigten Konditionen.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 md:p-12 space-y-10">
+            <div>
+              <h3 className="text-2xl font-bold text-[#003B79] mb-6">So funktioniert das Modell</h3>
+              <ul className="space-y-4">
+                {[
+                  "regulärer Preis des Deutschlandtickets: 63 € pro Monat",
+                  "Sie bezuschussen das Ticket mit mindestens 25 % des regulären Ticketpreises",
+                  "dadurch wird zusätzlich ein Rabatt von 5 % auf das Deutschlandticket gewährt",
+                  "für Ihre Beschäftigten kostet das Deutschlandticket Job damit maximal 44,10 € pro Monat",
+                  "Sie können freiwillig einen höheren Zuschuss übernehmen und den Eigenanteil Ihrer Beschäftigten weiter reduzieren",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-[#A3C410] shrink-0 mt-0.5" />
+                    <span className="text-slate-700 leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pt-8 border-t border-slate-100">
+              <h3 className="text-2xl font-bold text-[#003B79] mb-4">Deutschlandweit gültig</h3>
+              <p className="text-slate-600 leading-relaxed mb-4">
+                Das Deutschlandticket Job gilt deutschlandweit im teilnehmenden öffentlichen Nahverkehr – in Bussen, Straßenbahnen und U-Bahnen sowie in Nahverkehrszügen der 2. Klasse.
+              </p>
+              <p className="text-slate-600 leading-relaxed">
+                Das Ticket ist personengebunden und nicht übertragbar. Eine Mitnahme weiterer Personen, von Fahrrädern oder Hunden ist nicht automatisch enthalten.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing / Process Table */}
-      <section id="pricing" className="py-24 bg-slate-50">
+      <section id="pricing" className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="p-8 md:p-12 border-b border-slate-100">
