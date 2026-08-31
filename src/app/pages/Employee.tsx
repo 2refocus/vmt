@@ -36,7 +36,8 @@ export default function Employee() {
               Für Angestellte
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight tracking-tight">
-              Clever pendeln und sparen.<br />
+              Clever pendeln<br />
+              und sparen.<br />
               <span className="text-white">Kommt gut an.</span>
             </h1>
             <p className="text-lg md:text-xl text-[#003B79]/80 mb-6 leading-relaxed font-medium">
