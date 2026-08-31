@@ -9,7 +9,7 @@ export default function Employee() {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 overflow-hidden bg-[#A3C410] text-[#003B79]">
+      <section className="relative pt-24 pb-16 md:pb-20 overflow-hidden bg-[#A3C410] text-[#003B79]">
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
            <img 
              src={heroImg} 
@@ -30,16 +30,16 @@ export default function Employee() {
             <img
               src={dticketLogo}
               alt="Deutschlandticket Job"
-              className="h-14 md:h-16 w-auto mb-6 md:hidden"
+              className="h-14 md:h-16 w-auto mb-4 md:hidden"
             />
-            <div className="inline-block px-4 py-1.5 bg-[#003B79] text-white font-bold rounded-full mb-6 text-sm">
+            <div className="inline-block px-4 py-1.5 bg-[#003B79] text-white font-bold rounded-full mb-4 text-sm">
               Für Angestellte
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight tracking-tight">
               Clever pendeln und sparen.<br />
               <span className="text-white">Kommt gut an.</span>
             </h1>
-            <p className="text-xl md:text-2xl text-[#003B79]/80 mb-10 leading-relaxed font-medium">
+            <p className="text-lg md:text-xl text-[#003B79]/80 mb-6 leading-relaxed font-medium">
               Mindestens 30 % günstiger fahren. Einfach einsteigen, ankommen und profitieren. 
               Ohne Tarifstress und unabhängig von Spritpreisen.
             </p>
@@ -62,7 +62,7 @@ export default function Employee() {
             <img
               src={dticketLogo}
               alt="Deutschlandticket Job"
-              className="max-w-md w-full h-auto"
+              className="max-w-sm w-full h-auto"
             />
           </motion.div>
           </div>
