@@ -55,7 +55,7 @@ export default function Company() {
            <img 
              src={heroImg} 
              alt="Mitarbeiterbonus. Kommt gut an." 
-             className="absolute top-0 left-0 h-full w-full object-cover object-[28%_18%] md:object-[20%_25%] opacity-60"
+             className="absolute top-0 left-0 h-full w-full object-cover object-[28%_5%] md:object-[20%_25%] opacity-60"
            />
            <div className="absolute inset-0 bg-gradient-to-r from-[#003B79] via-[#003B79]/80 to-[#003B79]/40 md:from-[#003B79] md:via-[#003B79]/70 md:to-[#003B79]/35" />
         </div>
