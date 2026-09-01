@@ -14,7 +14,7 @@ export default function Employee() {
            <img 
              src={heroImg} 
              alt="Mehr Mobilität. Weniger Kosten." 
-             className="w-full h-full object-cover object-[46%_30%] md:absolute md:inset-y-0 md:-left-[40%] md:w-[165%] md:max-w-none md:object-[70%_30%] opacity-60 mix-blend-overlay"
+             className="w-full h-full object-cover object-[46%_30%] md:absolute md:inset-y-0 md:-left-[52%] md:w-[175%] md:max-w-none md:object-[70%_30%] opacity-60 mix-blend-overlay"
            />
            <div className="absolute inset-0 bg-gradient-to-r from-[#A3C410] via-[#A3C410]/95 to-[#A3C410]/50 md:via-[#A3C410]/80 md:to-[#A3C410]/35" />
         </div>
