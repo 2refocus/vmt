@@ -92,9 +92,7 @@ export default function Home() {
             </p>
           </div>
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 bg-[#003B79]/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-[#003B79]/20">
-              <UserCircle2 className="w-10 h-10 text-[#003B79]" />
-            </div>
+            <UserCircle2 className="w-16 h-16 text-[#003B79] shrink-0" />
             <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">
               Für <br />
               <span className="text-white">Angestellte</span>
