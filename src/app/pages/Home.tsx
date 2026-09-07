@@ -19,7 +19,7 @@ export default function Home() {
       <div className="relative flex-1 flex flex-col justify-start items-center pt-24 lg:pt-32 p-8 lg:p-16 bg-[#003B79] text-white overflow-hidden group">
         {/* Header background image with blue gradient overlay */}
         <div className="absolute inset-0 pointer-events-none">
-          <img src={employerBg} alt="" className="h-full w-full object-cover object-[center_85%] opacity-45" />
+          <img src={employerBg} alt="" className="h-full w-full object-cover object-top opacity-45" />
           <div className="absolute inset-0 bg-gradient-to-br from-[#003B79]/80 via-[#003B79]/60 to-[#002a58]/80" />
         </div>
         {/* Background Pattern/Graphic */}
