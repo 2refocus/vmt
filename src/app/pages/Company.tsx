@@ -84,7 +84,13 @@ export default function Company() {
               Das Deutschlandticket Job entlastet Ihre Angestellten bei den Mobilitätskosten und bietet einen attraktiven Benefit mit Mehrwert im Alltag.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+              <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 text-lg h-14 px-8" asChild>
+                <a href="#benefits">Vorteile</a>
+              </Button>
+              <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 text-lg h-14 px-8" asChild>
+                <a href="#conditions">Konditionen</a>
+              </Button>
               <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 text-lg h-14 px-8" asChild>
                 <a href="#how-it-works">So funktioniert's</a>
               </Button>
@@ -112,7 +118,7 @@ export default function Company() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-24 bg-white">
+      <section id="benefits" className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
@@ -168,7 +174,7 @@ export default function Company() {
       </section>
 
       {/* Conditions */}
-      <section className="py-24 bg-slate-50">
+      <section id="conditions" className="py-24 bg-slate-50">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
