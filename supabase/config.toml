@@ -2,7 +2,7 @@
 # https://supabase.com/docs/guides/cli/config
 
 [project]
-id = "vmt-jobticket"
+id = "bpozoojlnsxpssrzbuob"
 
 [api]
 enabled = true

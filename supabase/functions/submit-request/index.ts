@@ -1,3 +1,4 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 // Edge Function: submit-request
 // Receives form submissions, stores them in Supabase, and sends emails via Resend
 
