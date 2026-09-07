@@ -56,7 +56,7 @@ export default function Home() {
             to="/company" 
             className="inline-flex items-center gap-3 bg-[#A3C410] text-[#003B79] px-8 py-4 rounded-xl font-bold text-lg hover:bg-white transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
           >
-            Arbeitgeber-Vorteile entdecken
+            Arbeitgeber-Vorteile ansehen
             <ArrowRight className="w-5 h-5" />
           </Link>
         </motion.div>
