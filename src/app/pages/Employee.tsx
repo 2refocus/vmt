@@ -1,11 +1,41 @@
 import { Link } from "react-router"
-import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2 } from "lucide-react"
+import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2, Download, Share2, Mail, Linkedin } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
 import heroImg from "../../imports/vmt_visual_02_b2c.jpg"
 import dticketLogo from "../../imports/dticket.svg"
 
+const SHARE_URL = "https://das-kommt-gut-an.de/company"
+const SHARE_TEXT =
+  "Schau dir das Deutschlandticket Job an – ein attraktiver Benefit für Beschäftigte und Unternehmen:"
+
+function buildShareLinks() {
+  const encodedUrl = encodeURIComponent(SHARE_URL)
+  const encodedText = encodeURIComponent(`${SHARE_TEXT} ${SHARE_URL}`)
+  return {
+    whatsapp: `https://wa.me/?text=${encodedText}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    email: `mailto:?subject=${encodeURIComponent("Deutschlandticket Job")}&body=${encodedText}`,
+  }
+}
+
+async function handleNativeShare() {
+  if (typeof navigator !== "undefined" && navigator.share) {
+    try {
+      await navigator.share({
+        title: "Deutschlandticket Job",
+        text: SHARE_TEXT,
+        url: SHARE_URL,
+      })
+    } catch {
+      // user cancelled
+    }
+  }
+}
+
 export default function Employee() {
+  const shareLinks = buildShareLinks()
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       {/* Hero Section */}
@@ -178,7 +208,17 @@ export default function Employee() {
             {[
               { step: "1", title: "Chef fragen", desc: "Sprich deine Personalabteilung oder deinen Arbeitgeber auf das Deutschlandticket Job an." },
               { step: "2", title: "Vorteil sichern", desc: "Dein Arbeitgeber übernimmt mindestens 25% des Ticketpreises. Zusätzlich gibt es 5% Rabatt vom Verkehrsunternehmen auf das Deutschlandticket." },
-              { step: "3", title: "Losfahren", desc: "Du erhältst dein Deutschlandticket Job über das Verkehrsunternehmen und kannst damit deutschlandweit im Nah- und Regionalverkehr unterwegs sein." }
+              {
+                step: "3",
+                title: "Losfahren",
+                desc: (
+                  <>
+                    Du erhältst dein Deutschlandticket Job über das Verkehrsunternehmen und kannst damit deutschlandweit
+                    <br />
+                    im Nah- & Regionalverkehr unterwegs&nbsp;sein.
+                  </>
+                ),
+              },
             ].map((step, i) => (
               <div key={i} className="relative z-10 bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center">
                 <div className="w-12 h-12 bg-[#A3C410] text-[#003B79] rounded-full flex items-center justify-center font-bold text-xl mb-4 border-4 border-white shadow-sm">
@@ -190,16 +230,61 @@ export default function Employee() {
             ))}
           </div>
           
-          <div className="mt-16 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+          <div className="mt-16 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-left">
             <h3 className="text-xl font-bold text-[#003B79] mb-4">Chef, wir müssen reden!</h3>
             <p className="text-slate-600 mb-6">
               Dein Unternehmen bietet das Deutschlandticket Job noch nicht an? Sprich das Thema einfach an und zeig, welche Vorteile das Deutschlandticket Job für Beschäftigte und Unternehmen bietet.
             </p>
-            <Button className="bg-[#003B79] text-white hover:bg-[#003B79]/90" asChild>
-              <Link to="/company">
-                Info-Seite für Arbeitgeber zeigen
-              </Link>
-            </Button>
+
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-8">
+              <Button className="bg-[#003B79] text-white hover:bg-[#003B79]/90" asChild>
+                <Link to="/company">
+                  Info-Seite für Arbeitgeber zeigen
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
+                disabled
+                title="Download-Link folgt in Kürze"
+              >
+                <Download className="mr-2 w-4 h-4" />
+                Flyer herunterladen
+              </Button>
+            </div>
+
+            <div>
+              <p className="text-sm font-medium text-slate-500 mb-3">Mit Kolleg:innen oder Chef teilen</p>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="border-slate-200 text-slate-700 hover:bg-slate-50"
+                  onClick={handleNativeShare}
+                >
+                  <Share2 className="mr-2 w-4 h-4" />
+                  Teilen
+                </Button>
+                <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
+                  <a href={shareLinks.whatsapp} target="_blank" rel="noreferrer">
+                    WhatsApp
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
+                  <a href={shareLinks.linkedin} target="_blank" rel="noreferrer">
+                    <Linkedin className="mr-2 w-4 h-4" />
+                    LinkedIn
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
+                  <a href={shareLinks.email}>
+                    <Mail className="mr-2 w-4 h-4" />
+                    E-Mail
+                  </a>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
