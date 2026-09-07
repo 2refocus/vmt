@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router"
-import { ArrowRight, CheckCircle2, Building, TrendingUp, HandCoins, PiggyBank, MapPin, Phone, ChevronDown } from "lucide-react"
+import { ArrowRight, CheckCircle2, Building, TrendingUp, HandCoins, PiggyBank, Phone, ChevronDown } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
 import heroImg from "../../imports/chef_worker_happy_grey_4_3.jpg"
@@ -175,7 +175,7 @@ export default function Company() {
 
       {/* Conditions */}
       <section id="conditions" className="py-24 bg-slate-50">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto px-4 max-w-5xl">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
               Die Konditionen des Deutschlandticket Job
@@ -205,25 +205,8 @@ export default function Company() {
             </div>
 
             <div className="pt-8 border-t border-slate-100">
-              <h3 className="text-2xl font-bold text-[#003B79] mb-4">Deutschlandweit gültig</h3>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Das Deutschlandticket Job gilt deutschlandweit im teilnehmenden öffentlichen Nahverkehr – in Bussen, Straßenbahnen und U-Bahnen sowie in Nahverkehrszügen der 2. Klasse.
-              </p>
-              <p className="text-slate-600 leading-relaxed">
-                Das Ticket ist personengebunden und nicht übertragbar. Eine Mitnahme weiterer Personen, von Fahrrädern oder Hunden ist nicht automatisch enthalten.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing / Process Table */}
-      <section id="pricing" className="py-24 bg-white">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-            <div className="p-8 md:p-12 border-b border-slate-100">
-              <h2 className="text-3xl font-bold text-[#003B79] mb-2">Das Rechenbeispiel</h2>
-              <p className="text-sm text-slate-500 mb-6">Stand 2026</p>
+              <h3 className="text-2xl font-bold text-[#003B79] mb-2">Das Rechenbeispiel</h3>
+              <p className="text-sm text-slate-500 mb-4">Stand 2026</p>
               <p className="text-slate-600 mb-6">
                 So setzt sich der Preis zusammen – wählen Sie Ihren Unternehmenszuschuss:
               </p>
@@ -247,7 +230,7 @@ export default function Company() {
                   )
                 })}
               </div>
-              
+
               {/* Mobile: stacked rows */}
               <div className="space-y-4 md:hidden">
                 {[
@@ -297,18 +280,15 @@ export default function Company() {
                 </table>
               </div>
             </div>
-            
-            <div className="bg-[#003B79]/5 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
-              <div>
-                <h3 className="text-2xl font-bold text-[#003B79] mb-2">Interesse geweckt?</h3>
-                <p className="text-slate-600">Finden Sie mit Ihrer Postleitzahl den zuständigen Ansprechpartner für Ihre Region.</p>
-              </div>
-              <Button size="lg" className="bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8 w-full md:w-auto" asChild>
-                <Link to="/lookup">
-                  Jetzt Verbundpartner finden
-                  <MapPin className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
+
+            <div className="pt-8 border-t border-slate-100">
+              <h3 className="text-2xl font-bold text-[#003B79] mb-4">Deutschlandweit gültig</h3>
+              <p className="text-slate-600 leading-relaxed mb-4">
+                Das Deutschlandticket Job gilt deutschlandweit im teilnehmenden öffentlichen Nahverkehr – in Bussen, Straßenbahnen und U-Bahnen sowie in Nahverkehrszügen der 2. Klasse.
+              </p>
+              <p className="text-slate-600 leading-relaxed">
+                Das Ticket ist personengebunden und nicht übertragbar. Eine Mitnahme weiterer Personen, von Fahrrädern oder Hunden ist nicht automatisch enthalten.
+              </p>
             </div>
           </div>
         </div>
