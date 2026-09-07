@@ -177,7 +177,7 @@ export default function Employee() {
             
             {[
               { step: "1", title: "Chef fragen", desc: "Sprich deinen Arbeitgeber auf das Deutschlandticket Job an." },
-              { step: "2", title: "Zuschuss sichern", desc: "Arbeitgeber zahlt mindestens 25% vom Ticketpreis." },
+              { step: "2", title: "Vorteil sichern", desc: "Arbeitgeber zahlt mindestens 25% vom Ticketpreis." },
               { step: "3", title: "Losfahren", desc: "Ticket erhalten und deutschlandweit im Nah- und Regionalverkehr nutzen." }
             ].map((step, i) => (
               <div key={i} className="relative z-10 bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center">
