@@ -280,16 +280,6 @@ export default function Company() {
                 </table>
               </div>
             </div>
-
-            <div className="pt-8 border-t border-slate-100">
-              <h3 className="text-2xl font-bold text-[#003B79] mb-4">Deutschlandweit gültig</h3>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Das Deutschlandticket Job gilt deutschlandweit im teilnehmenden öffentlichen Nahverkehr – in Bussen, Straßenbahnen und U-Bahnen sowie in Nahverkehrszügen der 2. Klasse.
-              </p>
-              <p className="text-slate-600 leading-relaxed">
-                Das Ticket ist personengebunden und nicht übertragbar. Eine Mitnahme weiterer Personen, von Fahrrädern oder Hunden ist nicht automatisch enthalten.
-              </p>
-            </div>
           </div>
         </div>
       </section>
