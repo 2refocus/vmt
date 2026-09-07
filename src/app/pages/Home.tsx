@@ -101,12 +101,6 @@ export default function Home() {
             </h1>
           </div>
           
-          <p className="text-xl text-[#003B79]/80 mb-10 leading-relaxed font-medium">
-            Dein Chef zahlt. Du sparst. <br/>
-            Mindestens 30 % günstiger fahren. 
-            Einfach einsteigen, ankommen & profitieren.
-          </p>
-
           <Link 
             to="/employee" 
             className="inline-flex items-center gap-3 bg-[#003B79] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-[#003B79] transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
