@@ -159,7 +159,7 @@ export default function Employee() {
                 Du kannst deutschlandweit alle teilnehmenden Busse, Straßenbahnen, U-Bahnen sowie Nahverkehrszüge in der 2. Klasse nutzen, zum Beispiel S-Bahn, RB, RE und IRE.
               </p>
               <p className="text-slate-600 leading-relaxed">
-                Nicht enthalten sind grundsätzlich Fahrten im Fernverkehr wie IC, EC oder ICE sowie bestimmte touristische Verkehre. Auch die Mitnahme weiterer Personen, von Fahrrädern oder Hunden ist nicht automatisch enthalten.
+                Nicht enthalten sind grundsätzlich Fahrten im Fernverkehr wie IC, EC oder ICE sowie bestimmte touristische Verkehre.
               </p>
             </div>
           </div>
