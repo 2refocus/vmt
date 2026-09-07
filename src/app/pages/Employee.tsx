@@ -79,7 +79,8 @@ export default function Employee() {
               auf einen Blick
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed">
-              Mit dem Deutschlandticket Job sparst du jeden Monat bares Geld, weil dein Arbeitgeber dir was dazu gibt.
+              Mit dem Deutschlandticket Job sparst du jeden Monat bares Geld,<br />
+              weil dein Arbeitgeber dir was dazu gibt.
             </p>
           </div>
 
