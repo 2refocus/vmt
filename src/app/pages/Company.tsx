@@ -3,7 +3,7 @@ import { Link } from "react-router"
 import { ArrowRight, CheckCircle2, Building, TrendingUp, HandCoins, PiggyBank, MapPin, Phone, ChevronDown } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
-import heroImg from "../../imports/vmt_visual_ma_bonus_b2b.jpg"
+import heroImg from "../../imports/chef_worker_happy_grey_4_3.jpg"
 import dticketLogo from "../../imports/dticket.svg"
 
 const COMPANY_FAQS = [
@@ -55,7 +55,7 @@ export default function Company() {
            <img 
              src={heroImg} 
              alt="Mitarbeiterbonus. Kommt gut an." 
-             className="absolute top-0 left-0 h-full w-full object-cover object-[28%_5%] md:left-[10%] md:w-[110%] md:max-w-none md:object-[0%_25%] lg:left-[3%] xl:-left-[3%] xl:w-[118%] opacity-60"
+             className="absolute top-0 left-0 h-full w-full object-cover object-center opacity-60"
            />
            <div className="absolute inset-0 bg-gradient-to-r from-[#003B79] via-[#003B79]/65 to-[#003B79]/10 md:from-[#003B79] md:from-[0%] md:via-[#003B79] md:via-[18%] md:to-[#003B79]/15 md:to-[70%] lg:via-[22%] xl:via-[28%]" />
         </div>
