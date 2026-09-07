@@ -39,7 +39,7 @@ export default function Employee() {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 overflow-hidden bg-[#A3C410] text-[#003B79] md:min-h-[787px] md:flex md:items-center">
+      <section className="relative pt-10 pb-24 md:pt-24 md:pb-32 overflow-hidden bg-[#A3C410] text-[#003B79] md:min-h-[787px] md:flex md:items-center">
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
            <img 
              src={heroImg} 
@@ -55,7 +55,7 @@ export default function Employee() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl pt-20 md:pt-0"
+            className="max-w-3xl"
           >
             <img
               src={dticketLogo}

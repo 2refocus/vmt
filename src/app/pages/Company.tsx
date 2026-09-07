@@ -50,7 +50,7 @@ export default function Company() {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 overflow-hidden bg-[#003B79] text-white md:min-h-[787px] md:flex md:items-center">
+      <section className="relative pt-10 pb-24 md:pt-24 md:pb-32 overflow-hidden bg-[#003B79] text-white md:min-h-[787px] md:flex md:items-center">
         <div className="absolute inset-0 z-0 overflow-hidden">
            <img 
              src={heroImg} 
@@ -66,7 +66,7 @@ export default function Company() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl pt-20 md:pt-0"
+            className="max-w-3xl"
           >
             <img
               src={dticketLogo}
@@ -118,7 +118,7 @@ export default function Company() {
       </section>
 
       {/* Benefits Section */}
-      <section id="benefits" className="py-24 bg-white">
+      <section id="benefits" className="scroll-mt-24 py-24 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
@@ -174,7 +174,7 @@ export default function Company() {
       </section>
 
       {/* Conditions */}
-      <section id="conditions" className="py-24 bg-slate-50">
+      <section id="conditions" className="scroll-mt-24 py-24 bg-slate-50">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
@@ -204,7 +204,7 @@ export default function Company() {
               </ul>
             </div>
 
-            <div className="pt-8 border-t border-slate-100">
+            <div id="rechenbeispiel" className="scroll-mt-24 pt-8 border-t border-slate-100">
               <h3 className="text-2xl font-bold text-[#003B79] mb-2">Das Rechenbeispiel</h3>
               <p className="text-sm text-slate-500 mb-4">Stand 2026</p>
               <p className="text-slate-600 mb-6">
@@ -285,7 +285,7 @@ export default function Company() {
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="py-24 bg-slate-50">
+      <section id="how-it-works" className="scroll-mt-24 py-24 bg-slate-50">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">So funktioniert&apos;s</h2>
           <p className="text-lg text-slate-600 mb-12">
@@ -326,8 +326,8 @@ export default function Company() {
           </div>
 
           <p className="mt-12 text-lg text-slate-600 max-w-xl mx-auto">
-            Finden Sie mit Ihrer Postleitzahl den zuständigen Ansprechpartner<br />
-            für Ihre Region.
+            Finden Sie mit Ihrer Postleitzahl den zuständigen Ansprechpartner{" "}
+            <span className="whitespace-nowrap">für Ihre Region.</span>
           </p>
           <Button size="lg" className="mt-6 bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8" asChild>
             <Link to="/lookup">
