@@ -1,12 +1,16 @@
 import { Link, useSearchParams } from "react-router"
-import { CheckCircle2, ArrowRight, Mail, Calendar, Phone } from "lucide-react"
+import { CheckCircle2, ArrowRight, Mail, Calendar, Phone, Building2 } from "lucide-react"
 import { Button } from "../components/ui/button"
+import { getPartnersBySlugs, type PartnerSlug, PARTNERS } from "../data/partners"
 
 export default function Success() {
   const [searchParams] = useSearchParams();
-  const selectedPartners = (searchParams.get("partners") || "")
+  const selectedPartnerParam = searchParams.get("partners") || "";
+  const selectedPartnerSlugs = selectedPartnerParam
     .split(",")
-    .filter(Boolean);
+    .filter((slug): slug is PartnerSlug => slug !== "" && slug in PARTNERS);
+  
+  const selectedPartners = getPartnersBySlugs(selectedPartnerSlugs);
   const partnerCount = selectedPartners.length;
 
   return (
@@ -32,6 +36,26 @@ export default function Success() {
           </div>
           
           <div className="p-8 md:p-12">
+            {/* Selected Partners */}
+            {selectedPartners.length > 0 && (
+              <div className="mb-8 pb-8 border-b border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-3">
+                  {partnerCount === 1 ? "Ausgewählter Verbundpartner:" : "Ausgewählte Verbundpartner:"}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPartners.map(partner => (
+                    <span 
+                      key={partner.slug}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#003B79]/5 border border-[#003B79]/20 rounded-full text-sm font-medium text-[#003B79]"
+                    >
+                      <Building2 className="w-3.5 h-3.5" />
+                      {partner.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <h3 className="text-xl font-bold text-slate-800 mb-6">Wie geht es jetzt weiter?</h3>
             
             <div className="space-y-8">

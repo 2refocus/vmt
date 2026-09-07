@@ -1,133 +1,15 @@
 import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router"
-import { Search, MapPin, Phone, Mail, Globe, CheckCircle2, ArrowRight, Building2, User, LocateFixed } from "lucide-react"
+import { Search, MapPin, Phone, Mail, Globe, ArrowRight, Building2, AlertCircle } from "lucide-react"
 import { Button } from "../components/ui/button"
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet"
-import L from "leaflet"
-import "leaflet/dist/leaflet.css"
 import mapHeaderImg from "../../imports/map.png"
-
-// Mock Data
-type Partner = {
-  id: number;
-  name: string;
-  address: string;
-  contactPerson: string;
-  phone: string;
-  email: string;
-  website: string;
-  plzPrefixes: string[];
-  coordinates: [number, number];
-};
-
-const MOCK_PARTNERS = [
-  {
-    id: 1,
-    name: "Rheinbahn AG",
-    address: "Lierenfelder Str. 42, 40231 Düsseldorf",
-    contactPerson: "Max Mustermann",
-    phone: "0211 582-0",
-    email: "jobticket@rheinbahn.de",
-    website: "www.rheinbahn.de",
-    plzPrefixes: ["40", "41", "42"],
-    coordinates: [51.2217, 6.7762],
-  },
-  {
-    id: 2,
-    name: "Kölner Verkehrs-Betriebe AG",
-    address: "Scheidtweilerstraße 38, 50933 Köln",
-    contactPerson: "Julia Schmidt",
-    phone: "0221 547-0",
-    email: "grosskunden@kvb.koeln",
-    website: "www.kvb.koeln",
-    plzPrefixes: ["50", "51"],
-    coordinates: [50.9375, 6.9603],
-  },
-  {
-    id: 3,
-    name: "Stadtwerke Bonn Verkehrs-GmbH",
-    address: "Sandkaule 2, 53111 Bonn",
-    contactPerson: "Team Firmenkunden",
-    phone: "0228 711-1",
-    email: "firmenkunden@swb-busundbahn.de",
-    website: "www.swb-busundbahn.de",
-    plzPrefixes: ["53"],
-    coordinates: [50.7374, 7.0982],
-  },
-  {
-    id: 4,
-    name: "Jenaer Nahverkehr GmbH",
-    address: "Keßlerstraße 27, 07745 Jena",
-    contactPerson: "Kundenservice Jobticket",
-    phone: "03641 414-0",
-    email: "jobticket@nahverkehr-jena.de",
-    website: "www.stadtwerke-jena.de",
-    plzPrefixes: ["07"],
-    coordinates: [50.9271, 11.5892],
-  }
-] satisfies Partner[];
-
-const SAMPLE_PARTNERS_99085: Partner[] = [
-  {
-    id: 101,
-    name: "SWE EVAG Erfurt",
-    address: "Magdeburger Allee 34, 99086 Erfurt",
-    contactPerson: "Team Firmenkunden",
-    phone: "0361 564-0",
-    email: "service@evag-erfurt.de",
-    website: "www.evag-erfurt.de",
-    plzPrefixes: ["99"],
-    coordinates: [50.9848, 11.0299],
-  },
-  {
-    id: 102,
-    name: "DB Regio AG Region Südost",
-    address: "Kundendialog Jobticket, 04109 Leipzig",
-    contactPerson: "DB Geschäftskundenservice",
-    phone: "030 2970",
-    email: "geschaeftskunden@deutschebahn.com",
-    website: "www.bahn.de",
-    plzPrefixes: ["99"],
-    coordinates: [50.9795, 11.0358],
-  },
-  {
-    id: 103,
-    name: "Verkehrsverbund Mittelthüringen (VMT)",
-    address: "Häßlerstraße 8, 99096 Erfurt",
-    contactPerson: "VMT Beratungsteam",
-    phone: "0361 19449",
-    email: "service@vmt-thueringen.de",
-    website: "www.vmt-thueringen.de",
-    plzPrefixes: ["99"],
-    coordinates: [50.9583, 11.0289],
-  },
-];
-
-const markerIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
-
-const userMarkerIcon = new L.DivIcon({
-  className: "user-location-marker",
-  html: `
-    <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9999px;background:#ffffff;border:2px solid #A3C410;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="#A3C410" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <circle cx="12" cy="6" r="4"></circle>
-        <path d="M7 22v-3.5c0-2.2 1.8-4 4-4h2c2.2 0 4 1.8 4 4V22h-3v-3h-4v3H7z"></path>
-      </svg>
-    </div>
-  `,
-  iconSize: [28, 28],
-  iconAnchor: [14, 14],
-});
-
-const tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-const tileAttribution =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+import { 
+  findPartnersByPlz, 
+  isSelectable, 
+  type Partner, 
+  type PartnerSlug,
+  PARTNERS 
+} from "../data/partners"
 
 export default function Lookup() {
   const [searchParams] = useSearchParams();
@@ -136,77 +18,63 @@ export default function Lookup() {
   const errorFromQuery = searchParams.get("error");
   const initialSelectedPartners = (searchParams.get("partners") || "")
     .split(",")
-    .map((id) => Number(id))
-    .filter((id) => !Number.isNaN(id));
+    .filter((slug): slug is PartnerSlug => slug !== "" && slug in PARTNERS);
   
   const [plz, setPlz] = useState(initialPlz);
-  const [hasSearched, setHasSearched] = useState(!!initialPlz);
-  const [selectedPartnerIds, setSelectedPartnerIds] = useState<number[]>(initialSelectedPartners);
-  const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
-  const [locationError, setLocationError] = useState("");
+  const [hasSearched, setHasSearched] = useState(!!initialPlz && initialPlz.length === 5);
+  const [selectedPartnerSlugs, setSelectedPartnerSlugs] = useState<PartnerSlug[]>(initialSelectedPartners);
   const [selectionError, setSelectionError] = useState(
     errorFromQuery === "select_partner" ? "Bitte einen Verbundpartner auswählen." : ""
   );
 
   const getPartners = (): Partner[] => {
-    if (!plz || plz.length < 2) return [];
-    if (plz === "99085") return SAMPLE_PARTNERS_99085;
-    const prefix = plz.substring(0, 2);
-    return MOCK_PARTNERS.filter(p => p.plzPrefixes.includes(prefix));
+    if (!plz || plz.length !== 5) return [];
+    return findPartnersByPlz(plz);
   };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (plz.length >= 2) {
+    if (plz.length === 5) {
       setHasSearched(true);
-      // Update URL without reload
+      setSelectedPartnerSlugs([]);
       navigate(`/lookup?plz=${plz}`, { replace: true });
     }
   };
 
-  const handleSelect = (id: number) => {
+  const handleSelect = (partner: Partner) => {
+    if (!isSelectable(partner)) return;
+    
     setSelectionError("");
-    setSelectedPartnerIds((prev) =>
-      prev.includes(id) ? prev.filter((partnerId) => partnerId !== id) : [...prev, id]
+    setSelectedPartnerSlugs((prev) =>
+      prev.includes(partner.slug) 
+        ? prev.filter((s) => s !== partner.slug) 
+        : [...prev, partner.slug]
     );
   };
 
   const handleSubmit = () => {
-    const selectedForNextStep = selectedPartnerIds.filter((id) => id > 0);
-    if (selectedForNextStep.length === 0) {
+    const selectablePartners = selectedPartnerSlugs.filter(
+      (slug) => isSelectable(PARTNERS[slug])
+    );
+    if (selectablePartners.length === 0) {
       setSelectionError("Bitte einen Verbundpartner auswählen.");
       return;
     }
     setSelectionError("");
-    navigate(`/apply?partners=${selectedForNextStep.join(",")}&plz=${plz}`);
+    navigate(`/apply?partners=${selectablePartners.join(",")}&plz=${plz}`);
+  };
+
+  const handleCentralSubmit = () => {
+    setSelectionError("");
+    navigate(`/apply?partners=vmt&plz=${plz}`);
   };
 
   const handleResetSearch = () => {
     setPlz("");
     setHasSearched(false);
-    setSelectedPartnerIds([]);
-    setUserPosition(null);
-    setLocationError("");
+    setSelectedPartnerSlugs([]);
     setSelectionError("");
     navigate("/lookup", { replace: true });
-  };
-
-  const handleUseMyLocation = () => {
-    if (!("geolocation" in navigator)) {
-      setLocationError("Standortabfrage wird von diesem Browser nicht unterstützt.");
-      return;
-    }
-
-    setLocationError("");
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserPosition([position.coords.latitude, position.coords.longitude]);
-      },
-      () => {
-        setLocationError("Standort konnte nicht ermittelt werden. Bitte Berechtigung prüfen.");
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
   };
 
   const partners = getPartners();
@@ -257,13 +125,23 @@ export default function Lookup() {
                   <input 
                     type="text" 
                     value={plz}
-                    onChange={(e) => setPlz(e.target.value)}
-                    placeholder="Postleitzahl Ihres Standorts"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "").slice(0, 5);
+                      setPlz(value);
+                    }}
+                    placeholder="5-stellige Postleitzahl"
                     className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 focus:border-[#003B79] focus:ring-2 focus:ring-[#003B79]/20 outline-none transition-all text-lg font-medium"
                     maxLength={5}
+                    inputMode="numeric"
+                    pattern="[0-9]{5}"
                   />
                 </div>
-                <Button type="submit" size="lg" className="bg-[#003B79] text-white hover:bg-[#003B79]/90 px-8 h-auto rounded-xl">
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  className="bg-[#003B79] text-white hover:bg-[#003B79]/90 px-8 h-auto rounded-xl disabled:opacity-50"
+                  disabled={plz.length !== 5}
+                >
                   Suchen
                 </Button>
               </div>
@@ -274,103 +152,119 @@ export default function Lookup() {
               <div className="space-y-6">
                 <h3 className="text-xl font-bold text-slate-800 mb-4">
                   {partners.length > 0 
-                    ? `${plz === "99085" ? "3 Beispiel-Partner" : "Zuständige Partner"} für ${plz}` 
+                    ? `${partners.length === 1 ? "Zuständiger Partner" : "Zuständige Partner"} für ${plz}` 
                     : `Kein direkter Partner für ${plz} gefunden`}
                 </h3>
 
                 {partners.length > 0 ? (
                   <div className="space-y-6">
-                    <div className="relative rounded-xl overflow-hidden border border-slate-200">
-                      <MapContainer
-                        key={`${userPosition?.[0] ?? "p"}-${userPosition?.[1] ?? "p"}-${partners[0].id}`}
-                        center={userPosition ?? partners[0].coordinates}
-                        zoom={11}
-                        scrollWheelZoom={false}
-                        className="h-72 w-full"
-                      >
-                        <TileLayer
-                          attribution={tileAttribution}
-                          url={tileUrl}
-                        />
-                        {partners.map((partner) => (
-                          <Marker key={`marker-${partner.id}`} position={partner.coordinates} icon={markerIcon}>
-                            <Popup>
-                              <strong>{partner.name}</strong>
-                              <br />
-                              {partner.address}
-                            </Popup>
-                          </Marker>
-                        ))}
-                        {userPosition && (
-                          <Marker position={userPosition} icon={userMarkerIcon}>
-                            <Popup>Ihr Standort</Popup>
-                          </Marker>
-                        )}
-                      </MapContainer>
-                      <button
-                        type="button"
-                        onClick={handleUseMyLocation}
-                        className="absolute top-3 right-3 z-[1000] inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white/95 px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-white"
-                      >
-                        <LocateFixed className="h-4 w-4" />
-                        Mein Standort
-                      </button>
-                    </div>
-                    {locationError && <p className="text-sm text-red-600">{locationError}</p>}
-
                     <div className="space-y-4">
-                    {partners.map(partner => (
-                      <div 
-                        key={partner.id}
-                        onClick={() => handleSelect(partner.id)}
-                        className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all ${
-                          selectedPartnerIds.includes(partner.id)
-                            ? 'border-[#A3C410] bg-[#A3C410]/5' 
-                            : 'border-slate-200 hover:border-[#003B79]/30 bg-white'
-                        }`}
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                          <div className="w-16 h-16 bg-[#003B79]/5 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Building2 className="w-8 h-8 text-[#003B79]" />
-                          </div>
-                          
-                          <div className="flex-1">
-                            <h4 className="text-lg font-bold text-[#003B79] mb-1">{partner.name}</h4>
-                            <p className="text-slate-600 text-sm mb-4">{partner.address}</p>
+                    {partners.map(partner => {
+                      const selectable = isSelectable(partner);
+                      const isSelected = selectedPartnerSlugs.includes(partner.slug);
+                      
+                      return (
+                        <div 
+                          key={partner.slug}
+                          onClick={() => handleSelect(partner)}
+                          className={`relative p-6 rounded-xl border-2 transition-all ${
+                            selectable ? "cursor-pointer" : "cursor-default"
+                          } ${
+                            isSelected
+                              ? 'border-[#A3C410] bg-[#A3C410]/5' 
+                              : selectable
+                                ? 'border-slate-200 hover:border-[#003B79]/30 bg-white'
+                                : 'border-slate-200 bg-slate-50'
+                          }`}
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                            {/* Logo / Icon */}
+                            <div className={`w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              selectable ? "bg-[#003B79]/5" : "bg-slate-100"
+                            }`}>
+                              {partner.logo ? (
+                                <img 
+                                  src={partner.logo} 
+                                  alt={partner.name} 
+                                  className="w-12 h-12 object-contain"
+                                />
+                              ) : (
+                                <Building2 className={`w-8 h-8 ${selectable ? "text-[#003B79]" : "text-slate-400"}`} />
+                              )}
+                            </div>
                             
-                            <div className="grid sm:grid-cols-2 gap-y-2 gap-x-4 text-sm text-slate-700">
-                              <div className="flex items-center gap-2">
-                                <User className="w-4 h-4 text-slate-400" />
-                                {partner.contactPerson}
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Phone className="w-4 h-4 text-slate-400" />
-                                {partner.phone}
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Mail className="w-4 h-4 text-slate-400" />
-                                <a href={`mailto:${partner.email}`} className="text-[#003B79] hover:underline" onClick={e => e.stopPropagation()}>{partner.email}</a>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Globe className="w-4 h-4 text-slate-400" />
-                                <a href={`https://${partner.website}`} target="_blank" rel="noreferrer" className="text-[#003B79] hover:underline" onClick={e => e.stopPropagation()}>{partner.website}</a>
+                            <div className="flex-1">
+                              <h4 className={`text-lg font-bold mb-1 ${selectable ? "text-[#003B79]" : "text-slate-500"}`}>
+                                {partner.name}
+                              </h4>
+                              
+                              {partner.address && (
+                                <p className="text-slate-600 text-sm mb-4">{partner.address}</p>
+                              )}
+                              
+                              {/* Not selectable notice */}
+                              {!selectable && (
+                                <div className="flex items-center gap-2 text-amber-600 bg-amber-50 px-3 py-2 rounded-lg text-sm mb-4">
+                                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                                  <span>Kontakt über VMT — E-Mail-Adresse folgt</span>
+                                </div>
+                              )}
+                              
+                              <div className="grid sm:grid-cols-2 gap-y-2 gap-x-4 text-sm text-slate-700">
+                                {partner.phone && (
+                                  <div className="flex items-center gap-2">
+                                    <Phone className="w-4 h-4 text-slate-400" />
+                                    {partner.phone}
+                                  </div>
+                                )}
+                                {partner.email && (
+                                  <div className="flex items-center gap-2">
+                                    <Mail className="w-4 h-4 text-slate-400" />
+                                    <a 
+                                      href={`mailto:${partner.email}`} 
+                                      className="text-[#003B79] hover:underline" 
+                                      onClick={e => e.stopPropagation()}
+                                    >
+                                      {partner.email}
+                                    </a>
+                                  </div>
+                                )}
+                                {partner.website && (
+                                  <div className="flex items-center gap-2">
+                                    <Globe className="w-4 h-4 text-slate-400" />
+                                    <a 
+                                      href={`https://${partner.website}`} 
+                                      target="_blank" 
+                                      rel="noreferrer" 
+                                      className="text-[#003B79] hover:underline" 
+                                      onClick={e => e.stopPropagation()}
+                                    >
+                                      {partner.website}
+                                    </a>
+                                  </div>
+                                )}
                               </div>
                             </div>
-                          </div>
-                          
-                          <div className="flex items-center justify-center sm:self-center mt-4 sm:mt-0">
-                            <input
-                              type="checkbox"
-                              checked={selectedPartnerIds.includes(partner.id)}
-                              onChange={() => handleSelect(partner.id)}
-                              onClick={(e) => e.stopPropagation()}
-                              className="h-5 w-5 accent-[#003B79] cursor-pointer"
-                              aria-label={`${partner.name} auswählen`}
-                            />
+                            
+                            {/* Checkbox */}
+                            <div className="flex items-center justify-center sm:self-center mt-4 sm:mt-0">
+                              {selectable ? (
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => handleSelect(partner)}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="h-5 w-5 accent-[#003B79] cursor-pointer"
+                                  aria-label={`${partner.name} auswählen`}
+                                />
+                              ) : (
+                                <div className="h-5 w-5 border-2 border-slate-300 rounded bg-slate-100" />
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                     </div>
                   </div>
                 ) : (
@@ -381,25 +275,30 @@ export default function Lookup() {
                       Für diese Postleitzahl haben wir aktuell keinen direkten Verbundpartner hinterlegt. 
                       Bitte reichen Sie Ihre Anfrage trotzdem ein, unser zentrales Team wird sich umgehend bei Ihnen melden.
                     </p>
-                    <Button onClick={() => handleSelect(999)} variant="outline" className={`border-2 ${selectedPartnerIds.includes(999) ? 'border-[#003B79] bg-[#003B79]/5' : ''}`}>
+                    <Button 
+                      onClick={handleCentralSubmit} 
+                      className="bg-[#003B79] text-white hover:bg-[#003B79]/90"
+                    >
                       Anfrage zentral einreichen
                     </Button>
                   </div>
                 )}
 
-                <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-                  <Button variant="ghost" onClick={handleResetSearch} className="text-slate-500">
-                    Suche zurücksetzen
-                  </Button>
-                  <Button 
-                    onClick={handleSubmit} 
-                    size="lg" 
-                    className="bg-[#A3C410] text-[#003B79] hover:bg-[#A3C410]/90 text-lg px-8 h-14 w-full sm:w-auto"
-                  >
-                    Weiter zu Ihren Daten
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </div>
+                {partners.length > 0 && (
+                  <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                    <Button variant="ghost" onClick={handleResetSearch} className="text-slate-500">
+                      Suche zurücksetzen
+                    </Button>
+                    <Button 
+                      onClick={handleSubmit} 
+                      size="lg" 
+                      className="bg-[#A3C410] text-[#003B79] hover:bg-[#A3C410]/90 text-lg px-8 h-14 w-full sm:w-auto"
+                    >
+                      Weiter zu Ihren Daten
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </div>
+                )}
                 {selectionError && (
                   <p className="mt-3 text-sm text-red-600 text-right">{selectionError}</p>
                 )}
@@ -409,7 +308,7 @@ export default function Lookup() {
             {!hasSearched && (
               <div className="text-center p-12 bg-slate-50 rounded-xl border border-slate-100 text-slate-500">
                 <MapPin className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                Bitte geben Sie eine Postleitzahl ein, um Verbundpartner in Ihrer Nähe zu finden.
+                Bitte geben Sie eine 5-stellige Postleitzahl ein, um Verbundpartner in Ihrer Nähe zu finden.
               </div>
             )}
           </div>

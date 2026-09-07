@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router"
-import { Building2, User, Mail, Phone, MapPin, Users, ArrowRight, CheckCircle2 } from "lucide-react"
-import { motion } from "motion/react"
+import { Building2, User, Mail, Phone, MapPin, ArrowRight, CheckCircle2, Loader2, AlertCircle } from "lucide-react"
 import { Button } from "../components/ui/button"
 import applyImg from "../../imports/AdobeStock_400849655_Preview.jpeg"
+import { getPartnersBySlugs, type PartnerSlug, PARTNERS } from "../data/partners"
+import { submitRequest } from "../../lib/supabase"
 
 export default function Apply() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const selectedPartners = searchParams.get("partners") || "";
-  const selectedPartnerIds = selectedPartners
+  const selectedPartnerParam = searchParams.get("partners") || "";
+  const selectedPartnerSlugs = selectedPartnerParam
     .split(",")
-    .map((id) => Number(id))
-    .filter((id) => Number.isInteger(id) && id > 0);
+    .filter((slug): slug is PartnerSlug => slug !== "" && slug in PARTNERS);
   const prefilledPlz = searchParams.get("plz") || "";
+  
+  const selectedPartners = getPartnersBySlugs(selectedPartnerSlugs);
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  
   const [formData, setFormData] = useState({
     salutation: "",
     firstName: "",
@@ -33,13 +39,13 @@ export default function Apply() {
 
   useEffect(() => {
     // Enforce step order: partner selection first, then form data.
-    if (selectedPartnerIds.length === 0) {
+    if (selectedPartnerSlugs.length === 0) {
       const params = new URLSearchParams();
       if (prefilledPlz) params.set("plz", prefilledPlz);
       params.set("error", "select_partner");
       navigate(`/lookup?${params.toString()}`, { replace: true });
     }
-  }, [navigate, selectedPartnerIds.length, prefilledPlz]);
+  }, [navigate, selectedPartnerSlugs.length, prefilledPlz]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -51,15 +57,47 @@ export default function Apply() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(`/success?partners=${selectedPartnerIds.join(",")}`);
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      const result = await submitRequest({
+        plz: formData.plz,
+        partnerSlugs: selectedPartnerSlugs,
+        salutation: formData.salutation,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        company: formData.company,
+        position: formData.position,
+        employees: formData.employees,
+        phone: formData.phone,
+        email: formData.email,
+        street: formData.street,
+        city: formData.city,
+        interestPhone: formData.interestPhone,
+        interestContract: formData.interestContract,
+        message: formData.message,
+      });
+
+      if (result.success) {
+        navigate(`/success?partners=${selectedPartnerSlugs.join(",")}`);
+      } else {
+        setSubmitError(result.error || "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      setSubmitError("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const goToPartnerSelection = () => {
     const params = new URLSearchParams();
     if (formData.plz) params.set("plz", formData.plz);
-    if (selectedPartners) params.set("partners", selectedPartners);
+    if (selectedPartnerParam) params.set("partners", selectedPartnerParam);
     navigate(`/lookup?${params.toString()}`);
   };
 
@@ -104,6 +142,28 @@ export default function Apply() {
             </div>
           </div>
 
+          {/* Selected Partners Summary */}
+          {selectedPartners.length > 0 && (
+            <div className="px-8 md:px-12 pt-8 pb-0">
+              <div className="bg-[#003B79]/5 border border-[#003B79]/20 rounded-xl p-4">
+                <p className="text-sm font-medium text-[#003B79] mb-2">
+                  Ihre Anfrage geht an {selectedPartners.length === 1 ? "diesen Partner" : "diese Partner"}:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPartners.map(partner => (
+                    <span 
+                      key={partner.slug}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#003B79]/20 rounded-full text-sm font-medium text-[#003B79]"
+                    >
+                      <Building2 className="w-3.5 h-3.5" />
+                      {partner.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="p-8 md:p-12">
             <div className="space-y-8">
               
@@ -119,8 +179,10 @@ export default function Apply() {
                     <select 
                       name="salutation" 
                       required
+                      value={formData.salutation}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all bg-white"
+                      disabled={isSubmitting}
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all bg-white disabled:bg-slate-100 disabled:cursor-not-allowed"
                     >
                       <option value="">Bitte wählen...</option>
                       <option value="Frau">Frau</option>
@@ -130,11 +192,11 @@ export default function Apply() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Vorname *</label>
-                    <input type="text" name="firstName" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="firstName" required value={formData.firstName} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Nachname *</label>
-                    <input type="text" name="lastName" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="lastName" required value={formData.lastName} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                 </div>
               </section>
@@ -148,15 +210,15 @@ export default function Apply() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-slate-700 mb-1">Unternehmen *</label>
-                    <input type="text" name="company" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="company" required value={formData.company} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Position *</label>
-                    <input type="text" name="position" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="position" required value={formData.position} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Unternehmensgröße *</label>
-                    <select name="employees" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all bg-white">
+                    <select name="employees" required value={formData.employees} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all bg-white disabled:bg-slate-100 disabled:cursor-not-allowed">
                       <option value="">Bitte wählen...</option>
                       <option value="1-9">1-9 Mitarbeiter</option>
                       <option value="10-49">10-49 Mitarbeiter</option>
@@ -176,11 +238,11 @@ export default function Apply() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Telefonnummer *</label>
-                    <input type="tel" name="phone" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">E-Mail *</label>
-                    <input type="email" name="email" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="email" name="email" required value={formData.email} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                 </div>
               </section>
@@ -194,15 +256,15 @@ export default function Apply() {
                 <div className="grid grid-cols-3 gap-4">
                   <div className="col-span-3">
                     <label className="block text-sm font-medium text-slate-700 mb-1">Straße / Nr. *</label>
-                    <input type="text" name="street" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="street" required value={formData.street} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                   <div className="col-span-1">
                     <label className="block text-sm font-medium text-slate-700 mb-1">PLZ *</label>
-                    <input type="text" name="plz" required value={formData.plz} onChange={handleChange} maxLength={5} pattern="[0-9]{5}" title="Bitte geben Sie eine gültige 5-stellige PLZ ein" placeholder="z.B. 50667" className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="plz" required value={formData.plz} onChange={handleChange} maxLength={5} pattern="[0-9]{5}" title="Bitte geben Sie eine gültige 5-stellige PLZ ein" placeholder="z.B. 99084" disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-slate-700 mb-1">Ort *</label>
-                    <input type="text" name="city" required onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all" />
+                    <input type="text" name="city" required value={formData.city} onChange={handleChange} disabled={isSubmitting} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all disabled:bg-slate-100 disabled:cursor-not-allowed" />
                   </div>
                 </div>
               </section>
@@ -212,7 +274,7 @@ export default function Apply() {
                 <div className="space-y-3">
                   <label className="flex items-start gap-3 cursor-pointer group">
                     <div className="relative flex items-center justify-center mt-1">
-                      <input type="checkbox" name="interestPhone" onChange={handleChange} className="peer w-5 h-5 appearance-none border-2 border-slate-300 rounded checked:bg-[#003B79] checked:border-[#003B79] transition-colors cursor-pointer" />
+                      <input type="checkbox" name="interestPhone" checked={formData.interestPhone} onChange={handleChange} disabled={isSubmitting} className="peer w-5 h-5 appearance-none border-2 border-slate-300 rounded checked:bg-[#003B79] checked:border-[#003B79] transition-colors cursor-pointer disabled:cursor-not-allowed" />
                       <CheckCircle2 className="w-4 h-4 text-white absolute opacity-0 peer-checked:opacity-100 pointer-events-none" />
                     </div>
                     <span className="text-slate-700 group-hover:text-slate-900 transition-colors">Ich wünsche eine telefonische Beratung</span>
@@ -220,7 +282,7 @@ export default function Apply() {
                   
                   <label className="flex items-start gap-3 cursor-pointer group">
                     <div className="relative flex items-center justify-center mt-1">
-                      <input type="checkbox" name="interestContract" onChange={handleChange} className="peer w-5 h-5 appearance-none border-2 border-slate-300 rounded checked:bg-[#003B79] checked:border-[#003B79] transition-colors cursor-pointer" />
+                      <input type="checkbox" name="interestContract" checked={formData.interestContract} onChange={handleChange} disabled={isSubmitting} className="peer w-5 h-5 appearance-none border-2 border-slate-300 rounded checked:bg-[#003B79] checked:border-[#003B79] transition-colors cursor-pointer disabled:cursor-not-allowed" />
                       <CheckCircle2 className="w-4 h-4 text-white absolute opacity-0 peer-checked:opacity-100 pointer-events-none" />
                     </div>
                     <span className="text-slate-700 group-hover:text-slate-900 transition-colors">Bitte schicken Sie mir die Vertragsunterlagen zu</span>
@@ -229,18 +291,43 @@ export default function Apply() {
                 
                 <div className="mt-6">
                   <label className="block text-sm font-medium text-slate-700 mb-1">Ihre Nachricht an uns (optional)</label>
-                  <textarea name="message" onChange={handleChange} rows={4} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all resize-none"></textarea>
+                  <textarea name="message" value={formData.message} onChange={handleChange} disabled={isSubmitting} rows={4} className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none transition-all resize-none disabled:bg-slate-100 disabled:cursor-not-allowed"></textarea>
                 </div>
               </section>
             </div>
 
+            {/* Error Message */}
+            {submitError && (
+              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-red-800 font-medium">Fehler beim Absenden</p>
+                  <p className="text-red-600 text-sm">{submitError}</p>
+                </div>
+              </div>
+            )}
+
             <div className="mt-10 flex justify-between items-center">
-              <Button type="button" variant="ghost" onClick={goToPartnerSelection} className="text-slate-500">
+              <Button type="button" variant="ghost" onClick={goToPartnerSelection} className="text-slate-500" disabled={isSubmitting}>
                 Zurück zur Partnerauswahl
               </Button>
-              <Button type="submit" size="lg" className="bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8 w-full sm:w-auto">
-                Anfrage verbindlich absenden
-                <ArrowRight className="ml-2 w-5 h-5" />
+              <Button 
+                type="submit" 
+                size="lg" 
+                className="bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8 w-full sm:w-auto disabled:opacity-70"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 w-5 h-5 animate-spin" />
+                    Wird gesendet...
+                  </>
+                ) : (
+                  <>
+                    Anfrage verbindlich absenden
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </>
+                )}
               </Button>
             </div>
           </form>
