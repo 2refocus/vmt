@@ -326,7 +326,8 @@ export default function Company() {
           </div>
 
           <p className="mt-12 text-lg text-slate-600 max-w-xl mx-auto">
-            Finden Sie mit Ihrer Postleitzahl den zuständigen Ansprechpartner für Ihre Region.
+            Finden Sie mit Ihrer Postleitzahl den zuständigen Ansprechpartner<br />
+            für Ihre Region.
           </p>
           <Button size="lg" className="mt-6 bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8" asChild>
             <Link to="/lookup">
