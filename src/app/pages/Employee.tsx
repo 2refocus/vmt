@@ -176,7 +176,7 @@ export default function Employee() {
             <div className="hidden md:block absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
             
             {[
-              { step: "1", title: "Chef fragen", desc: "Sprich mit deiner Personalabteilung oder deinem Chef." },
+              { step: "1", title: "Chef fragen", desc: "Sprich deinen Arbeitgeber auf das Deutschlandticket Job an." },
               { step: "2", title: "Zuschuss sichern", desc: "Arbeitgeber zahlt mindestens 25% vom Ticketpreis." },
               { step: "3", title: "Losfahren", desc: "Ticket erhalten und deutschlandweit im Nah- und Regionalverkehr nutzen." }
             ].map((step, i) => (
