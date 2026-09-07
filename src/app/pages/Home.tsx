@@ -49,9 +49,7 @@ export default function Home() {
               Für <br />
               <span className="text-[#A3C410]">Unternehmen</span>
             </h1>
-            <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20">
-              <Building2 className="w-10 h-10 text-[#A3C410]" />
-            </div>
+            <Building2 className="w-16 h-16 text-[#A3C410] shrink-0" />
           </div>
 
           <Link 
