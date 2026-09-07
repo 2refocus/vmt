@@ -143,7 +143,7 @@ export default function Employee() {
                   "dein Arbeitgeber übernimmt mindestens 25 % des regulären Ticketpreises",
                   "zusätzlich gibt es 5 % Rabatt auf das Deutschlandticket",
                   "monatlich kündbar",
-                  "als digitales, personengebundenes Ticket erhältlich",
+                  "personengebunden",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-[#A3C410] shrink-0 mt-0.5" />
