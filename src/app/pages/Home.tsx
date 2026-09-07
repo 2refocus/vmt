@@ -53,12 +53,6 @@ export default function Home() {
               <Building2 className="w-10 h-10 text-[#A3C410]" />
             </div>
           </div>
-          
-          <p className="text-xl text-white/80 mb-10 leading-relaxed font-light">
-            Steigern Sie Ihre Arbeitgeberattraktivität. <br/>
-            Das Ticket, bei dem Sie als Arbeitgeber mitzahlen – 
-            einfach integriert und sofort wirksam.
-          </p>
 
           <Link 
             to="/company" 
