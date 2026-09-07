@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { ArrowRight, Leaf, Train, PiggyBank, Smile, ChevronRight, CheckCircle2 } from "lucide-react"
+import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2 } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
 import heroImg from "../../imports/vmt_visual_02_b2c.jpg"
@@ -73,49 +73,50 @@ export default function Employee() {
       {/* Value Proposition */}
       <section id="benefits" className="py-24 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold text-[#003B79] mb-6">
-                Deine Vorteile<br />
-                auf einen Blick
-              </h2>
-              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Mit dem Deutschlandticket Job sparst du jeden Monat bares Geld und 
-                kommst entspannter zur Arbeit. Das Ticket gilt deutschlandweit im gesamten Nah- und Regionalverkehr.
-              </p>
-              
-              <ul className="space-y-4">
-                {[
-                  "Mindestens 30 % geringere Kosten im Vergleich zum normalen D-Ticket",
-                  "Unabhängigkeit von steigenden Spritpreisen und Staus",
-                  "Deutschlandweit gültig im Nah- und Regionalverkehr"
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <div className="mt-1 bg-[#A3C410]/20 p-1 rounded-full">
-                      <ChevronRight className="w-4 h-4 text-[#003B79]" />
-                    </div>
-                    <span className="text-slate-700 font-medium">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: PiggyBank, title: "Geld sparen", desc: "Maximal 44,10 € pro Monat" },
-                { icon: Train, title: "Grenzenlos", desc: "Gültig in ganz Deutschland" },
-                { icon: Leaf, title: "Nachhaltig", desc: "Gut fürs Klima, gut für dich" },
-                { icon: Smile, title: "Stressfrei", desc: "Keine Parkplatzsuche mehr" }
-              ].map((card, i) => (
-                <div key={i} className="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col items-center text-center hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 text-[#003B79]">
-                    <card.icon className="w-6 h-6" />
-                  </div>
-                  <h4 className="font-bold text-[#003B79] mb-1">{card.title}</h4>
-                  <p className="text-sm text-slate-500">{card.desc}</p>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-[#003B79] mb-6">
+              Deine Vorteile<br />
+              auf einen Blick
+            </h2>
+            <p className="text-lg text-slate-600 leading-relaxed">
+              Mit dem Deutschlandticket Job sparst du jeden Monat bares Geld, weil dein Arbeitgeber dir was dazu gibt.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: PiggyBank,
+                title: "Geld sparen",
+                desc: "Mit dem Arbeitgeberzuschuss zahlst du mindestens 30% weniger als für das reguläre Deutschlandticket",
+              },
+              {
+                icon: Train,
+                title: "Grenzenlos",
+                desc: "Ein Ticket, unzählige Möglichkeiten: Nutze Busse, Straßenbahnen und Nahverkehrszüge deutschlandweit – ganz ohne Tarifgrenzen.",
+              },
+              {
+                icon: Leaf,
+                title: "Nachhaltig",
+                desc: "Gut fürs Klima, gut für dich. Jede Fahrt mit Bus und Bahn statt mit dem Auto spart CO₂ und trägt zu einer klimafreundlicheren Mobilität bei.",
+              },
+              {
+                icon: Smile,
+                title: "Stressfrei",
+                desc: "Keine Staus, keine Parkplatzsuche, keine Sorgen um steigende Benzinpreise – einfach einsteigen und entspannt ankommen.",
+              },
+            ].map((card, i) => (
+              <div
+                key={i}
+                className="bg-slate-50 p-8 rounded-2xl border border-slate-100 flex flex-col hover:shadow-md transition-shadow"
+              >
+                <div className="w-14 h-14 bg-[#003B79]/10 text-[#003B79] rounded-xl flex items-center justify-center mb-6">
+                  <card.icon className="w-7 h-7" />
                 </div>
-              ))}
-            </div>
+                <h3 className="text-xl font-bold text-[#003B79] mb-3">{card.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{card.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
