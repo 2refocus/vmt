@@ -2,7 +2,7 @@ import { Link } from "react-router"
 import { Building2, UserCircle2, ArrowRight } from "lucide-react"
 import { motion } from "motion/react"
 import vmtLogoNoSubline from "../../imports/vmt-logo-01_nosubline.svg"
-import employerBg from "../../imports/chef_worker_happy_grey_3_4.jpg"
+import employerBg from "../../imports/chef_worker_happy_grey_4_3.jpg"
 import employeeBg from "../../imports/vmt_visual_b2c.jpg"
 
 export default function Home() {
