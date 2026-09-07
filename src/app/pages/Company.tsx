@@ -190,11 +190,11 @@ export default function Company() {
               <h3 className="text-2xl font-bold text-[#003B79] mb-6">So funktioniert das Modell</h3>
               <ul className="space-y-4">
                 {[
-                  "regulärer Preis des Deutschlandtickets: 63 € pro Monat",
-                  "Sie bezuschussen das Ticket mit mindestens 25 % des regulären Ticketpreises",
-                  "dadurch wird zusätzlich ein Rabatt von 5 % auf das Deutschlandticket gewährt",
-                  "für Ihre Beschäftigten kostet das Deutschlandticket Job damit maximal 44,10 € pro Monat",
-                  "Sie können freiwillig einen höheren Zuschuss übernehmen und den Eigenanteil Ihrer Beschäftigten weiter reduzieren",
+                  "63 € regulärer Preis des Deutschlandtickets pro Monat",
+                  "Mindestzuschuss von 25% durch Sie als Arbeitgeber auf den regulären Ticketpreis",
+                  "zusätzlich 5 % Rabatt durch das Verkehrsunternehmen",
+                  "maximal 44,10 € Eigenanteil pro Monat für Ihre Mitarbeitenden",
+                  "Mehr Zuschuss, mehr Vorteil: Sie können den Arbeitgeberzuschuss freiwillig erhöhen und den Eigenanteil Ihrer Mitarbeitenden weiter reduzieren – bis hin zur vollständigen Kostenübernahme.",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-[#A3C410] shrink-0 mt-0.5" />
