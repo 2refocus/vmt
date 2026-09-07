@@ -142,7 +142,6 @@ export default function Employee() {
                   "maximal 44,10 € pro Monat statt regulär 63 €",
                   "dein Arbeitgeber übernimmt mindestens 25 % des regulären Ticketpreises",
                   "zusätzlich gibt es 5 % Rabatt auf das Deutschlandticket",
-                  "deutschlandweit im öffentlichen Nahverkehr gültig",
                   "monatlich kündbar",
                   "als digitales, personengebundenes Ticket erhältlich",
                 ].map((item) => (
