@@ -331,7 +331,7 @@ export default function Company() {
           </p>
           <Button size="lg" className="mt-6 bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8" asChild>
             <Link to="/lookup">
-              Kontakt aufnehmen
+              Jetzt Kontakt aufnehmen
               <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </Button>
