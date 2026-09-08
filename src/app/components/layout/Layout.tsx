@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Outlet, Link, useLocation } from "react-router"
-import { Info, Users, Briefcase, Menu, Mail } from "lucide-react"
+import { Info, Users, Briefcase, Menu, Mail, Share2, Linkedin } from "lucide-react"
 import { cn } from "../../../lib/utils"
 import {
   Sheet,
@@ -20,10 +20,53 @@ const companyLinks = [
   { to: "/company#how-it-works", label: "So funktioniert's" },
 ] as const
 
+const SHARE_TEXT =
+  "Das Deutschlandticket Job – attraktiver Benefit für Beschäftigte und Unternehmen:"
+
+function getShareUrl(pathname: string) {
+  if (typeof window !== "undefined") {
+    return `${window.location.origin}${pathname}`
+  }
+  return `https://das-kommt-gut-an.de${pathname}`
+}
+
+function buildShareLinks(url: string) {
+  const encodedUrl = encodeURIComponent(url)
+  const encodedText = encodeURIComponent(`${SHARE_TEXT} ${url}`)
+  return {
+    whatsapp: `https://wa.me/?text=${encodedText}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    email: `mailto:?subject=${encodeURIComponent("Deutschlandticket Job")}&body=${encodedText}`,
+  }
+}
+
+async function handleNativeShare(url: string) {
+  if (typeof navigator !== "undefined" && navigator.share) {
+    try {
+      await navigator.share({
+        title: "Deutschlandticket Job",
+        text: SHARE_TEXT,
+        url,
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
+  return false
+}
+
 export function Layout() {
   const location = useLocation()
   const isHome = location.pathname === "/"
   const [menuOpen, setMenuOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const shareUrl = useMemo(
+    () => getShareUrl(location.pathname + location.hash),
+    [location.pathname, location.hash]
+  )
+  const shareLinks = useMemo(() => buildShareLinks(shareUrl), [shareUrl])
 
   useEffect(() => {
     setMenuOpen(false)
@@ -39,6 +82,22 @@ export function Layout() {
     }
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [location.pathname, location.hash])
+
+  const onShare = async () => {
+    const shared = await handleNativeShare(shareUrl)
+    if (shared) {
+      setMenuOpen(false)
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      window.open(shareLinks.whatsapp, "_blank", "noreferrer")
+    }
+    setMenuOpen(false)
+  }
 
   const getBgColor = () => {
     if (location.pathname.startsWith("/employee")) return "bg-white text-[#003B79] border-b border-[#A3C410]/20"
@@ -139,6 +198,43 @@ export function Layout() {
                   <Link to="/lookup" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
                     Kontakt + Verbundpartner
                   </Link>
+
+                  <div className="mt-4 border-t border-slate-100 pt-4">
+                    <p className="px-3 mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+                      Teilen
+                    </p>
+                    <button type="button" className={`${mobileLinkClass} w-full text-left`} onClick={onShare}>
+                      <span className="inline-flex items-center gap-2">
+                        <Share2 className="w-4 h-4" />
+                        {copied ? "Link kopiert" : "Seite teilen"}
+                      </span>
+                    </button>
+                    <a
+                      href={shareLinks.whatsapp}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={mobileSubLinkClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      WhatsApp
+                    </a>
+                    <a
+                      href={shareLinks.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={mobileSubLinkClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      LinkedIn
+                    </a>
+                    <a
+                      href={shareLinks.email}
+                      className={mobileSubLinkClass}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      E-Mail
+                    </a>
+                  </div>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -166,6 +262,43 @@ export function Layout() {
                 <p className="text-white/70 max-w-sm">
                   Die smarte Mobilitätslösung für Unternehmen und Beschäftigte. Einfach, nachhaltig und kosteneffizient.
                 </p>
+                <div className="mt-6">
+                  <p className="text-sm font-medium text-white/80 mb-3">Seite teilen</p>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={onShare}
+                      className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      {copied ? "Link kopiert" : "Teilen"}
+                    </button>
+                    <a
+                      href={shareLinks.whatsapp}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+                    >
+                      WhatsApp
+                    </a>
+                    <a
+                      href={shareLinks.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+                    >
+                      <Linkedin className="w-4 h-4" />
+                      LinkedIn
+                    </a>
+                    <a
+                      href={shareLinks.email}
+                      className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+                    >
+                      <Mail className="w-4 h-4" />
+                      E-Mail
+                    </a>
+                  </div>
+                </div>
               </div>
 
               <div>
