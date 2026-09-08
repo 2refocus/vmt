@@ -1,31 +1,43 @@
-import { useEffect, useMemo, useState } from "react"
-import { fetchRecentSubmissions, fetchSubmissionStats, listPartnerRows } from "../../../lib/partners-api"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { Button } from "../../components/ui/button"
+import {
+  fetchRecentSubmissions,
+  fetchSubmissionStats,
+  listPartnerRows,
+  resetAllSubmissions,
+} from "../../../lib/partners-api"
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<{ month: string; partner_slug: string; submission_count: number }[]>([])
   const [recent, setRecent] = useState<any[]>([])
   const [names, setNames] = useState<Record<string, string>>({})
   const [error, setError] = useState("")
+  const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(true)
+  const [resetting, setResetting] = useState(false)
+
+  const loadDashboard = useCallback(async () => {
+    const [s, r, partners] = await Promise.all([
+      fetchSubmissionStats(),
+      fetchRecentSubmissions(40),
+      listPartnerRows(),
+    ])
+    setStats(s)
+    setRecent(r)
+    setNames(Object.fromEntries(partners.map((p) => [p.slug, p.name])))
+  }, [])
 
   useEffect(() => {
     ;(async () => {
       try {
-        const [s, r, partners] = await Promise.all([
-          fetchSubmissionStats(),
-          fetchRecentSubmissions(40),
-          listPartnerRows(),
-        ])
-        setStats(s)
-        setRecent(r)
-        setNames(Object.fromEntries(partners.map((p) => [p.slug, p.name])))
+        await loadDashboard()
       } catch (err) {
         setError(err instanceof Error ? err.message : "Laden fehlgeschlagen")
       } finally {
         setLoading(false)
       }
     })()
-  }, [])
+  }, [loadDashboard])
 
   const totalsByPartner = useMemo(() => {
     const map = new Map<string, number>()
@@ -37,15 +49,60 @@ export default function AdminDashboard() {
 
   const totalAll = totalsByPartner.reduce((sum, [, n]) => sum + n, 0)
 
+  const handleReset = async () => {
+    const confirmed = window.confirm(
+      `Wirklich alle ${totalAll} Absendungen unwiderruflich löschen?\n\nDas Dashboard wird zurückgesetzt. Partnerdaten bleiben erhalten.`
+    )
+    if (!confirmed) return
+
+    const typed = window.prompt('Zum Bestätigen bitte „RESET“ eingeben:')
+    if (typed !== "RESET") {
+      setMessage("Reset abgebrochen.")
+      return
+    }
+
+    setResetting(true)
+    setError("")
+    setMessage("")
+    try {
+      const deleted = await resetAllSubmissions()
+      await loadDashboard()
+      setMessage(`${deleted} Absendung${deleted === 1 ? "" : "en"} gelöscht.`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Reset fehlgeschlagen")
+    } finally {
+      setResetting(false)
+    }
+  }
+
   if (loading) return <p className="text-slate-600">Dashboard wird geladen…</p>
-  if (error) return <p className="text-red-600">{error}</p>
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-[#003B79]">Dashboard</h1>
-        <p className="text-slate-600 mt-1">Übersicht der Formular-Absendungen je Verbundpartner.</p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-[#003B79]">Dashboard</h1>
+          <p className="text-slate-600 mt-1">Übersicht der Formular-Absendungen je Verbundpartner.</p>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          className="border-red-200 text-red-700 hover:bg-red-50 shrink-0"
+          onClick={handleReset}
+          disabled={resetting || (totalAll === 0 && recent.length === 0)}
+        >
+          {resetting ? "Wird gelöscht…" : "Absendungen zurücksetzen"}
+        </Button>
       </div>
+
+      <p className="text-xs text-slate-500 -mt-4">
+        Löscht nur Formular-Absendungen. Partner und PLZ-Zuordnungen bleiben erhalten. Bestätigung: „RESET“.
+      </p>
+
+      {message && (
+        <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">{message}</p>
+      )}
+      {error && <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
 
       <div className="grid sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-xl border border-slate-200 p-5">

@@ -174,3 +174,21 @@ export async function fetchRecentSubmissions(limit = 50) {
   if (error) throw error
   return data || []
 }
+
+export async function resetAllSubmissions(): Promise<number> {
+  if (!supabase) throw new Error("Supabase nicht konfiguriert")
+
+  const { count, error: countError } = await supabase
+    .from("submissions")
+    .select("id", { count: "exact", head: true })
+  if (countError) throw countError
+
+  // Supabase requires a filter for DELETE; match all existing rows.
+  const { error } = await supabase
+    .from("submissions")
+    .delete()
+    .gte("created_at", "1970-01-01T00:00:00.000Z")
+  if (error) throw error
+
+  return count || 0
+}
