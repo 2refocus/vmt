@@ -7,6 +7,9 @@ import Apply from "./pages/Apply";
 import Lookup from "./pages/Lookup";
 import Success from "./pages/Success";
 import FAQ from "./pages/FAQ";
+import { AdminGuard } from "./pages/admin/AdminShell";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPartners from "./pages/admin/AdminPartners";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +23,14 @@ export const router = createBrowserRouter([
       { path: "lookup", Component: Lookup },
       { path: "success", Component: Success },
       { path: "faq", Component: FAQ },
+    ],
+  },
+  {
+    path: "/admin",
+    Component: AdminGuard,
+    children: [
+      { index: true, Component: AdminDashboard },
+      { path: "partners", Component: AdminPartners },
     ],
   },
 ]);

@@ -5,8 +5,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@2";
 
-// Partner email mapping (synced with src/app/data/partners.ts)
-const PARTNER_EMAILS: Record<string, { name: string; email: string | null }> = {
+// Fallback partner map if DB is unavailable (keep in sync with seed / partners.ts)
+const PARTNER_EMAILS_FALLBACK: Record<string, { name: string; email: string | null }> = {
   abellio: { name: "Abellio", email: "abo@abellio.de" },
   "db-regio": { name: "DB Regio", email: "jobticket-region-suedost@deutschebahn.de" },
   evag: { name: "EVAG Erfurt", email: "evag-kooperation@stadtwerke-erfurt.de" },
@@ -19,10 +19,208 @@ const PARTNER_EMAILS: Record<string, { name: string; email: string | null }> = {
   twsb: { name: "Thüringerwaldbahn und Straßenbahn Gotha", email: "info@waldbahn-gotha.de" },
   vlg: { name: "VLG Gotha", email: "job-ticket@nvg-gotha.de" },
   vmt: { name: "Verkehrsverbund Mittelthüringen (VMT)", email: "service@vmt-thueringen.de" },
+  fuh: { name: "Frank & Haueis GmbH (Test)", email: "andy@frank-haueis.de" },
 };
 
 const VMT_FALLBACK_EMAIL = Deno.env.get("VMT_FALLBACK_EMAIL") || "service@vmt-thueringen.de";
-const MAIL_FROM = Deno.env.get("MAIL_FROM") || "noreply@das-kommt-gut-an.de";
+const MAIL_FROM = Deno.env.get("MAIL_FROM") || "vmt@mail.das-kommt-gut-an.de";
+const ASSET_BASE =
+  Deno.env.get("MAIL_ASSET_BASE") ||
+  "https://bpozoojlnsxpssrzbuob.supabase.co/storage/v1/object/public/email-assets";
+const VMT_LOGO_URL = `${ASSET_BASE}/vmt-logo.png`;
+const DTICKET_LOGO_URL = `${ASSET_BASE}/dticket.png`;
+const SITE_URL = "https://das-kommt-gut-an.de";
+const VMT_BLUE = "#003B79";
+const VMT_GREEN = "#A3C410";
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function emailShell(options: {
+  preheader: string;
+  headerBg: string;
+  headerTitle: string;
+  headerSubtitle?: string;
+  headerTitleColor?: string;
+  bodyHtml: string;
+}): string {
+  const titleColor = options.headerTitleColor || "#ffffff";
+  return `<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
+  <title>${escapeHtml(options.headerTitle)}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#e8eef5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:${VMT_BLUE};">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(options.preheader)}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e8eef5;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #d7e0ec;">
+          <tr>
+            <td style="background-color:#ffffff;padding:20px 28px;border-bottom:4px solid ${VMT_GREEN};">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="left" style="vertical-align:middle;">
+                    <img src="${VMT_LOGO_URL}" alt="VMT Verkehrsverbund Mittelthüringen" width="160" style="display:block;width:160px;max-width:55%;height:auto;border:0;">
+                  </td>
+                  <td align="right" style="vertical-align:middle;">
+                    <img src="${DTICKET_LOGO_URL}" alt="Deutschlandticket Job" width="110" style="display:block;width:110px;max-width:42%;height:auto;border:0;margin-left:auto;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:${options.headerBg};padding:28px 28px;text-align:center;">
+              <h1 style="margin:0;font-size:22px;line-height:1.3;color:${titleColor};font-weight:700;">${escapeHtml(options.headerTitle)}</h1>
+              ${
+                options.headerSubtitle
+                  ? `<p style="margin:10px 0 0;font-size:14px;color:${titleColor};opacity:0.9;"><a href="${SITE_URL}" style="color:${titleColor};text-decoration:underline;">${escapeHtml(options.headerSubtitle)}</a></p>`
+                  : ""
+              }
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#ffffff;padding:28px;color:#1f2937;font-size:16px;line-height:1.6;">
+              ${options.bodyHtml}
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#f4f7fb;padding:20px 28px;text-align:center;border-top:1px solid #e2e8f0;">
+              <p style="margin:0 0 8px;font-size:12px;line-height:1.5;color:#64748b;">
+                Verkehrsverbund Mittelthüringen (VMT)<br>
+                <a href="${SITE_URL}" style="color:${VMT_BLUE};text-decoration:none;font-weight:600;">das-kommt-gut-an.de</a>
+              </p>
+              <p style="margin:0;font-size:11px;color:#94a3b8;">
+                Diese E-Mail wurde automatisch über das Kontaktformular generiert.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+function buildPartnerEmailHtml(data: SubmissionRequest, partnerName: string): string {
+  const preferences = [];
+  if (data.interestPhone) preferences.push("Telefonische Beratung gewünscht");
+  if (data.interestContract) preferences.push("Vertragsunterlagen gewünscht");
+
+  const field = (label: string, value: string) => `
+    <tr>
+      <td style="padding:6px 0;width:120px;color:#64748b;font-size:13px;vertical-align:top;">${label}</td>
+      <td style="padding:6px 0;color:#0f172a;font-size:15px;font-weight:600;vertical-align:top;">${value}</td>
+    </tr>`;
+
+  const section = (title: string, rows: string) => `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px;">
+      <tr>
+        <td style="padding:0 0 10px;border-bottom:2px solid ${VMT_GREEN};">
+          <h3 style="margin:0;color:${VMT_BLUE};font-size:13px;letter-spacing:0.04em;text-transform:uppercase;">${title}</h3>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding-top:10px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>
+        </td>
+      </tr>
+    </table>`;
+
+  const bodyHtml = `
+    <p style="margin:0 0 12px;">Hallo ${escapeHtml(partnerName)},</p>
+    <p style="margin:0 0 24px;">Sie haben eine neue Anfrage zum Deutschlandticket Job erhalten:</p>
+    ${section(
+      "Ansprechpartner:in",
+      field("Name", `${escapeHtml(data.salutation)} ${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}`) +
+        field("Position", escapeHtml(data.position))
+    )}
+    ${section(
+      "Unternehmen",
+      field("Firma", escapeHtml(data.company)) +
+        field("Größe", `${escapeHtml(data.employees)} Mitarbeiter`) +
+        field("Adresse", `${escapeHtml(data.street)}, ${escapeHtml(data.plz)} ${escapeHtml(data.city)}`)
+    )}
+    ${section(
+      "Kontakt",
+      field("E-Mail", `<a href="mailto:${escapeHtml(data.email)}" style="color:${VMT_BLUE};text-decoration:none;">${escapeHtml(data.email)}</a>`) +
+        field("Telefon", escapeHtml(data.phone)) +
+        (preferences.length
+          ? field("Wünsche", escapeHtml(preferences.join(", ")))
+          : "")
+    )}
+    ${
+      data.message
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 24px;">
+            <tr>
+              <td style="background-color:#f4f7fb;border-left:4px solid ${VMT_GREEN};border-radius:8px;padding:16px;color:#1f2937;font-size:15px;">
+                <strong style="color:${VMT_BLUE};">Nachricht</strong><br>
+                ${escapeHtml(data.message).replace(/\n/g, "<br>")}
+              </td>
+            </tr>
+          </table>`
+        : ""
+    }
+    <p style="margin:0;">Bitte setzen Sie sich zeitnah mit dem Interessenten in Verbindung.</p>
+  `;
+
+  return emailShell({
+    preheader: `Neue Anfrage von ${data.company}`,
+    headerBg: VMT_BLUE,
+    headerTitle: "Neue Deutschlandticket Job Anfrage",
+    headerSubtitle: "über das-kommt-gut-an.de",
+    bodyHtml,
+  });
+}
+
+function buildApplicantConfirmationHtml(data: SubmissionRequest, partnerNames: string[]): string {
+  const partnerChips = partnerNames
+    .map(
+      (name) =>
+        `<span style="display:inline-block;background-color:#ffffff;border:1px solid #d7e0ec;color:${VMT_BLUE};padding:8px 14px;border-radius:999px;margin:4px;font-size:14px;font-weight:600;">${escapeHtml(name)}</span>`
+    )
+    .join("");
+
+  const bodyHtml = `
+    <p style="margin:0 0 12px;">${escapeHtml(data.salutation)} ${escapeHtml(data.lastName)},</p>
+    <p style="margin:0 0 18px;">vielen Dank für Ihr Interesse am Deutschlandticket Job für Ihr Unternehmen <strong style="color:${VMT_BLUE};">${escapeHtml(data.company)}</strong>.</p>
+    <p style="margin:0 0 12px;">Ihre Anfrage wurde erfolgreich an ${partnerNames.length === 1 ? "folgenden Verbundpartner" : "folgende Verbundpartner"} übermittelt:</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+      <tr>
+        <td style="background-color:#f4f7fb;border-radius:10px;padding:16px;text-align:center;">
+          ${partnerChips}
+        </td>
+      </tr>
+    </table>
+    <h3 style="margin:0 0 12px;color:${VMT_BLUE};font-size:18px;">Wie geht es weiter?</h3>
+    <ol style="margin:0 0 22px;padding-left:20px;color:#334155;">
+      <li style="margin-bottom:8px;">Ihr Verbundpartner wird sich innerhalb von 1–2 Werktagen bei Ihnen melden.</li>
+      <li style="margin-bottom:8px;">Gemeinsam besprechen Sie die Details und erhalten die Vertragsunterlagen.</li>
+      <li style="margin-bottom:8px;">Nach Vertragsabschluss können Ihre Mitarbeitenden das Deutschlandticket Job bestellen.</li>
+    </ol>
+    <p style="margin:0 0 18px;">Bei Fragen erreichen Sie uns unter <a href="mailto:service@vmt-thueringen.de" style="color:${VMT_BLUE};font-weight:600;text-decoration:none;">service@vmt-thueringen.de</a>.</p>
+    <p style="margin:0;">Mit freundlichen Grüßen<br><strong style="color:${VMT_BLUE};">Ihr VMT-Team</strong></p>
+  `;
+
+  return emailShell({
+    preheader: "Ihre Anfrage zum Deutschlandticket Job wurde übermittelt",
+    headerBg: VMT_GREEN,
+    headerTitle: "Vielen Dank für Ihre Anfrage!",
+    headerTitleColor: VMT_BLUE,
+    bodyHtml,
+  });
+}
 
 interface SubmissionRequest {
   plz: string;
@@ -49,37 +247,33 @@ function validateRequest(data: unknown): SubmissionRequest {
 
   const d = data as Record<string, unknown>;
 
-  // Required string fields
   const requiredStrings = [
     "plz", "salutation", "firstName", "lastName", "company",
-    "position", "employees", "phone", "email", "street", "city"
+    "position", "employees", "phone", "email", "street", "city",
   ];
-  
+
   for (const field of requiredStrings) {
     if (typeof d[field] !== "string" || !d[field]) {
       throw new Error(`Missing or invalid field: ${field}`);
     }
   }
 
-  // PLZ validation
   if (!/^[0-9]{5}$/.test(d.plz as string)) {
     throw new Error("Invalid PLZ format");
   }
 
-  // Email validation
   if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(d.email as string)) {
     throw new Error("Invalid email format");
   }
 
-  // Partner slugs validation
   if (!Array.isArray(d.partnerSlugs) || d.partnerSlugs.length === 0) {
     throw new Error("At least one partner must be selected");
   }
 
   const validSlugs = d.partnerSlugs.filter(
-    (s): s is string => typeof s === "string" && s in PARTNER_EMAILS
+    (s): s is string => typeof s === "string" && /^[a-z0-9-]+$/.test(s)
   );
-  
+
   if (validSlugs.length === 0) {
     throw new Error("No valid partners selected");
   }
@@ -101,119 +295,6 @@ function validateRequest(data: unknown): SubmissionRequest {
     interestContract: Boolean(d.interestContract),
     message: typeof d.message === "string" ? d.message : "",
   };
-}
-
-function buildPartnerEmailHtml(data: SubmissionRequest, partnerName: string): string {
-  const preferences = [];
-  if (data.interestPhone) preferences.push("Telefonische Beratung gewünscht");
-  if (data.interestContract) preferences.push("Vertragsunterlagen gewünscht");
-
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-    .header { background: #003B79; color: white; padding: 24px; text-align: center; }
-    .content { padding: 24px; max-width: 600px; margin: 0 auto; }
-    .section { margin-bottom: 24px; }
-    .section h3 { color: #003B79; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; }
-    .field { margin-bottom: 8px; }
-    .label { color: #666; font-size: 12px; }
-    .value { font-weight: 500; }
-    .message { background: #f5f5f5; padding: 16px; border-radius: 8px; margin-top: 16px; }
-    .footer { text-align: center; padding: 24px; color: #666; font-size: 12px; border-top: 1px solid #eee; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1 style="margin: 0; font-size: 20px;">Neue Deutschlandticket Job Anfrage</h1>
-    <p style="margin: 8px 0 0; opacity: 0.8;">über das-kommt-gut-an.de</p>
-  </div>
-  <div class="content">
-    <p>Hallo ${partnerName},</p>
-    <p>Sie haben eine neue Anfrage zum Deutschlandticket Job erhalten:</p>
-    
-    <div class="section">
-      <h3>Ansprechpartner:in</h3>
-      <div class="field"><span class="label">Name:</span> <span class="value">${data.salutation} ${data.firstName} ${data.lastName}</span></div>
-      <div class="field"><span class="label">Position:</span> <span class="value">${data.position}</span></div>
-    </div>
-    
-    <div class="section">
-      <h3>Unternehmen</h3>
-      <div class="field"><span class="label">Firma:</span> <span class="value">${data.company}</span></div>
-      <div class="field"><span class="label">Größe:</span> <span class="value">${data.employees} Mitarbeiter</span></div>
-      <div class="field"><span class="label">Adresse:</span> <span class="value">${data.street}, ${data.plz} ${data.city}</span></div>
-    </div>
-    
-    <div class="section">
-      <h3>Kontakt</h3>
-      <div class="field"><span class="label">E-Mail:</span> <span class="value"><a href="mailto:${data.email}">${data.email}</a></span></div>
-      <div class="field"><span class="label">Telefon:</span> <span class="value">${data.phone}</span></div>
-      ${preferences.length > 0 ? `<div class="field"><span class="label">Wünsche:</span> <span class="value">${preferences.join(", ")}</span></div>` : ""}
-    </div>
-    
-    ${data.message ? `<div class="message"><strong>Nachricht:</strong><br>${data.message.replace(/\n/g, "<br>")}</div>` : ""}
-    
-    <p style="margin-top: 24px;">Bitte setzen Sie sich zeitnah mit dem Interessenten in Verbindung.</p>
-  </div>
-  <div class="footer">
-    Diese E-Mail wurde automatisch über das Kontaktformular auf das-kommt-gut-an.de generiert.<br>
-    Verkehrsverbund Mittelthüringen (VMT)
-  </div>
-</body>
-</html>`;
-}
-
-function buildApplicantConfirmationHtml(data: SubmissionRequest, partnerNames: string[]): string {
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-    .header { background: #A3C410; color: #003B79; padding: 24px; text-align: center; }
-    .content { padding: 24px; max-width: 600px; margin: 0 auto; }
-    .partners { background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 16px 0; }
-    .partner { display: inline-block; background: white; padding: 6px 12px; border-radius: 16px; margin: 4px; font-size: 14px; }
-    .footer { text-align: center; padding: 24px; color: #666; font-size: 12px; border-top: 1px solid #eee; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1 style="margin: 0; font-size: 24px;">Vielen Dank für Ihre Anfrage!</h1>
-  </div>
-  <div class="content">
-    <p>${data.salutation} ${data.lastName},</p>
-    <p>vielen Dank für Ihr Interesse am Deutschlandticket Job für Ihr Unternehmen <strong>${data.company}</strong>.</p>
-    
-    <p>Ihre Anfrage wurde erfolgreich an ${partnerNames.length === 1 ? "folgenden Verbundpartner" : "folgende Verbundpartner"} übermittelt:</p>
-    
-    <div class="partners">
-      ${partnerNames.map(name => `<span class="partner">${name}</span>`).join(" ")}
-    </div>
-    
-    <h3 style="color: #003B79;">Wie geht es weiter?</h3>
-    <ol>
-      <li>Ihr Verbundpartner wird sich innerhalb von 1-2 Werktagen bei Ihnen melden.</li>
-      <li>Gemeinsam besprechen Sie die Details und erhalten die Vertragsunterlagen.</li>
-      <li>Nach Vertragsabschluss können Ihre Mitarbeitenden das Deutschlandticket Job bestellen.</li>
-    </ol>
-    
-    <p>Bei Fragen können Sie uns jederzeit unter <a href="mailto:service@vmt-thueringen.de">service@vmt-thueringen.de</a> erreichen.</p>
-    
-    <p>Mit freundlichen Grüßen<br>
-    Ihr VMT-Team</p>
-  </div>
-  <div class="footer">
-    Verkehrsverbund Mittelthüringen (VMT)<br>
-    <a href="https://das-kommt-gut-an.de">das-kommt-gut-an.de</a>
-  </div>
-</body>
-</html>`;
 }
 
 Deno.serve(async (req) => {
@@ -250,18 +331,44 @@ Deno.serve(async (req) => {
     // Prepare mail status tracking
     const mailStatus: Record<string, { sent: boolean; error?: string; messageId?: string }> = {};
 
-    // Get partner emails and names
+    // Resolve partners from DB (fallback to static map)
+    const { data: partnerRows, error: partnerError } = await supabase
+      .from("partners")
+      .select("slug, name, email, selectable")
+      .in("slug", data.partnerSlugs);
+
+    if (partnerError) {
+      console.error("Partner lookup error:", partnerError);
+    }
+
+    const partnerBySlug: Record<string, { name: string; email: string | null }> = {
+      ...PARTNER_EMAILS_FALLBACK,
+    };
+    for (const row of partnerRows || []) {
+      partnerBySlug[row.slug] = {
+        name: row.name,
+        email: row.selectable === false ? null : row.email,
+      };
+    }
+
     const partnerRecipients: { slug: string; name: string; email: string }[] = [];
     const partnerNames: string[] = [];
 
     for (const slug of data.partnerSlugs) {
-      const partner = PARTNER_EMAILS[slug];
+      const partner = partnerBySlug[slug];
       if (partner) {
         partnerNames.push(partner.name);
         if (partner.email) {
           partnerRecipients.push({ slug, name: partner.name, email: partner.email });
         }
       }
+    }
+
+    if (partnerNames.length === 0) {
+      return new Response(JSON.stringify({ error: "No valid partners selected" }), {
+        status: 400,
+        headers: { ...headers, "Content-Type": "application/json" },
+      });
     }
 
     // Send emails to partners

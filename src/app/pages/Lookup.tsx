@@ -1,15 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router"
 import { Search, MapPin, Phone, Mail, Globe, ArrowRight, Building2, AlertCircle } from "lucide-react"
 import { Button } from "../components/ui/button"
 import mapHeaderImg from "../../imports/map.png"
 import { 
-  findPartnersByPlz, 
   isSelectable, 
   type Partner, 
   type PartnerSlug,
   PARTNERS 
 } from "../data/partners"
+import {
+  findPartnersInCatalog,
+  loadPartnersCatalog,
+  type PartnersCatalog,
+} from "../../lib/partners-api"
 
 export default function Lookup() {
   const [searchParams] = useSearchParams();
@@ -18,18 +22,23 @@ export default function Lookup() {
   const errorFromQuery = searchParams.get("error");
   const initialSelectedPartners = (searchParams.get("partners") || "")
     .split(",")
-    .filter((slug): slug is PartnerSlug => slug !== "" && slug in PARTNERS);
+    .filter((slug) => slug !== "");
   
   const [plz, setPlz] = useState(initialPlz);
   const [hasSearched, setHasSearched] = useState(!!initialPlz && initialPlz.length === 5);
-  const [selectedPartnerSlugs, setSelectedPartnerSlugs] = useState<PartnerSlug[]>(initialSelectedPartners);
+  const [selectedPartnerSlugs, setSelectedPartnerSlugs] = useState<string[]>(initialSelectedPartners);
   const [selectionError, setSelectionError] = useState(
     errorFromQuery === "select_partner" ? "Bitte einen Verbundpartner auswählen." : ""
   );
+  const [catalog, setCatalog] = useState<PartnersCatalog | null>(null);
+
+  useEffect(() => {
+    loadPartnersCatalog().then(setCatalog);
+  }, []);
 
   const getPartners = (): Partner[] => {
-    if (!plz || plz.length !== 5) return [];
-    return findPartnersByPlz(plz);
+    if (!plz || plz.length !== 5 || !catalog) return [];
+    return findPartnersInCatalog(catalog, plz);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -53,9 +62,10 @@ export default function Lookup() {
   };
 
   const handleSubmit = () => {
-    const selectablePartners = selectedPartnerSlugs.filter(
-      (slug) => isSelectable(PARTNERS[slug])
-    );
+    const selectablePartners = selectedPartnerSlugs.filter((slug) => {
+      const partner = catalog?.partners[slug] || PARTNERS[slug as PartnerSlug];
+      return partner && isSelectable(partner);
+    });
     if (selectablePartners.length === 0) {
       setSelectionError("Bitte einen Verbundpartner auswählen.");
       return;
@@ -78,6 +88,8 @@ export default function Lookup() {
   };
 
   const partners = getPartners();
+  const websiteHref = (website: string) =>
+    website.startsWith("http") ? website : `https://${website}`;
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24">
@@ -233,13 +245,13 @@ export default function Lookup() {
                                   <div className="flex items-center gap-2">
                                     <Globe className="w-4 h-4 text-slate-400" />
                                     <a 
-                                      href={`https://${partner.website}`} 
+                                      href={websiteHref(partner.website)} 
                                       target="_blank" 
                                       rel="noreferrer" 
                                       className="text-[#003B79] hover:underline" 
                                       onClick={e => e.stopPropagation()}
                                     >
-                                      {partner.website}
+                                      {partner.website.replace(/^https?:\/\//, "")}
                                     </a>
                                   </div>
                                 )}

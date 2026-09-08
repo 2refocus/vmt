@@ -26,7 +26,8 @@ export type PartnerSlug =
   | "swg"
   | "twsb"
   | "vlg"
-  | "vmt";
+  | "vmt"
+  | "fuh";
 
 export type Partner = {
   slug: PartnerSlug;
@@ -116,6 +117,15 @@ export const PARTNERS: Record<PartnerSlug, Partner> = {
     name: "Verkehrsverbund Mittelthüringen (VMT)",
     email: "service@vmt-thueringen.de",
     phone: "0361 19449",
+  },
+  fuh: {
+    slug: "fuh",
+    name: "Frank & Haueis GmbH (Test)",
+    email: "andy@frank-haueis.de",
+    phone: "+49 361 6600030",
+    address: "Schlachthofstraße 84, 99085 Erfurt",
+    website: "https://www.frank-haueis.de",
+    coordinates: [50.9786, 11.0464],
   },
 };
 
@@ -252,6 +262,7 @@ export const PLZ_TO_PARTNERS: Record<string, PartnerSlug[]> = {
   "99898": ["db-regio", "vlg"],
   "99947": ["db-regio"],
   "99958": ["vlg"],
+  "99999": ["fuh"],
 };
 
 /**
