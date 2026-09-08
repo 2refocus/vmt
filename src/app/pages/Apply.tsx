@@ -307,14 +307,14 @@ export default function Apply() {
               </div>
             )}
 
-            <div className="mt-10 flex justify-between items-center">
-              <Button type="button" variant="ghost" onClick={goToPartnerSelection} className="text-slate-500" disabled={isSubmitting}>
+            <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between sm:items-center sm:gap-4">
+              <Button type="button" variant="ghost" onClick={goToPartnerSelection} className="text-slate-500 w-full sm:w-auto" disabled={isSubmitting}>
                 Zurück zur Partnerauswahl
               </Button>
               <Button 
                 type="submit" 
                 size="lg" 
-                className="bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8 w-full sm:w-auto disabled:opacity-70"
+                className="bg-[#003B79] text-white hover:bg-[#003B79]/90 text-lg h-14 px-8 w-full sm:w-auto shrink-0 disabled:opacity-70"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
