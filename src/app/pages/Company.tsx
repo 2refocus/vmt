@@ -94,7 +94,7 @@ export default function Company() {
               Das Deutschlandticket Job entlastet Ihre Angestellten bei den Mobilitätskosten und bietet einen attraktiven Benefit mit Mehrwert im Alltag.
             </p>
             
-            <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-start justify-start">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:items-start sm:justify-start">
               <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 text-lg h-14 px-8" asChild>
                 <a href="#benefits">Vorteile</a>
               </Button>
@@ -107,6 +107,7 @@ export default function Company() {
               <Button size="lg" className="bg-[#A3C410] text-[#003B79] hover:bg-white text-lg h-14 px-8" asChild>
                 <Link to="/lookup">
                   Jetzt Kontakt aufnehmen
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
             </div>

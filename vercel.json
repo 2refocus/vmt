@@ -1,5 +1,63 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/company",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|slackbot|discordbot|telegrambot|googlebot|bingbot|applebot|preview|embedly|quora|pinterest|redditbot).*"
+        }
+      ],
+      "destination": "/share/company.html"
+    },
+    {
+      "source": "/employee",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|slackbot|discordbot|telegrambot|googlebot|bingbot|applebot|preview|embedly|quora|pinterest|redditbot).*"
+        }
+      ],
+      "destination": "/share/employee.html"
+    },
+    {
+      "source": "/lookup",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|slackbot|discordbot|telegrambot|googlebot|bingbot|applebot|preview|embedly|quora|pinterest|redditbot).*"
+        }
+      ],
+      "destination": "/share/lookup.html"
+    },
+    {
+      "source": "/faq",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|slackbot|discordbot|telegrambot|googlebot|bingbot|applebot|preview|embedly|quora|pinterest|redditbot).*"
+        }
+      ],
+      "destination": "/share/faq.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/og/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    }
   ]
 }

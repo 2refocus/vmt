@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet"
+import { SeoMeta } from "../SeoMeta"
 import vmtLogo from "../../../imports/vmt-logo-01.svg"
 import dticketWhite from "../../../imports/dticket_white.svg"
 import logosVerbund from "../../../imports/logos_verbund_icon_only.png"
@@ -117,6 +118,7 @@ export function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
+      <SeoMeta />
       {!isHome && (
         <header className={cn("sticky top-0 z-50 w-full", getBgColor())}>
           <div className="container mx-auto px-3 sm:px-0 h-20 pt-2 flex items-center justify-between">
