@@ -60,15 +60,15 @@ export default function Company() {
            <div className="absolute inset-0 bg-gradient-to-r from-[#003B79] via-[#003B79]/65 to-[#003B79]/10 md:from-[#003B79] md:from-[0%] md:via-[#003B79] md:via-[18%] md:to-[#003B79]/15 md:to-[70%] lg:via-[22%] xl:via-[28%]" />
         </div>
         
-        <div className="container relative z-10 mx-auto px-4 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+        <div className="container relative z-10 mx-auto px-4 max-w-6xl w-full">
+          <div className="grid md:grid-cols-2 gap-10 items-center justify-items-start text-left">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl"
+            className="max-w-3xl w-full text-left"
           >
-            <div className="relative inline-block mb-6 md:hidden">
+            <div className="relative mb-6 md:hidden w-fit">
               <div
                 aria-hidden
                 className="pointer-events-none absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15 blur-xl"
@@ -83,18 +83,18 @@ export default function Company() {
                 }}
               />
             </div>
-            <div className="inline-block px-4 py-1.5 bg-[#A3C410] text-[#003B79] font-bold rounded-full mb-6 text-sm">
+            <div className="inline-flex w-fit px-4 py-1.5 bg-[#A3C410] text-[#003B79] font-bold rounded-full mb-6 text-sm">
               Für Unternehmen
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight tracking-tight text-left">
               <span className="text-[#A3C410]">Mitarbeiterbonus.</span><br />
               Kommt gut an.
             </h1>
-            <p className="text-xl md:text-2xl text-white/80 mb-10 leading-relaxed font-light">
+            <p className="text-xl md:text-2xl text-white/80 mb-10 leading-relaxed font-light text-left">
               Das Deutschlandticket Job entlastet Ihre Angestellten bei den Mobilitätskosten und bietet einen attraktiven Benefit mit Mehrwert im Alltag.
             </p>
             
-            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-start justify-start">
               <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 text-lg h-14 px-8" asChild>
                 <a href="#benefits">Vorteile</a>
               </Button>

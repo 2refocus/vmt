@@ -50,14 +50,14 @@ export default function Employee() {
         </div>
         
         <div className="container relative z-10 mx-auto px-4 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+          <div className="grid md:grid-cols-2 gap-10 items-center justify-items-start">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl"
+            className="max-w-3xl w-full text-left"
           >
-            <div className="relative inline-block mb-6 md:hidden">
+            <div className="relative mb-6 md:hidden w-fit">
               <div
                 aria-hidden
                 className="pointer-events-none absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/18 blur-xl"
@@ -72,7 +72,7 @@ export default function Employee() {
                 }}
               />
             </div>
-            <div className="inline-block px-4 py-1.5 bg-[#003B79] text-white font-bold rounded-full mb-6 text-sm">
+            <div className="inline-flex px-4 py-1.5 bg-[#003B79] text-white font-bold rounded-full mb-6 text-sm">
               Für Angestellte
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight tracking-tight">
