@@ -68,11 +68,21 @@ export default function Company() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <img
-              src={dticketLogo}
-              alt="Deutschlandticket Job"
-              className="h-14 md:h-16 w-auto mb-6 md:hidden"
-            />
+            <div className="relative inline-block mb-6 md:hidden">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15 blur-xl"
+              />
+              <img
+                src={dticketLogo}
+                alt="Deutschlandticket Job"
+                className="relative z-10 h-14 w-auto"
+                style={{
+                  filter:
+                    "drop-shadow(0 4px 10px rgba(0, 0, 0, 0.18)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.22))",
+                }}
+              />
+            </div>
             <div className="inline-block px-4 py-1.5 bg-[#A3C410] text-[#003B79] font-bold rounded-full mb-6 text-sm">
               Für Unternehmen
             </div>
@@ -107,11 +117,21 @@ export default function Company() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="hidden md:flex justify-end items-center"
           >
-            <img
-              src={dticketLogo}
-              alt="Deutschlandticket Job"
-              className="max-w-md w-full h-auto"
-            />
+            <div className="relative max-w-md w-full">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[65%] w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/12 blur-2xl"
+              />
+              <img
+                src={dticketLogo}
+                alt="Deutschlandticket Job"
+                className="relative z-10 w-full h-auto"
+                style={{
+                  filter:
+                    "drop-shadow(0 6px 14px rgba(0, 0, 0, 0.2)) drop-shadow(0 0 18px rgba(255, 255, 255, 0.22))",
+                }}
+              />
+            </div>
           </motion.div>
           </div>
         </div>
