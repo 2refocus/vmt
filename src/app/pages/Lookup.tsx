@@ -87,7 +87,16 @@ export default function Lookup() {
     navigate("/lookup", { replace: true });
   };
 
-  const partners = getPartners();
+  const VMT_FALLBACK: Partner = {
+    slug: "vmt" as PartnerSlug,
+    name: "VMT / Verkehrsverbund Mittelthüringen",
+    email: "post@vmt-thueringen.de",
+    phone: "0361 19449",
+    website: "https://www.vmt-thueringen.de/",
+  };
+
+  const directPartners = getPartners();
+  const partners = directPartners.length > 0 ? directPartners : (hasSearched ? [VMT_FALLBACK] : []);
   const websiteHref = (website: string) =>
     website.startsWith("http") ? website : `https://${website}`;
 
@@ -163,12 +172,9 @@ export default function Lookup() {
             {hasSearched && (
               <div className="space-y-6">
                 <h3 className="text-xl font-bold text-slate-800 mb-4">
-                  {partners.length > 0 
-                    ? `${partners.length === 1 ? "Zuständiger Partner" : "Zuständige Partner"} für ${plz}` 
-                    : `Kein direkter Partner für ${plz} gefunden`}
+                  Zuständiger Verbundpartner
                 </h3>
 
-                {partners.length > 0 ? (
                   <div className="space-y-6">
                     <div className="space-y-4">
                     {partners.map(partner => {
@@ -279,24 +285,7 @@ export default function Lookup() {
                     })}
                     </div>
                   </div>
-                ) : (
-                  <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
-                    <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <h4 className="text-lg font-bold text-slate-700 mb-2">Wir helfen Ihnen gerne weiter</h4>
-                    <p className="text-slate-500 max-w-md mx-auto mb-6">
-                      Für diese Postleitzahl haben wir aktuell keinen direkten Verbundpartner hinterlegt. 
-                      Bitte reichen Sie Ihre Anfrage trotzdem ein, unser zentrales Team wird sich umgehend bei Ihnen melden.
-                    </p>
-                    <Button 
-                      onClick={handleCentralSubmit} 
-                      className="bg-[#003B79] text-white hover:bg-[#003B79]/90"
-                    >
-                      Anfrage zentral einreichen
-                    </Button>
-                  </div>
-                )}
 
-                {partners.length > 0 && (
                   <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                     <Button variant="ghost" onClick={handleResetSearch} className="text-slate-500">
                       Suche zurücksetzen
@@ -310,10 +299,9 @@ export default function Lookup() {
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </div>
-                )}
-                {selectionError && (
-                  <p className="mt-3 text-sm text-red-600 text-right">{selectionError}</p>
-                )}
+                  {selectionError && (
+                    <p className="mt-3 text-sm text-red-600 text-right">{selectionError}</p>
+                  )}
               </div>
             )}
             

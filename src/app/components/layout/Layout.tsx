@@ -254,7 +254,9 @@ export function Layout() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-start gap-8 mb-6">
-                  <img src={vmtLogo} alt="VMT Logo" className="h-10 w-auto brightness-0 invert" />
+                  <a href="https://www.vmt-thueringen.de/" target="_blank" rel="noreferrer">
+                    <img src={vmtLogo} alt="VMT Logo" className="h-10 w-auto brightness-0 invert" />
+                  </a>
                   <img
                     src={dticketWhite}
                     alt="Deutschlandticket Job"
@@ -264,43 +266,6 @@ export function Layout() {
                 <p className="text-white/70 max-w-sm">
                   Die smarte Mobilitätslösung für Unternehmen und Beschäftigte. Einfach, nachhaltig und kosteneffizient.
                 </p>
-                <div className="mt-6">
-                  <p className="text-sm font-medium text-white/80 mb-3">Seite teilen</p>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={onShare}
-                      className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                    >
-                      <Share2 className="w-4 h-4" />
-                      {copied ? "Link kopiert" : "Teilen"}
-                    </button>
-                    <a
-                      href={shareLinks.whatsapp}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                    >
-                      WhatsApp
-                    </a>
-                    <a
-                      href={shareLinks.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                    >
-                      <Linkedin className="w-4 h-4" />
-                      LinkedIn
-                    </a>
-                    <a
-                      href={shareLinks.email}
-                      className="inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      E-Mail
-                    </a>
-                  </div>
-                </div>
               </div>
 
               <div>
@@ -322,9 +287,9 @@ export function Layout() {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/lookup" className="hover:text-white transition-colors">
-                      Jobticket beantragen
-                    </Link>
+                    <a href="https://www.vmt-thueringen.de/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                      VMT Mittelthüringen
+                    </a>
                   </li>
                 </ul>
               </div>
