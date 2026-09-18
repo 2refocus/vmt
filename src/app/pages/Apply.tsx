@@ -3,19 +3,30 @@ import { useNavigate, useSearchParams } from "react-router"
 import { Building2, User, Mail, Phone, MapPin, ArrowRight, CheckCircle2, Loader2, AlertCircle } from "lucide-react"
 import { Button } from "../components/ui/button"
 import applyImg from "../../imports/AdobeStock_400849655_Preview.jpeg"
-import { getPartnersBySlugs, type PartnerSlug, PARTNERS } from "../data/partners"
+import { type PartnerSlug, type Partner } from "../data/partners"
 import { submitRequest } from "../../lib/supabase"
+import { loadPartnersCatalog } from "../../lib/partners-api"
 
 export default function Apply() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const selectedPartnerParam = searchParams.get("partners") || "";
-  const selectedPartnerSlugs = selectedPartnerParam
-    .split(",")
-    .filter((slug): slug is PartnerSlug => slug !== "" && slug in PARTNERS);
+  const rawSlugs = selectedPartnerParam.split(",").filter(Boolean);
   const prefilledPlz = searchParams.get("plz") || "";
+
+  const [catalog, setCatalog] = useState<Record<string, Partner> | null>(null);
+
+  useEffect(() => {
+    loadPartnersCatalog().then((c) => setCatalog(c.partners));
+  }, []);
+
+  const selectedPartnerSlugs = rawSlugs.filter(
+    (slug) => catalog ? slug in catalog : true
+  ) as PartnerSlug[];
   
-  const selectedPartners = getPartnersBySlugs(selectedPartnerSlugs);
+  const selectedPartners = selectedPartnerSlugs
+    .map((slug) => catalog?.[slug])
+    .filter((p): p is Partner => !!p);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -38,14 +49,14 @@ export default function Apply() {
   });
 
   useEffect(() => {
-    // Enforce step order: partner selection first, then form data.
+    if (!catalog) return;
     if (selectedPartnerSlugs.length === 0) {
       const params = new URLSearchParams();
       if (prefilledPlz) params.set("plz", prefilledPlz);
       params.set("error", "select_partner");
       navigate(`/lookup?${params.toString()}`, { replace: true });
     }
-  }, [navigate, selectedPartnerSlugs.length, prefilledPlz]);
+  }, [navigate, selectedPartnerSlugs.length, prefilledPlz, catalog]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
