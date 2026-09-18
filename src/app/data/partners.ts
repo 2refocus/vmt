@@ -38,6 +38,7 @@ export type Partner = {
   website?: string;
   coordinates?: [number, number];
   logo?: string;
+  selectable?: boolean;
 };
 
 export const PARTNERS: Record<PartnerSlug, Partner> = {
@@ -279,6 +280,7 @@ export function findPartnersByPlz(plz: string): Partner[] {
  * Check if a partner can be selected (has email address)
  */
 export function isSelectable(partner: Partner): boolean {
+  if (partner.selectable !== undefined) return partner.selectable;
   return partner.email !== null;
 }
 

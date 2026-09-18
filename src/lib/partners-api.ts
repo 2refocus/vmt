@@ -68,7 +68,7 @@ export async function loadPartnersCatalog(): Promise<PartnersCatalog> {
     const staticLogo = PARTNERS[row.slug as PartnerSlug]?.logo
     // Prefer DB selectable flag via email null
     const partner = rowToPartner(row, staticLogo)
-    if (!row.selectable) partner.email = null
+    partner.selectable = row.selectable
     partners[row.slug] = partner
   }
 
