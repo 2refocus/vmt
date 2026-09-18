@@ -6,7 +6,10 @@ import {
   listPlzForPartner,
   replacePartnerPlz,
   upsertPartner,
+  loadSiteSettings,
+  saveSiteSetting,
   type PartnerRow,
+  type SiteSetting,
 } from "../../../lib/partners-api"
 
 const emptyForm: PartnerRow = {
@@ -32,10 +35,15 @@ export default function AdminPartners() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [settings, setSettings] = useState<SiteSetting[]>([])
+  const [settingsEdits, setSettingsEdits] = useState<Record<string, string>>({})
+  const [savingSettings, setSavingSettings] = useState(false)
 
   const reload = async () => {
-    const data = await listPartnerRows()
+    const [data, siteSettings] = await Promise.all([listPartnerRows(), loadSiteSettings()])
     setRows(data)
+    setSettings(siteSettings)
+    setSettingsEdits(Object.fromEntries(siteSettings.map((s) => [s.key, s.value])))
   }
 
   useEffect(() => {
@@ -243,6 +251,56 @@ export default function AdminPartners() {
           </form>
         )}
       </div>
+
+      {/* Settings */}
+      <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-100">
+          <h2 className="font-semibold text-[#003B79]">Einstellungen</h2>
+        </div>
+        <div className="p-5 space-y-4">
+          {settings.map((s) => (
+            <div key={s.key}>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                {s.label || s.key}
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={settingsEdits[s.key] ?? s.value}
+                  onChange={(e) =>
+                    setSettingsEdits((prev) => ({ ...prev, [s.key]: e.target.value }))
+                  }
+                  className="input flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="shrink-0"
+                  disabled={savingSettings || settingsEdits[s.key] === s.value}
+                  onClick={async () => {
+                    setSavingSettings(true)
+                    setError("")
+                    try {
+                      await saveSiteSetting(s.key, settingsEdits[s.key])
+                      setMessage(`"${s.label || s.key}" gespeichert.`)
+                      await reload()
+                    } catch (err) {
+                      setError(err instanceof Error ? err.message : "Speichern fehlgeschlagen")
+                    } finally {
+                      setSavingSettings(false)
+                    }
+                  }}
+                >
+                  {savingSettings ? "…" : "Speichern"}
+                </Button>
+              </div>
+            </div>
+          ))}
+          {settings.length === 0 && (
+            <p className="text-sm text-slate-500">Keine Einstellungen vorhanden.</p>
+          )}
+        </div>
+      </section>
 
       <style>{`
         .input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; outline: none; }
