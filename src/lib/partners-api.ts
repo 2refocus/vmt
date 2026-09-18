@@ -192,3 +192,26 @@ export async function resetAllSubmissions(): Promise<number> {
 
   return count || 0
 }
+
+// ── Site Settings ──────────────────────────────────────────
+
+export type SiteSetting = { key: string; value: string; label: string | null }
+
+export async function loadSiteSettings(): Promise<SiteSetting[]> {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from("site_settings")
+    .select("key, value, label")
+    .order("key")
+  if (error) throw error
+  return (data || []) as SiteSetting[]
+}
+
+export async function saveSiteSetting(key: string, value: string): Promise<void> {
+  if (!supabase) throw new Error("Supabase nicht konfiguriert")
+  const { error } = await supabase
+    .from("site_settings")
+    .update({ value, updated_at: new Date().toISOString() })
+    .eq("key", key)
+  if (error) throw error
+}

@@ -5,6 +5,9 @@ import {
   fetchSubmissionStats,
   listPartnerRows,
   resetAllSubmissions,
+  loadSiteSettings,
+  saveSiteSetting,
+  type SiteSetting,
 } from "../../../lib/partners-api"
 
 export default function AdminDashboard() {
@@ -15,16 +18,22 @@ export default function AdminDashboard() {
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(true)
   const [resetting, setResetting] = useState(false)
+  const [settings, setSettings] = useState<SiteSetting[]>([])
+  const [settingsEdits, setSettingsEdits] = useState<Record<string, string>>({})
+  const [savingSettings, setSavingSettings] = useState(false)
 
   const loadDashboard = useCallback(async () => {
-    const [s, r, partners] = await Promise.all([
+    const [s, r, partners, siteSettings] = await Promise.all([
       fetchSubmissionStats(),
       fetchRecentSubmissions(40),
       listPartnerRows(),
+      loadSiteSettings(),
     ])
     setStats(s)
     setRecent(r)
     setNames(Object.fromEntries(partners.map((p) => [p.slug, p.name])))
+    setSettings(siteSettings)
+    setSettingsEdits(Object.fromEntries(siteSettings.map((s) => [s.key, s.value])))
   }, [])
 
   useEffect(() => {
@@ -180,6 +189,57 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* Settings */}
+      <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-100">
+          <h2 className="font-semibold text-[#003B79]">Einstellungen</h2>
+        </div>
+        <div className="p-5 space-y-4">
+          {settings.map((s) => (
+            <div key={s.key}>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                {s.label || s.key}
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={settingsEdits[s.key] ?? s.value}
+                  onChange={(e) =>
+                    setSettingsEdits((prev) => ({ ...prev, [s.key]: e.target.value }))
+                  }
+                  className="flex-1 px-3 py-2 rounded-lg border border-slate-200 focus:border-[#003B79] focus:ring-1 focus:ring-[#003B79] outline-none text-sm"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="shrink-0"
+                  disabled={savingSettings || settingsEdits[s.key] === s.value}
+                  onClick={async () => {
+                    setSavingSettings(true)
+                    setError("")
+                    try {
+                      await saveSiteSetting(s.key, settingsEdits[s.key])
+                      setMessage(`"${s.label || s.key}" gespeichert.`)
+                      await loadDashboard()
+                    } catch (err) {
+                      setError(err instanceof Error ? err.message : "Speichern fehlgeschlagen")
+                    } finally {
+                      setSavingSettings(false)
+                    }
+                  }}
+                >
+                  {savingSettings ? "…" : "Speichern"}
+                </Button>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">Schlüssel: <code className="font-mono">{s.key}</code></p>
+            </div>
+          ))}
+          {settings.length === 0 && (
+            <p className="text-sm text-slate-500">Keine Einstellungen vorhanden.</p>
+          )}
         </div>
       </section>
 

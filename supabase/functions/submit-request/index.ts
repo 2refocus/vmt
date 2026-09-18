@@ -401,11 +401,21 @@ Deno.serve(async (req) => {
         mailStatus["applicant"] = { sent: false, error: String(err) };
       }
 
-      // Send copy to VMT
+      // Send copy to VMT — read address from site_settings, fall back to env/default
+      let vmtCopyEmail = VMT_FALLBACK_EMAIL;
+      try {
+        const { data: setting } = await supabase
+          .from("site_settings")
+          .select("value")
+          .eq("key", "vmt_copy_email")
+          .single();
+        if (setting?.value) vmtCopyEmail = setting.value;
+      } catch { /* keep fallback */ }
+
       try {
         const result = await resend.emails.send({
           from: `VMT Deutschlandticket Job <${MAIL_FROM}>`,
-          to: VMT_FALLBACK_EMAIL,
+          to: vmtCopyEmail,
           replyTo: data.email,
           subject: `[Kopie] Deutschlandticket Job Anfrage von ${data.company}`,
           html: buildPartnerEmailHtml(data, "VMT Team"),
