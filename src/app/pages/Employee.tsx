@@ -139,7 +139,7 @@ export default function Employee() {
               {
                 icon: PiggyBank,
                 title: "Geld sparen",
-                desc: "Mit dem Arbeitgeberzuschuss zahlst du mindestens 30% weniger als für das reguläre Deutschlandticket",
+                desc: "Mit dem Arbeitgeberzuschuss zahlst du mindestens 30 % weniger als für das reguläre Deutschlandticket",
               },
               {
                 icon: Train,
@@ -227,7 +227,7 @@ export default function Employee() {
             
             {[
               { step: "1", title: "Chef fragen", desc: "Sprich deine Personalabteilung oder deinen Arbeitgeber auf das Deutschlandticket Job an." },
-              { step: "2", title: "Vorteil sichern", desc: "Dein Arbeitgeber übernimmt mindestens 25% des Ticketpreises. Zusätzlich gibt es 5% Rabatt vom Verkehrsunternehmen auf das Deutschlandticket." },
+              { step: "2", title: "Vorteil sichern", desc: "Dein Arbeitgeber übernimmt mindestens 25 % des Ticketpreises. Zusätzlich gibt es 5% Rabatt vom Verkehrsunternehmen auf das Deutschlandticket." },
               {
                 step: "3",
                 title: "Losfahren",

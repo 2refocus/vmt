@@ -212,7 +212,7 @@ export default function Company() {
               <ul className="space-y-4">
                 {[
                   "63 € regulärer Preis des Deutschlandtickets pro Monat",
-                  "Mindestzuschuss von 25% durch Sie als Arbeitgeber auf den regulären Ticketpreis",
+                  "Mindestzuschuss von 25 % durch Sie als Arbeitgeber auf den regulären Ticketpreis",
                   "zusätzlich 5 % Rabatt durch das Verkehrsunternehmen",
                   "maximal 44,10 € Eigenanteil pro Monat für Ihre Mitarbeitenden",
                   "Mehr Zuschuss, mehr Vorteil: Sie können den Arbeitgeberzuschuss freiwillig erhöhen und den Eigenanteil Ihrer Mitarbeitenden weiter reduzieren – bis hin zur vollständigen Kostenübernahme.",
