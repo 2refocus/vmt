@@ -10,7 +10,7 @@ const COMPANY_FAQS = [
   {
     question: "Welche Unternehmen mitmachen können",
     answer:
-      "Grundsätzlich kann jedes Unternehmen teilnehmen. Voraussetzung ist lediglich, dass mindestens zwei Arbeitnehmer*innen Ihres Unternehmens das Jobticket abnehmen und Sie als Arbeitgeber einen Zuschuss von mindestens 25 % (auf den rabattierten Ticketpreis) gewähren.",
+      "Grundsätzlich kann jedes Unternehmen teilnehmen. Voraussetzung ist lediglich, dass mindestens ein*e Arbeitnehmer*in Ihres Unternehmens das Jobticket abnehmen und Sie als Arbeitgeber einen Zuschuss von mindestens 25 % (auf den rabattierten Ticketpreis) gewähren.",
   },
   {
     question: "Wie die Mitarbeitenden Ihres Unternehmens Ihr Deutschlandticket Job bestellen",
