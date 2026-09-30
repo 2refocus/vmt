@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "../../components/ui/button"
 import {
   fetchRecentSubmissions,
@@ -6,6 +6,7 @@ import {
   listPartnerRows,
   resetAllSubmissions,
 } from "../../../lib/partners-api"
+import { fetchAnalytics, type AnalyticsData } from "../../../lib/analytics"
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<{ month: string; partner_slug: string; submission_count: number }[]>([])
@@ -15,16 +16,20 @@ export default function AdminDashboard() {
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(true)
   const [resetting, setResetting] = useState(false)
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+  const liveInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const loadDashboard = useCallback(async () => {
-    const [s, r, partners] = await Promise.all([
+    const [s, r, partners, analyticsData] = await Promise.all([
       fetchSubmissionStats(),
       fetchRecentSubmissions(40),
       listPartnerRows(),
+      fetchAnalytics(),
     ])
     setStats(s)
     setRecent(r)
     setNames(Object.fromEntries(partners.map((p) => [p.slug, p.name])))
+    setAnalytics(analyticsData)
   }, [])
 
   useEffect(() => {
@@ -37,6 +42,18 @@ export default function AdminDashboard() {
         setLoading(false)
       }
     })()
+
+    // Refresh live user count every 30s
+    liveInterval.current = setInterval(async () => {
+      try {
+        const data = await fetchAnalytics()
+        setAnalytics(data)
+      } catch { /* ignore */ }
+    }, 30_000)
+
+    return () => {
+      if (liveInterval.current) clearInterval(liveInterval.current)
+    }
   }, [loadDashboard])
 
   const totalsByPartner = useMemo(() => {
@@ -104,6 +121,95 @@ export default function AdminDashboard() {
       )}
       {error && <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
 
+      {/* Analytics KPIs */}
+      {analytics && (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-5">
+            <p className="text-sm text-slate-500">Besucher jetzt live</p>
+            <p className="text-3xl font-bold text-[#A3C410] mt-1">
+              <span className="inline-block w-2.5 h-2.5 bg-[#A3C410] rounded-full mr-2 animate-pulse" />
+              {analytics.liveUsers}
+            </p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-5">
+            <p className="text-sm text-slate-500">Seitenaufrufe heute</p>
+            <p className="text-3xl font-bold text-[#003B79] mt-1">{analytics.todayViews}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-5">
+            <p className="text-sm text-slate-500">Seitenaufrufe gesamt</p>
+            <p className="text-3xl font-bold text-[#003B79] mt-1">{analytics.totalViews}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-5">
+            <p className="text-sm text-slate-500">Absendungen gesamt</p>
+            <p className="text-3xl font-bold text-[#003B79] mt-1">{totalAll}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Page views by page + Referrers */}
+      {analytics && (
+        <div className="grid lg:grid-cols-2 gap-6">
+          <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-100">
+              <h2 className="font-semibold text-[#003B79]">Aufrufe je Seite (30 Tage)</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 text-left text-slate-500">
+                  <tr>
+                    <th className="px-5 py-3 font-medium">Seite</th>
+                    <th className="px-5 py-3 font-medium text-right">Aufrufe</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {analytics.viewsByPage.length === 0 && (
+                    <tr>
+                      <td colSpan={2} className="px-5 py-8 text-center text-slate-500">Noch keine Daten.</td>
+                    </tr>
+                  )}
+                  {analytics.viewsByPage.map((row) => (
+                    <tr key={row.path} className="border-t border-slate-100">
+                      <td className="px-5 py-3 font-mono text-sm text-slate-700">{row.path}</td>
+                      <td className="px-5 py-3 text-right font-semibold text-[#003B79]">{row.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-100">
+              <h2 className="font-semibold text-[#003B79]">Referrer (30 Tage)</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 text-left text-slate-500">
+                  <tr>
+                    <th className="px-5 py-3 font-medium">Quelle</th>
+                    <th className="px-5 py-3 font-medium text-right">Aufrufe</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {analytics.referrers.length === 0 && (
+                    <tr>
+                      <td colSpan={2} className="px-5 py-8 text-center text-slate-500">Keine Referrer erfasst.</td>
+                    </tr>
+                  )}
+                  {analytics.referrers.map((row) => (
+                    <tr key={row.referrer} className="border-t border-slate-100">
+                      <td className="px-5 py-3 text-slate-700">{row.referrer}</td>
+                      <td className="px-5 py-3 text-right font-semibold text-[#003B79]">{row.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* Submission KPIs */}
       <div className="grid sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-xl border border-slate-200 p-5">
           <p className="text-sm text-slate-500">Absendungen gesamt</p>

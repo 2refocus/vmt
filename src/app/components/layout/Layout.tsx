@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "../ui/sheet"
 import { SeoMeta } from "../SeoMeta"
+import { trackPageView } from "../../../lib/analytics"
 import vmtLogo from "../../../imports/vmt-logo-01.svg"
 import dticketWhite from "../../../imports/dticket_white.svg"
 import logosVerbund from "../../../imports/logos_verbund_icon_only.png"
@@ -72,6 +73,10 @@ export function Layout() {
   useEffect(() => {
     setMenuOpen(false)
   }, [location.pathname, location.hash])
+
+  useEffect(() => {
+    trackPageView(location.pathname)
+  }, [location.pathname])
 
   useEffect(() => {
     if (location.hash) {
