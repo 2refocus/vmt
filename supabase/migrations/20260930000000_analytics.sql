@@ -23,29 +23,22 @@ CREATE INDEX idx_active_sessions_last_seen ON public.active_sessions (last_seen 
 ALTER TABLE public.page_views ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.active_sessions ENABLE ROW LEVEL SECURITY;
 
--- Anon can INSERT page views
-CREATE POLICY "anon_insert_page_views" ON public.page_views
-  FOR INSERT TO anon WITH CHECK (true);
+-- Page views: anyone can insert, anyone can read
+CREATE POLICY "page_views_insert" ON public.page_views
+  FOR INSERT WITH CHECK (true);
 
--- Anon can INSERT/UPDATE active sessions
-CREATE POLICY "anon_upsert_active_sessions" ON public.active_sessions
-  FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "page_views_select" ON public.page_views
+  FOR SELECT USING (true);
 
-CREATE POLICY "anon_update_active_sessions" ON public.active_sessions
-  FOR UPDATE TO anon USING (true) WITH CHECK (true);
+-- Active sessions: full CRUD for all roles
+CREATE POLICY "active_sessions_insert" ON public.active_sessions
+  FOR INSERT WITH CHECK (true);
 
--- Authenticated can read everything
-CREATE POLICY "auth_read_page_views" ON public.page_views
-  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "active_sessions_update" ON public.active_sessions
+  FOR UPDATE USING (true) WITH CHECK (true);
 
-CREATE POLICY "auth_read_active_sessions" ON public.active_sessions
-  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "active_sessions_select" ON public.active_sessions
+  FOR SELECT USING (true);
 
--- Anon can also read active_sessions count (for live indicator, optional)
-CREATE POLICY "anon_select_active_sessions" ON public.active_sessions
-  FOR SELECT TO anon USING (true);
-
--- Cleanup: auto-delete old sessions via a simple approach
--- (sessions older than 2 min are stale, cleaned on next dashboard load)
-CREATE POLICY "auth_delete_active_sessions" ON public.active_sessions
-  FOR DELETE TO authenticated USING (true);
+CREATE POLICY "active_sessions_delete" ON public.active_sessions
+  FOR DELETE USING (true);
