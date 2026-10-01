@@ -266,9 +266,12 @@ export default function Employee() {
               <Button
                 variant="outline"
                 className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
-                onClick={() => {
-                  trackDownload("B2C_Flyer_allgemein_print.pdf")
-                  window.open("/downloads/B2C_Flyer_allgemein_print.pdf", "_blank")
+                onClick={async () => {
+                  await trackDownload("B2C_Flyer_allgemein_print.pdf")
+                  const a = document.createElement("a")
+                  a.href = "/downloads/B2C_Flyer_allgemein_print.pdf"
+                  a.download = "B2C_Flyer_allgemein_print.pdf"
+                  a.click()
                 }}
               >
                 <Download className="mr-2 w-4 h-4" />
@@ -277,9 +280,12 @@ export default function Employee() {
               <Button
                 variant="outline"
                 className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
-                onClick={() => {
-                  trackDownload("B2B_Flyer_allgemein_print.pdf")
-                  window.open("/downloads/B2B_Flyer_allgemein_print.pdf", "_blank")
+                onClick={async () => {
+                  await trackDownload("B2B_Flyer_allgemein_print.pdf")
+                  const a = document.createElement("a")
+                  a.href = "/downloads/B2B_Flyer_allgemein_print.pdf"
+                  a.download = "B2B_Flyer_allgemein_print.pdf"
+                  a.click()
                 }}
               >
                 <Download className="mr-2 w-4 h-4" />

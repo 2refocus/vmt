@@ -38,12 +38,12 @@ export function trackPageView(path: string) {
   }, 30_000)
 }
 
-export function trackDownload(filename: string) {
-  if (!supabase) return
+export async function trackDownload(filename: string): Promise<boolean> {
+  if (!supabase) return false
 
   const sessionId = getSessionId()
 
-  supabase
+  const { error } = await supabase
     .from("page_views")
     .insert({
       path: filename,
@@ -51,9 +51,12 @@ export function trackDownload(filename: string) {
       session_id: sessionId,
       event_type: "download",
     })
-    .then(({ error }) => {
-      if (error) console.error("Download tracking failed:", error)
-    })
+
+  if (error) {
+    console.error("Download tracking failed:", error.message, error)
+    return false
+  }
+  return true
 }
 
 // --- Admin queries ---
