@@ -123,7 +123,7 @@ export default function AdminDashboard() {
 
       {/* Analytics KPIs */}
       {analytics && (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <div className="bg-white rounded-xl border border-slate-200 p-5">
             <p className="text-sm text-slate-500">Besucher jetzt live</p>
             <p className="text-3xl font-bold text-[#A3C410] mt-1">
@@ -138,6 +138,10 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-xl border border-slate-200 p-5">
             <p className="text-sm text-slate-500">Seitenaufrufe gesamt</p>
             <p className="text-3xl font-bold text-[#003B79] mt-1">{analytics.totalViews}</p>
+          </div>
+          <div className="bg-white rounded-xl border border-slate-200 p-5">
+            <p className="text-sm text-slate-500">Downloads gesamt</p>
+            <p className="text-3xl font-bold text-[#003B79] mt-1">{analytics.totalDownloads}</p>
           </div>
           <div className="bg-white rounded-xl border border-slate-200 p-5">
             <p className="text-sm text-slate-500">Absendungen gesamt</p>
@@ -207,6 +211,33 @@ export default function AdminDashboard() {
             </div>
           </section>
         </div>
+      )}
+
+      {/* Downloads */}
+      {analytics && analytics.downloads.length > 0 && (
+        <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-100">
+            <h2 className="font-semibold text-[#003B79]">Flyer-Downloads</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-slate-500">
+                <tr>
+                  <th className="px-5 py-3 font-medium">Datei</th>
+                  <th className="px-5 py-3 font-medium text-right">Downloads</th>
+                </tr>
+              </thead>
+              <tbody>
+                {analytics.downloads.map((row) => (
+                  <tr key={row.file} className="border-t border-slate-100">
+                    <td className="px-5 py-3 text-slate-700">{row.file}</td>
+                    <td className="px-5 py-3 text-right font-semibold text-[#003B79]">{row.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
       )}
 
       {/* Submission KPIs */}

@@ -38,6 +38,22 @@ export function trackPageView(path: string) {
   }, 30_000)
 }
 
+export function trackDownload(filename: string) {
+  if (!supabase) return
+
+  const sessionId = getSessionId()
+
+  supabase
+    .from("page_views")
+    .insert({
+      path: filename,
+      referrer: window.location.pathname,
+      session_id: sessionId,
+      event_type: "download",
+    })
+    .then()
+}
+
 // --- Admin queries ---
 
 export interface AnalyticsData {
@@ -47,11 +63,13 @@ export interface AnalyticsData {
   viewsByPage: { path: string; count: number }[]
   referrers: { referrer: string; count: number }[]
   viewsByDay: { date: string; count: number }[]
+  downloads: { file: string; count: number }[]
+  totalDownloads: number
 }
 
 export async function fetchAnalytics(): Promise<AnalyticsData> {
   if (!supabase) {
-    return { todayViews: 0, totalViews: 0, liveUsers: 0, viewsByPage: [], referrers: [], viewsByDay: [] }
+    return { todayViews: 0, totalViews: 0, liveUsers: 0, viewsByPage: [], referrers: [], viewsByDay: [], downloads: [], totalDownloads: 0 }
   }
 
   const now = new Date()
@@ -62,17 +80,19 @@ export async function fetchAnalytics(): Promise<AnalyticsData> {
   // Clean up stale sessions
   await supabase.from("active_sessions").delete().lt("last_seen", sixtySecsAgo)
 
-  const [todayRes, totalRes, liveRes, allViewsRes] = await Promise.all([
-    // Today's views
+  const [todayRes, totalRes, liveRes, allViewsRes, downloadsRes] = await Promise.all([
+    // Today's page views
     supabase
       .from("page_views")
       .select("id", { count: "exact", head: true })
+      .eq("event_type", "pageview")
       .gte("created_at", todayStart),
 
-    // Total views
+    // Total page views
     supabase
       .from("page_views")
-      .select("id", { count: "exact", head: true }),
+      .select("id", { count: "exact", head: true })
+      .eq("event_type", "pageview"),
 
     // Live users
     supabase
@@ -80,13 +100,20 @@ export async function fetchAnalytics(): Promise<AnalyticsData> {
       .select("session_id", { count: "exact", head: true })
       .gte("last_seen", sixtySecsAgo),
 
-    // Last 30 days raw data for aggregation
+    // Last 30 days page views for aggregation
     supabase
       .from("page_views")
       .select("path, referrer, created_at")
+      .eq("event_type", "pageview")
       .gte("created_at", thirtyDaysAgo)
       .order("created_at", { ascending: false })
       .limit(10000),
+
+    // All downloads
+    supabase
+      .from("page_views")
+      .select("path, created_at")
+      .eq("event_type", "download"),
   ])
 
   const rows = allViewsRes.data || []
@@ -128,6 +155,17 @@ export async function fetchAnalytics(): Promise<AnalyticsData> {
     .map(([date, count]) => ({ date, count }))
     .sort((a, b) => a.date.localeCompare(b.date))
 
+  // Downloads
+  const dlRows = downloadsRes.data || []
+  const dlMap = new Map<string, number>()
+  for (const r of dlRows) {
+    const name = r.path.split("/").pop() || r.path
+    dlMap.set(name, (dlMap.get(name) || 0) + 1)
+  }
+  const downloads = [...dlMap.entries()]
+    .map(([file, count]) => ({ file, count }))
+    .sort((a, b) => b.count - a.count)
+
   return {
     todayViews: todayRes.count || 0,
     totalViews: totalRes.count || 0,
@@ -135,5 +173,7 @@ export async function fetchAnalytics(): Promise<AnalyticsData> {
     viewsByPage,
     referrers,
     viewsByDay,
+    downloads,
+    totalDownloads: dlRows.length,
   }
 }

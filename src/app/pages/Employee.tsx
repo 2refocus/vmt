@@ -2,6 +2,7 @@ import { Link } from "react-router"
 import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2, Download, Share2, Mail, Linkedin } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
+import { trackDownload } from "../../lib/analytics"
 import heroImg from "../../imports/vmt_visual_02_b2c.jpg"
 import dticketLogo from "../../imports/dticket.svg"
 
@@ -265,11 +266,22 @@ export default function Employee() {
               <Button
                 variant="outline"
                 className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
-                disabled
-                title="Download-Link folgt in Kürze"
+                asChild
               >
-                <Download className="mr-2 w-4 h-4" />
-                Flyer herunterladen
+                <a href="/downloads/B2C_Flyer_allgemein_print.pdf" download onClick={() => trackDownload("B2C_Flyer_allgemein_print.pdf")}>
+                  <Download className="mr-2 w-4 h-4" />
+                  Flyer für Angestellte
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
+                asChild
+              >
+                <a href="/downloads/B2B_Flyer_allgemein_print.pdf" download onClick={() => trackDownload("B2B_Flyer_allgemein_print.pdf")}>
+                  <Download className="mr-2 w-4 h-4" />
+                  Flyer für Arbeitgeber
+                </a>
               </Button>
             </div>
 
