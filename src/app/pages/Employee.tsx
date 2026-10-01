@@ -266,22 +266,24 @@ export default function Employee() {
               <Button
                 variant="outline"
                 className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
-                asChild
+                onClick={() => {
+                  trackDownload("B2C_Flyer_allgemein_print.pdf")
+                  window.open("/downloads/B2C_Flyer_allgemein_print.pdf", "_blank")
+                }}
               >
-                <a href="/downloads/B2C_Flyer_allgemein_print.pdf" download onClick={() => trackDownload("B2C_Flyer_allgemein_print.pdf")}>
-                  <Download className="mr-2 w-4 h-4" />
-                  Flyer für Angestellte
-                </a>
+                <Download className="mr-2 w-4 h-4" />
+                Flyer für Angestellte
               </Button>
               <Button
                 variant="outline"
                 className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
-                asChild
+                onClick={() => {
+                  trackDownload("B2B_Flyer_allgemein_print.pdf")
+                  window.open("/downloads/B2B_Flyer_allgemein_print.pdf", "_blank")
+                }}
               >
-                <a href="/downloads/B2B_Flyer_allgemein_print.pdf" download onClick={() => trackDownload("B2B_Flyer_allgemein_print.pdf")}>
-                  <Download className="mr-2 w-4 h-4" />
-                  Flyer für Arbeitgeber
-                </a>
+                <Download className="mr-2 w-4 h-4" />
+                Flyer für Arbeitgeber
               </Button>
             </div>
 

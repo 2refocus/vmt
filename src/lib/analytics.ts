@@ -51,7 +51,9 @@ export function trackDownload(filename: string) {
       session_id: sessionId,
       event_type: "download",
     })
-    .then()
+    .then(({ error }) => {
+      if (error) console.error("Download tracking failed:", error)
+    })
 }
 
 // --- Admin queries ---
