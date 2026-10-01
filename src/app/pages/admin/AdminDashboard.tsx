@@ -181,7 +181,7 @@ export default function AdminDashboard() {
       {analytics && (
         <div className="grid lg:grid-cols-2 gap-6">
           <CollapsibleSection title="Aufrufe je Seite (30 Tage)" defaultOpen={false}>
-            <div className="overflow-x-auto">
+            <div className="overflow-auto max-h-[20rem]">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-left text-slate-500">
                   <tr>
@@ -207,7 +207,7 @@ export default function AdminDashboard() {
           </CollapsibleSection>
 
           <CollapsibleSection title="Referrer (30 Tage)" defaultOpen={false}>
-            <div className="overflow-x-auto">
+            <div className="overflow-auto max-h-[20rem]">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-left text-slate-500">
                   <tr>
