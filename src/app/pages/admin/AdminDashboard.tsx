@@ -180,7 +180,7 @@ export default function AdminDashboard() {
       {/* Page views by page + Referrers */}
       {analytics && (
         <div className="grid lg:grid-cols-2 gap-6">
-          <CollapsibleSection title="Aufrufe je Seite (30 Tage)">
+          <CollapsibleSection title="Aufrufe je Seite (30 Tage)" defaultOpen={false}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-left text-slate-500">
@@ -206,7 +206,7 @@ export default function AdminDashboard() {
             </div>
           </CollapsibleSection>
 
-          <CollapsibleSection title="Referrer (30 Tage)">
+          <CollapsibleSection title="Referrer (30 Tage)" defaultOpen={false}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-left text-slate-500">
@@ -236,7 +236,7 @@ export default function AdminDashboard() {
 
       {/* Downloads */}
       {analytics && (
-        <CollapsibleSection title="Flyer-Downloads">
+        <CollapsibleSection title="Flyer-Downloads" defaultOpen={false}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-left text-slate-500">
@@ -279,7 +279,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <CollapsibleSection title="Absendungen je Partner">
+      <CollapsibleSection title="Absendungen je Partner" defaultOpen={false}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-left text-slate-500">
@@ -337,7 +337,7 @@ export default function AdminDashboard() {
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection title="Neueste Anfragen" defaultOpen={false}>
+      <CollapsibleSection title="Neueste Anfragen">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-left text-slate-500">
