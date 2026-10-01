@@ -4,33 +4,43 @@ import { ChevronDown, Search, Building2, UserCircle2 } from "lucide-react"
 const FAQS = [
   {
     target: "company",
-    question: "Welche Unternehmen können beim Deutschlandticket Job mitmachen?",
-    answer: "Grundsätzlich kann jedes Unternehmen teilnehmen. Voraussetzung ist lediglich, dass mindestens ein*e Arbeitnehmer*in Ihres Unternehmens das Jobticket abnehmen und Sie als Arbeitgeber einen Zuschuss von mindestens 25 % (auf den rabattierten Ticketpreis) gewähren."
+    question: "Welche Unternehmen können am Deutschlandticket Job teilnehmen?",
+    answer: "Grundsätzlich jedes Unternehmen! Die Teilnahme ist ganz einfach: Mindestens eine Mitarbeiterin oder ein Mitarbeiter nutzt das Jobticket und Sie als Arbeitgeber übernehmen mindestens 25 % des Ticketpreises."
+  },
+  {
+    target: "company",
+    question: "Welche Voraussetzungen muss ein zukünftiger Vertragspartner für das Deutschlandticket Job erfüllen?",
+    answer: "Voraussetzung ist der Abschluss eines Deutschlandticket Job \u201ERahmenvertrags\u201C mit dem von Ihnen ausgewählten Verkehrsunternehmen."
   },
   {
     target: "company",
     question: "Wie funktioniert die Abrechnung für mich als Arbeitgeber?",
-    answer: "Die Abrechnung erfolgt in der Regel monatlich über den gewählten Verbundpartner. Sie erhalten eine gesammelte Rechnung über alle aktiven Tickets Ihrer Mitarbeitenden abzüglich Ihres Arbeitgeberzuschusses. Der Betrag für die Mitarbeitenden wird bei diesen in der Regel direkt über die Lohnabrechnung einbehalten."
+    answer: "Die Abrechnung ist abhängig von dem von Ihnen ausgewählten Verkehrsunternehmen. Für detaillierte Informationen zu den jeweiligen Abrechnungsmodalitäten wenden Sie sich bitte direkt an die zuständigen Ansprechpartner. Diese beraten Sie gerne ausführlich und informieren Sie über den individuellen Ablauf."
   },
   {
     target: "company",
     question: "Gibt es steuerliche Vorteile für den Arbeitgeberzuschuss?",
-    answer: "Ja. Der Arbeitgeberzuschuss zum Deutschlandticket Job ist in der Regel steuer- und sozialabgabenfrei, sofern er zusätzlich zum ohnehin geschuldeten Arbeitslohn gewährt wird."
+    answer: "Ja. Der Arbeitgeberzuschuss zum Deutschlandticket Job ist grundsätzlich steuer- und sozialabgabenfrei."
   },
   {
     target: "employee",
-    question: "Wie bestelle ich mein Deutschlandticket Job?",
-    answer: "Sobald Ihr Arbeitgeber einen Vertrag mit einem Verbundpartner abgeschlossen hat, erhalten Sie einen speziellen Link oder Code. Darüber können Sie Ihr persönliches Ticket digital (meist als App-Ticket) bestellen."
+    question: "Wie erhalte ich mein Deutschlandticket Job?",
+    answer: "Sobald Ihr Arbeitgeber einen Rahmenvertrag für das Deutschlandticket Job mit einem Verkehrsunternehmen abgeschlossen hat, erhalten Sie von Ihrem Arbeitgeber \u2013 beispielsweise über die Personalabteilung \u2013 alle weiteren Informationen zur Bestellung und Ausgabe Ihres Tickets. Je nach ausgewähltem Verkehrsunternehmen erhalten Sie Ihr persönliches Deutschlandticket Job digital oder können es in einem Kundencenter erwerben."
   },
   {
     target: "employee",
     question: "Ist das Ticket auch in der Freizeit nutzbar?",
-    answer: "Ja, uneingeschränkt! Das Deutschlandticket Job gilt rund um die Uhr in ganz Deutschland im Nah- und Regionalverkehr – egal ob für den Arbeitsweg, am Wochenende oder im Urlaub."
+    answer: "Ja. Das Deutschlandticket Job können Sie rund um die Uhr und deutschlandweit für beliebig viele Fahrten im öffentlichen Nahverkehr nutzen. Es gilt in der 2. Klasse der teilnehmenden Nahverkehrszüge sowie in Bussen, Straßenbahnen und U-Bahnen der teilnehmenden Verkehrsverbünde und Verkehrsunternehmen. Ob für den Arbeitsweg, einen Ausflug am Wochenende oder während Ihres Urlaubs \u2013 das Ticket kann flexibel für private und berufliche Fahrten genutzt werden."
+  },
+  {
+    target: "employee",
+    question: "Kann ich mein Deutschlandticket Job wieder kündigen?",
+    answer: "Ja. Das Deutschlandticket Job ist ein Abonnement, welches monatlich kündbar ist."
   },
   {
     target: "employee",
     question: "Was passiert, wenn ich das Unternehmen verlasse?",
-    answer: "Wenn Sie aus dem Unternehmen ausscheiden, erlischt Ihre Berechtigung für das vergünstigte Deutschlandticket Job. Das Ticket wird dann zum Ende des Monats Ihres Ausscheidens gekündigt. Sie können danach privat ein reguläres Deutschlandticket abonnieren."
+    answer: "Wenn Sie aus dem Unternehmen ausscheiden, endet Ihre Berechtigung für den vergünstigten Deutschlandticket Job Tarif zum Ende des Monats, in dem Ihr Arbeitsverhältnis endet. Der Vertrag über das Deutschlandticket besteht jedoch weiterhin. Ihr Ticket wird nach dem Ausscheiden aus dem Unternehmen automatisch auf ein reguläres Deutschlandticket umgestellt und läuft entsprechend weiter. Eine automatische Kündigung des Vertrags erfolgt daher nicht. Wenn Sie das Ticket nach Ihrem Ausscheiden aus dem Unternehmen nicht weiter nutzen möchten, müssen Sie den Vertrag rechtzeitig zum Ende des Monats kündigen, in dem Ihr Arbeitsverhältnis endet. Bitte beachten Sie dabei die geltenden Kündigungsfristen."
   }
 ];
 
@@ -145,7 +155,7 @@ export default function FAQ() {
         <div className="mt-8 bg-[#003B79]/5 rounded-2xl p-8 text-center border border-[#003B79]/10">
           <h3 className="text-lg font-bold text-[#003B79] mb-2">Ihre Frage war nicht dabei?</h3>
           <p className="text-slate-600 mb-6">Wir helfen Ihnen gerne persönlich weiter.</p>
-          <a href="mailto:service@vmt-thueringen.de" className="inline-flex items-center justify-center bg-white text-[#003B79] border border-slate-200 hover:border-[#003B79] px-6 py-3 rounded-xl font-medium transition-colors shadow-sm">
+          <a href="mailto:post@vmt-thueringen.de" className="inline-flex items-center justify-center bg-white text-[#003B79] border border-slate-200 hover:border-[#003B79] px-6 py-3 rounded-xl font-medium transition-colors shadow-sm">
             Kontakt aufnehmen
           </a>
         </div>
