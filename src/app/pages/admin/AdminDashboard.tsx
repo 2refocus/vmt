@@ -279,6 +279,39 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      <CollapsibleSection title="Neueste Anfragen">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-left text-slate-500">
+              <tr>
+                <th className="px-5 py-3 font-medium">Zeit</th>
+                <th className="px-5 py-3 font-medium">Firma</th>
+                <th className="px-5 py-3 font-medium">PLZ</th>
+                <th className="px-5 py-3 font-medium">Partner</th>
+                <th className="px-5 py-3 font-medium">Mail</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recent.map((row) => (
+                <tr key={row.id} className="border-t border-slate-100">
+                  <td className="px-5 py-3 whitespace-nowrap">
+                    {new Date(row.created_at).toLocaleString("de-DE")}
+                  </td>
+                  <td className="px-5 py-3">{row.company}</td>
+                  <td className="px-5 py-3 font-mono">{row.plz}</td>
+                  <td className="px-5 py-3">
+                    {(row.partner_slugs || []).map((s: string) => names[s] || s).join(", ")}
+                  </td>
+                  <td className="px-5 py-3 text-xs text-slate-500">
+                    {row.mail_status ? JSON.stringify(row.mail_status) : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CollapsibleSection>
+
       <CollapsibleSection title="Absendungen je Partner" defaultOpen={false}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -330,39 +363,6 @@ export default function AdminDashboard() {
                   <td className="px-5 py-3">{new Date(row.month).toLocaleDateString("de-DE", { month: "long", year: "numeric" })}</td>
                   <td className="px-5 py-3">{names[row.partner_slug] || row.partner_slug}</td>
                   <td className="px-5 py-3 text-right font-semibold">{row.submission_count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Neueste Anfragen">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-slate-500">
-              <tr>
-                <th className="px-5 py-3 font-medium">Zeit</th>
-                <th className="px-5 py-3 font-medium">Firma</th>
-                <th className="px-5 py-3 font-medium">PLZ</th>
-                <th className="px-5 py-3 font-medium">Partner</th>
-                <th className="px-5 py-3 font-medium">Mail</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recent.map((row) => (
-                <tr key={row.id} className="border-t border-slate-100">
-                  <td className="px-5 py-3 whitespace-nowrap">
-                    {new Date(row.created_at).toLocaleString("de-DE")}
-                  </td>
-                  <td className="px-5 py-3">{row.company}</td>
-                  <td className="px-5 py-3 font-mono">{row.plz}</td>
-                  <td className="px-5 py-3">
-                    {(row.partner_slugs || []).map((s: string) => names[s] || s).join(", ")}
-                  </td>
-                  <td className="px-5 py-3 text-xs text-slate-500">
-                    {row.mail_status ? JSON.stringify(row.mail_status) : "—"}
-                  </td>
                 </tr>
               ))}
             </tbody>
