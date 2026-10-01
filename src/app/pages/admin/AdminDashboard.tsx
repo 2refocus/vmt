@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { ChevronDown } from "lucide-react"
 import { Button } from "../../components/ui/button"
 import {
   fetchRecentSubmissions,
@@ -7,6 +8,33 @@ import {
   resetAllSubmissions,
 } from "../../../lib/partners-api"
 import { fetchAnalytics, type AnalyticsData } from "../../../lib/analytics"
+
+function CollapsibleSection({
+  title,
+  defaultOpen = true,
+  children,
+}: {
+  title: string
+  defaultOpen?: boolean
+  children: React.ReactNode
+}) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <button
+        type="button"
+        className="w-full px-5 py-4 border-b border-slate-100 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors"
+        onClick={() => setOpen((o) => !o)}
+      >
+        <h2 className="font-semibold text-[#003B79]">{title}</h2>
+        <ChevronDown
+          className={`w-5 h-5 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && children}
+    </section>
+  )
+}
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<{ month: string; partner_slug: string; submission_count: number }[]>([])
@@ -43,7 +71,6 @@ export default function AdminDashboard() {
       }
     })()
 
-    // Refresh live user count every 30s
     liveInterval.current = setInterval(async () => {
       try {
         const data = await fetchAnalytics()
@@ -72,7 +99,7 @@ export default function AdminDashboard() {
     )
     if (!confirmed) return
 
-    const typed = window.prompt('Zum Bestätigen bitte „RESET“ eingeben:')
+    const typed = window.prompt('Zum Bestätigen bitte „RESET" eingeben:')
     if (typed !== "RESET") {
       setMessage("Reset abgebrochen.")
       return
@@ -113,7 +140,7 @@ export default function AdminDashboard() {
       </div>
 
       <p className="text-xs text-slate-500 -mt-4">
-        Löscht nur Formular-Absendungen. Partner und PLZ-Zuordnungen bleiben erhalten. Bestätigung: „RESET“.
+        Löscht nur Formular-Absendungen. Partner und PLZ-Zuordnungen bleiben erhalten. Bestätigung: „RESET".
       </p>
 
       {message && (
@@ -153,10 +180,7 @@ export default function AdminDashboard() {
       {/* Page views by page + Referrers */}
       {analytics && (
         <div className="grid lg:grid-cols-2 gap-6">
-          <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="font-semibold text-[#003B79]">Aufrufe je Seite (30 Tage)</h2>
-            </div>
+          <CollapsibleSection title="Aufrufe je Seite (30 Tage)">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-left text-slate-500">
@@ -180,12 +204,9 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
-          </section>
+          </CollapsibleSection>
 
-          <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100">
-              <h2 className="font-semibold text-[#003B79]">Referrer (30 Tage)</h2>
-            </div>
+          <CollapsibleSection title="Referrer (30 Tage)">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-left text-slate-500">
@@ -209,16 +230,13 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
-          </section>
+          </CollapsibleSection>
         </div>
       )}
 
       {/* Downloads */}
-      {analytics && analytics.downloads.length > 0 && (
-        <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100">
-            <h2 className="font-semibold text-[#003B79]">Flyer-Downloads</h2>
-          </div>
+      {analytics && (
+        <CollapsibleSection title="Flyer-Downloads">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-left text-slate-500">
@@ -228,6 +246,11 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
+                {analytics.downloads.length === 0 && (
+                  <tr>
+                    <td colSpan={2} className="px-5 py-8 text-center text-slate-500">Noch keine Downloads.</td>
+                  </tr>
+                )}
                 {analytics.downloads.map((row) => (
                   <tr key={row.file} className="border-t border-slate-100">
                     <td className="px-5 py-3 text-slate-700">{row.file}</td>
@@ -237,7 +260,7 @@ export default function AdminDashboard() {
               </tbody>
             </table>
           </div>
-        </section>
+        </CollapsibleSection>
       )}
 
       {/* Submission KPIs */}
@@ -256,10 +279,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100">
-          <h2 className="font-semibold text-[#003B79]">Absendungen je Partner</h2>
-        </div>
+      <CollapsibleSection title="Absendungen je Partner">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-left text-slate-500">
@@ -287,12 +307,9 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
-      </section>
+      </CollapsibleSection>
 
-      <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100">
-          <h2 className="font-semibold text-[#003B79]">Monatliche Statistik</h2>
-        </div>
+      <CollapsibleSection title="Monatliche Statistik" defaultOpen={false}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-left text-slate-500">
@@ -318,12 +335,9 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
-      </section>
+      </CollapsibleSection>
 
-      <section className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100">
-          <h2 className="font-semibold text-[#003B79]">Neueste Anfragen</h2>
-        </div>
+      <CollapsibleSection title="Neueste Anfragen" defaultOpen={false}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-left text-slate-500">
@@ -354,7 +368,7 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
-      </section>
+      </CollapsibleSection>
     </div>
   )
 }
