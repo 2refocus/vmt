@@ -88,7 +88,7 @@ export default function FAQ() {
               }`}
             >
               <Building2 className="w-4 h-4" />
-              Für Arbeitgeber
+              Für Unternehmen
             </button>
             <button 
               onClick={() => setFilter("employee")}
@@ -97,7 +97,7 @@ export default function FAQ() {
               }`}
             >
               <UserCircle2 className="w-4 h-4" />
-              Für Beschäftigte
+              Für Angestellte
             </button>
           </div>
 
@@ -122,7 +122,7 @@ export default function FAQ() {
                       <span className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded inline-block w-max ${
                         isCompany ? 'bg-[#003B79]/10 text-[#003B79]' : 'bg-[#A3C410]/20 text-[#003B79]'
                       }`}>
-                        {isCompany ? 'Arbeitgeber' : 'Beschäftigte'}
+                        {isCompany ? 'Unternehmen' : 'Angestellte'}
                       </span>
                       <span className="font-bold text-slate-800 text-lg pr-4">{faq.question}</span>
                     </div>

@@ -148,11 +148,8 @@ export default function Company() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
-              Ihre Vorteile auf einen Blick
+              Vorteile auf einen Blick
             </h2>
-            <p className="text-lg text-slate-600">
-              Mit dem Deutschlandticket Job bieten Sie Ihren Angestellten einen attraktiven Benefit und unterstützen sie bei ihren täglichen Mobilitätskosten.
-            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -160,7 +157,7 @@ export default function Company() {
               {
                 icon: TrendingUp,
                 title: "Mitarbeiterbonus mit Alltagsnutzen",
-                desc: "Bieten Sie Ihrem Team einen finanziellen Vorteil, von dem Ihre Angestellten jeden Monat profitieren."
+                desc: "Bereits ab einem Arbeitgeberzuschuss von 15,75 Euro profitieren Ihre Mitarbeitenden jeden Monat von mind. 30 % Rabatt auf das Deutschlandticket."
               },
               {
                 icon: Building,
@@ -262,7 +259,7 @@ export default function Company() {
                 {[
                   { label: "Deutschlandticket", value: formatEuro(TICKET_PRICE), valueClass: "text-slate-900" },
                   { label: "Zuschuss Unternehmen", hint: `(${subsidyPercent} %)`, value: formatEuro(subsidyAmount), valueClass: "text-[#003B79]" },
-                  { label: "5 % Rabatt", value: formatEuro(discountAmount), valueClass: "text-[#A3C410]" },
+                  { label: "Zuschuss Verkehrsunternehmen", hint: "(5 %)", value: formatEuro(discountAmount), valueClass: "text-[#A3C410]" },
                   { label: "Preis für Mitarbeitende", hint: "pro Monat (max.)", value: formatEuro(employeePrice), valueClass: "text-slate-900", highlight: true },
                 ].map((row) => (
                   <div
@@ -291,7 +288,7 @@ export default function Company() {
                     <tr className="border-b-2 border-slate-200">
                       <th className="pb-4 font-semibold text-slate-900 align-top">Deutschlandticket</th>
                       <th className="pb-4 font-semibold text-slate-900 align-top">Zuschuss Unternehmen<br/><span className="text-sm font-normal text-slate-500">({subsidyPercent} %)</span></th>
-                      <th className="pb-4 font-semibold text-slate-900 align-top">5 % Rabatt</th>
+                      <th className="pb-4 font-semibold text-slate-900 align-top">Zuschuss Verkehrsunternehmen<br/><span className="text-sm font-normal text-slate-500">(5 %)</span></th>
                       <th className="pb-4 font-semibold text-slate-900 align-top">Preis für Mitarbeitende<br/><span className="text-sm font-normal text-slate-500">pro Monat (max.)</span></th>
                     </tr>
                   </thead>

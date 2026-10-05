@@ -150,8 +150,7 @@ export default function Employee() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-[#003B79] mb-6">
-              Deine Vorteile<br />
-              auf einen Blick
+              Vorteile auf einen Blick
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed">
               Mit dem Deutschlandticket Job sparst du jeden Monat bares Geld,<br />
@@ -204,19 +203,16 @@ export default function Employee() {
             <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mb-4">
               Die Konditionen des Deutschlandticket Job
             </h2>
-            <p className="text-lg text-slate-600">
-              Mit dem Deutschlandticket Job bist du deutschlandweit im Nahverkehr unterwegs und du zahlst weniger als für das reguläre Deutschlandticket.
-            </p>
           </div>
 
           <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 md:p-12 space-y-10">
             <div>
-              <h3 className="text-2xl font-bold text-[#003B79] mb-6">Deine Vorteile auf einen Blick</h3>
+              <h3 className="text-2xl font-bold text-[#003B79] mb-6">Alles auf einen Blick</h3>
               <ul className="space-y-4">
                 {[
                   "maximal 44,10 € pro Monat statt regulär 63 €",
                   "dein Arbeitgeber übernimmt mindestens 25 % des regulären Ticketpreises",
-                  "zusätzlich gibt es 5 % Rabatt auf das Deutschlandticket",
+                  "zusätzlich gibt es 5 % Rabatt vom Verkehrsunternehmen",
                   "monatlich kündbar",
                   "personengebunden",
                 ].map((item) => (
@@ -252,7 +248,7 @@ export default function Employee() {
             
             {[
               { step: "1", title: "Chef fragen", desc: "Sprich deine Personalabteilung oder deinen Arbeitgeber auf das Deutschlandticket Job an." },
-              { step: "2", title: "Vorteil sichern", desc: "Dein Arbeitgeber übernimmt mindestens 25 % des Ticketpreises. Zusätzlich gibt es 5% Rabatt vom Verkehrsunternehmen auf das Deutschlandticket." },
+              { step: "2", title: "Vorteil sichern", desc: "Dein Arbeitgeber übernimmt mindestens 25 % des Ticketpreises. Zusätzlich gibt es 5 % Rabatt vom Verkehrsunternehmen auf das Deutschlandticket." },
               {
                 step: "3",
                 title: "Losfahren",
