@@ -184,6 +184,21 @@ function buildPartnerEmailHtml(data: SubmissionRequest, partnerName: string): st
   });
 }
 
+function nextStepPreference(data: SubmissionRequest): string {
+  const phone = data.interestPhone
+  const contract = data.interestContract
+  let text = ""
+  if (phone && contract) {
+    text = "Sie haben eine telefonische Kontaktaufnahme und die Zusendung der Vertragsunterlagen gewünscht."
+  } else if (phone) {
+    text = "Sie haben eine telefonische Kontaktaufnahme gewünscht."
+  } else if (contract) {
+    text = "Sie haben die Zusendung der Vertragsunterlagen gewünscht."
+  }
+  if (!text) return ""
+  return `<li style="margin-bottom:8px;">${text}</li>`
+}
+
 function buildApplicantConfirmationHtml(data: SubmissionRequest, partnerNames: string[]): string {
   const partnerChips = partnerNames
     .map(
@@ -205,9 +220,8 @@ function buildApplicantConfirmationHtml(data: SubmissionRequest, partnerNames: s
     </table>
     <h3 style="margin:0 0 12px;color:${VMT_BLUE};font-size:18px;">Wie geht es weiter?</h3>
     <ol style="margin:0 0 22px;padding-left:20px;color:#334155;">
-      <li style="margin-bottom:8px;">Ihr Verbundpartner wird sich innerhalb von 1–2 Werktagen bei Ihnen melden.</li>
-      <li style="margin-bottom:8px;">Gemeinsam besprechen Sie die Details und erhalten die Vertragsunterlagen.</li>
-      <li style="margin-bottom:8px;">Nach Vertragsabschluss können Ihre Mitarbeitenden das Deutschlandticket Job bestellen.</li>
+      <li style="margin-bottom:8px;">Ihr lokaler Verbundpartner wird sich innerhalb der nächsten 1-2 Werktage bei Ihnen melden.</li>
+      ${nextStepPreference(data)}
     </ol>
     <p style="margin:0 0 18px;">Bei Fragen erreichen Sie uns unter <a href="mailto:post@vmt-thueringen.de" style="color:${VMT_BLUE};font-weight:600;text-decoration:none;">post@vmt-thueringen.de</a>.</p>
     <p style="margin:0;">Mit freundlichen Grüßen<br><strong style="color:${VMT_BLUE};">Ihr VMT-Team</strong></p>

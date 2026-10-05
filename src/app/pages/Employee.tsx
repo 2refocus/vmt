@@ -1,10 +1,33 @@
+import { useState } from "react"
 import { Link } from "react-router"
-import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2, Download, Share2, Mail, Linkedin } from "lucide-react"
+import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2, ChevronDown, Download, Share2, Mail, Linkedin } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
 import { trackDownload } from "../../lib/analytics"
 import heroImg from "../../imports/vmt_visual_02_b2c.jpg"
 import dticketLogo from "../../imports/dticket.svg"
+
+const EMPLOYEE_FAQS = [
+  {
+    question: "Wie erhalte ich mein Deutschlandticket Job?",
+    answer:
+      "Sobald Ihr Arbeitgeber einen Rahmenvertrag für das Deutschlandticket Job mit einem Verkehrsunternehmen abgeschlossen hat, erhalten Sie von Ihrem Arbeitgeber – beispielsweise über die Personalabteilung – alle weiteren Informationen zur Bestellung und Ausgabe Ihres Tickets. Je nach ausgewähltem Verkehrsunternehmen erhalten Sie Ihr persönliches Deutschlandticket Job digital oder können es in einem Kundencenter erwerben.",
+  },
+  {
+    question: "Ist das Ticket auch in der Freizeit nutzbar?",
+    answer:
+      "Ja. Das Deutschlandticket Job können Sie rund um die Uhr und deutschlandweit für beliebig viele Fahrten im öffentlichen Nahverkehr nutzen. Es gilt in der 2. Klasse der teilnehmenden Nahverkehrszüge sowie in Bussen, Straßenbahnen und U-Bahnen der teilnehmenden Verkehrsverbünde und Verkehrsunternehmen. Ob für den Arbeitsweg, einen Ausflug am Wochenende oder während Ihres Urlaubs – das Ticket kann flexibel für private und berufliche Fahrten genutzt werden.",
+  },
+  {
+    question: "Kann ich mein Deutschlandticket Job wieder kündigen?",
+    answer: "Ja. Das Deutschlandticket Job ist ein Abonnement, welches monatlich kündbar ist.",
+  },
+  {
+    question: "Was passiert, wenn ich das Unternehmen verlasse?",
+    answer:
+      "Wenn Sie aus dem Unternehmen ausscheiden, endet Ihre Berechtigung für den vergünstigten Deutschlandticket Job Tarif zum Ende des Monats, in dem Ihr Arbeitsverhältnis endet. Der Vertrag über das Deutschlandticket besteht jedoch weiterhin. Ihr Ticket wird nach dem Ausscheiden aus dem Unternehmen automatisch auf ein reguläres Deutschlandticket umgestellt und läuft entsprechend weiter. Eine automatische Kündigung des Vertrags erfolgt daher nicht. Wenn Sie das Ticket nach Ihrem Ausscheiden aus dem Unternehmen nicht weiter nutzen möchten, müssen Sie den Vertrag rechtzeitig zum Ende des Monats kündigen, in dem Ihr Arbeitsverhältnis endet. Bitte beachten Sie dabei die geltenden Kündigungsfristen.",
+  },
+]
 
 const SHARE_URL = "https://das-kommt-gut-an.de/company"
 const SHARE_TEXT =
@@ -36,6 +59,7 @@ async function handleNativeShare() {
 
 export default function Employee() {
   const shareLinks = buildShareLinks()
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -251,7 +275,46 @@ export default function Employee() {
             ))}
           </div>
           
-          <div className="mt-16 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-left">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#003B79] mt-16 mb-8">Noch Fragen?</h2>
+          <div className="grid gap-4 text-left mb-16">
+            {EMPLOYEE_FAQS.map((faq, i) => {
+              const isOpen = openFaqIndex === i
+
+              return (
+                <div
+                  key={faq.question}
+                  className={`rounded-xl border overflow-hidden transition-colors ${
+                    isOpen ? "border-[#003B79]" : "border-slate-200 hover:border-[#003B79]"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaqIndex(isOpen ? null : i)}
+                    className="w-full p-4 flex items-center gap-3 text-left cursor-pointer group bg-white"
+                  >
+                    <CheckCircle2 className="w-5 h-5 text-[#A3C410] shrink-0" />
+                    <span className="font-medium text-slate-700 group-hover:text-[#003B79] flex-1">
+                      {faq.question}
+                    </span>
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform ${
+                        isOpen ? "rotate-180 bg-slate-100 text-slate-600" : "bg-slate-50 text-slate-400"
+                      }`}
+                    >
+                      <ChevronDown className="w-5 h-5" />
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 pb-4 pt-0 pl-12 text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-left">
             <h3 className="text-xl font-bold text-[#003B79] mb-4">Chef, wir müssen reden!</h3>
             <p className="text-slate-600 mb-6">
               Dein Unternehmen bietet das Deutschlandticket Job noch nicht an? Sprich das Thema einfach an und zeig, welche Vorteile das Deutschlandticket Job für Beschäftigte und Unternehmen bietet.

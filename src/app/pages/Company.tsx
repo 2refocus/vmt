@@ -8,19 +8,24 @@ import dticketLogo from "../../imports/dticket.svg"
 
 const COMPANY_FAQS = [
   {
-    question: "Welche Unternehmen mitmachen können",
+    question: "Welche Unternehmen können am Deutschlandticket Job teilnehmen?",
     answer:
-      "Grundsätzlich kann jedes Unternehmen teilnehmen. Voraussetzung ist lediglich, dass mindestens ein*e Arbeitnehmer*in Ihres Unternehmens das Jobticket abnehmen und Sie als Arbeitgeber einen Zuschuss von mindestens 25 % (auf den rabattierten Ticketpreis) gewähren.",
+      "Grundsätzlich jedes Unternehmen! Die Teilnahme ist ganz einfach: Mindestens eine Mitarbeiterin oder ein Mitarbeiter nutzt das Jobticket und Sie als Arbeitgeber übernehmen mindestens 25 % des Ticketpreises.",
   },
   {
-    question: "Wie die Mitarbeitenden Ihres Unternehmens Ihr Deutschlandticket Job bestellen",
+    question: "Welche Voraussetzungen muss ein zukünftiger Vertragspartner für das Deutschlandticket Job erfüllen?",
     answer:
-      "Nach Vertragsabschluss mit Ihrem Verbundpartner erhalten Ihre Mitarbeitenden einen Zugang über Link oder Code. Darüber können sie das Deutschlandticket Job digital bestellen – in der Regel direkt als App-Ticket.",
+      "Voraussetzung ist der Abschluss eines Deutschlandticket Job „Rahmenvertrags“ mit dem von Ihnen ausgewählten Verkehrsunternehmen.",
   },
   {
-    question: "Wie abgerechnet wird",
+    question: "Wie funktioniert die Abrechnung für mich als Arbeitgeber?",
     answer:
-      "Die Abrechnung erfolgt in der Regel monatlich über den gewählten Verbundpartner. Sie erhalten eine gesammelte Rechnung über alle aktiven Tickets Ihrer Mitarbeitenden abzüglich Ihres Arbeitgeberzuschusses. Der Betrag für die Mitarbeitenden wird bei diesen in der Regel direkt über die Lohnabrechnung einbehalten.",
+      "Die Abrechnung ist abhängig von dem von Ihnen ausgewählten Verkehrsunternehmen. Für detaillierte Informationen zu den jeweiligen Abrechnungsmodalitäten wenden Sie sich bitte direkt an die zuständigen Ansprechpartner. Diese beraten Sie gerne ausführlich und informieren Sie über den individuellen Ablauf.",
+  },
+  {
+    question: "Gibt es steuerliche Vorteile für den Arbeitgeberzuschuss?",
+    answer:
+      "Ja. Der Arbeitgeberzuschuss zum Deutschlandticket Job ist grundsätzlich steuer- und sozialabgabenfrei.",
   },
 ]
 
