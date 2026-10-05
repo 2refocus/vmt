@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
 
 -- Seed default VMT copy email
 INSERT INTO public.site_settings (key, value, label) VALUES
-  ('vmt_copy_email', 'service@vmt-thueringen.de', 'E-Mail für VMT-Kopie der Anfragen')
+  ('vmt_copy_email', 'post@vmt-thueringen.de', 'E-Mail für VMT-Kopie der Anfragen')
 ON CONFLICT (key) DO NOTHING;
 
 -- RLS: anon can read, authenticated can read+write

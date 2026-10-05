@@ -80,7 +80,7 @@ INSERT INTO public.partners (slug, name, email, phone, address, website, lat, ln
   ('swg', 'Stadtwerke Weimar', 'Kundendienst-verkehr@swg-weimar.de', '03643 4341-147', NULL, NULL, NULL, NULL, 'swg', true, 90),
   ('twsb', 'Thüringerwaldbahn und Straßenbahn Gotha', 'info@waldbahn-gotha.de', '03621 398270', NULL, NULL, NULL, NULL, 'twsb', true, 100),
   ('vlg', 'VLG Gotha', 'job-ticket@nvg-gotha.de', '03621 3982710', NULL, NULL, NULL, NULL, 'vlg', true, 110),
-  ('vmt', 'Verkehrsverbund Mittelthüringen (VMT)', 'service@vmt-thueringen.de', '0361 19449', NULL, NULL, NULL, NULL, NULL, true, 120),
+  ('vmt', 'Verkehrsverbund Mittelthüringen (VMT)', 'post@vmt-thueringen.de', '0361 19449', NULL, NULL, NULL, NULL, NULL, true, 120),
   ('fuh', 'Frank & Haueis GmbH (Test)', 'andy@frank-haueis.de', '+49 361 6600030', 'Schlachthofstraße 84, 99085 Erfurt', 'https://www.frank-haueis.de', 50.9786, 11.0464, NULL, true, 5)
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,

@@ -116,7 +116,7 @@ export const PARTNERS: Record<PartnerSlug, Partner> = {
   vmt: {
     slug: "vmt",
     name: "Verkehrsverbund Mittelthüringen (VMT)",
-    email: "service@vmt-thueringen.de",
+    email: "post@vmt-thueringen.de",
     phone: "0361 19449",
   },
   fuh: {

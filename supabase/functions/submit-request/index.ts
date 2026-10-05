@@ -18,11 +18,11 @@ const PARTNER_EMAILS_FALLBACK: Record<string, { name: string; email: string | nu
   swg: { name: "Stadtwerke Weimar", email: "Kundendienst-verkehr@swg-weimar.de" },
   twsb: { name: "Thüringerwaldbahn und Straßenbahn Gotha", email: "info@waldbahn-gotha.de" },
   vlg: { name: "VLG Gotha", email: "job-ticket@nvg-gotha.de" },
-  vmt: { name: "Verkehrsverbund Mittelthüringen (VMT)", email: "service@vmt-thueringen.de" },
+  vmt: { name: "Verkehrsverbund Mittelthüringen (VMT)", email: "post@vmt-thueringen.de" },
   fuh: { name: "Frank & Haueis GmbH (Test)", email: "andy@frank-haueis.de" },
 };
 
-const VMT_FALLBACK_EMAIL = Deno.env.get("VMT_FALLBACK_EMAIL") || "service@vmt-thueringen.de";
+const VMT_FALLBACK_EMAIL = Deno.env.get("VMT_FALLBACK_EMAIL") || "post@vmt-thueringen.de";
 const MAIL_FROM = Deno.env.get("MAIL_FROM") || "vmt@mail.das-kommt-gut-an.de";
 const ASSET_BASE =
   Deno.env.get("MAIL_ASSET_BASE") ||
@@ -209,7 +209,7 @@ function buildApplicantConfirmationHtml(data: SubmissionRequest, partnerNames: s
       <li style="margin-bottom:8px;">Gemeinsam besprechen Sie die Details und erhalten die Vertragsunterlagen.</li>
       <li style="margin-bottom:8px;">Nach Vertragsabschluss können Ihre Mitarbeitenden das Deutschlandticket Job bestellen.</li>
     </ol>
-    <p style="margin:0 0 18px;">Bei Fragen erreichen Sie uns unter <a href="mailto:service@vmt-thueringen.de" style="color:${VMT_BLUE};font-weight:600;text-decoration:none;">service@vmt-thueringen.de</a>.</p>
+    <p style="margin:0 0 18px;">Bei Fragen erreichen Sie uns unter <a href="mailto:post@vmt-thueringen.de" style="color:${VMT_BLUE};font-weight:600;text-decoration:none;">post@vmt-thueringen.de</a>.</p>
     <p style="margin:0;">Mit freundlichen Grüßen<br><strong style="color:${VMT_BLUE};">Ihr VMT-Team</strong></p>
   `;
 
