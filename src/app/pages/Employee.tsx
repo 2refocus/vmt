@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2, ChevronDown, Download, Share2, Mail, Linkedin } from "lucide-react"
+import { ArrowRight, Shuffle, Train, PiggyBank, Smile, CheckCircle2, ChevronDown, Download, Share2, Mail, Linkedin } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
 import { trackDownload } from "../../lib/analytics"
@@ -192,9 +192,9 @@ export default function Employee() {
                 desc: "Ein Ticket, unzählige Möglichkeiten: Nutze Busse, Straßenbahnen und Nahverkehrszüge deutschlandweit – ganz ohne Tarifgrenzen.",
               },
               {
-                icon: Leaf,
-                title: "Nachhaltig",
-                desc: "Gut fürs Klima, gut für dich. Jede Fahrt mit Bus und Bahn statt mit dem Auto spart CO₂ und trägt zu einer klimafreundlicheren Mobilität bei.",
+                icon: Shuffle,
+                title: "Flexibel",
+                desc: "Heute Auto, morgen Fahrrad, übermorgen Bus, Zug und Straßenbahn? Mit dem Deutschlandticket Job bist du flexibel unterwegs - ganz ohne Parkplatzsuche oder Helmfrisur.",
               },
               {
                 icon: Smile,
