@@ -48,7 +48,6 @@ Vielleicht wäre das Deutschlandticket Job auch für uns interessant? Weitere In
 function buildShareLinks() {
   const encodedText = encodeURIComponent(EMPLOYER_PITCH)
   return {
-    whatsapp: `https://wa.me/?text=${encodedText}`,
     linkedin: `https://www.linkedin.com/feed/?shareActive=true&text=${encodedText}`,
     email: `mailto:?subject=${encodeURIComponent("Deutschlandticket Job")}&body=${encodedText}`,
   }
@@ -394,11 +393,6 @@ export default function Employee() {
                 >
                   <Share2 className="mr-2 w-4 h-4" />
                   Teilen
-                </Button>
-                <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
-                  <a href={shareLinks.whatsapp} target="_blank" rel="noreferrer">
-                    WhatsApp
-                  </a>
                 </Button>
                 <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
                   <a href={shareLinks.email}>
