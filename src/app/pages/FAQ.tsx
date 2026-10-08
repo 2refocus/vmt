@@ -25,22 +25,32 @@ const FAQS = [
   {
     target: "employee",
     question: "Wie erhalte ich mein Deutschlandticket Job?",
-    answer: "Sobald Ihr Arbeitgeber einen Rahmenvertrag für das Deutschlandticket Job mit einem Verkehrsunternehmen abgeschlossen hat, erhalten Sie von Ihrem Arbeitgeber \u2013 beispielsweise über die Personalabteilung \u2013 alle weiteren Informationen zur Bestellung und Ausgabe Ihres Tickets. Je nach ausgewähltem Verkehrsunternehmen erhalten Sie Ihr persönliches Deutschlandticket Job digital oder können es in einem Kundencenter erwerben."
+    answer: "Sobald Ihr Arbeitgeber einen Rahmenvertrag für das Deutschlandticket Job mit einem Verkehrsunternehmen abgeschlossen hat, erhalten Sie von Ihrem Arbeitgeber – beispielsweise über die Personalabteilung – alle weiteren Informationen zur Bestellung und Ausgabe Ihres Tickets.\n\nJe nach ausgewähltem Verkehrsunternehmen erhalten Sie Ihr persönliches Deutschlandticket Job digital, postalisch oder können es in einem Kundencenter erwerben."
   },
   {
     target: "employee",
     question: "Ist das Ticket auch in der Freizeit nutzbar?",
-    answer: "Ja. Das Deutschlandticket Job können Sie rund um die Uhr und deutschlandweit für beliebig viele Fahrten im öffentlichen Nahverkehr nutzen. Es gilt in der 2. Klasse der teilnehmenden Nahverkehrszüge sowie in Bussen, Straßenbahnen und U-Bahnen der teilnehmenden Verkehrsverbünde und Verkehrsunternehmen. Ob für den Arbeitsweg, einen Ausflug am Wochenende oder während Ihres Urlaubs \u2013 das Ticket kann flexibel für private und berufliche Fahrten genutzt werden."
+    answer: "Ja. Das Deutschlandticket Job können Sie rund um die Uhr und deutschlandweit für beliebig viele Fahrten im öffentlichen Nahverkehr nutzen. Es gilt in der 2. Klasse der teilnehmenden Nahverkehrszüge sowie in Bussen, Straßenbahnen und U-Bahnen der teilnehmenden Verkehrsverbünde und Verkehrsunternehmen.\n\nOb für den Arbeitsweg, einen Ausflug am Wochenende oder während Ihres Urlaubs – das Ticket kann flexibel für private und berufliche Fahrten genutzt werden."
   },
   {
     target: "employee",
     question: "Kann ich mein Deutschlandticket Job wieder kündigen?",
-    answer: "Ja. Das Deutschlandticket Job ist ein Abonnement, welches monatlich kündbar ist."
+    answer: "Ja. Das Deutschlandticket Job ist ein Abonnement, welches monatlich gekündigt werden kann. Die Kündigung ist bis zum 10. Kalendertag eines Monats schriftlich einzureichen."
   },
   {
     target: "employee",
     question: "Was passiert, wenn ich das Unternehmen verlasse?",
-    answer: "Wenn Sie aus dem Unternehmen ausscheiden, endet Ihre Berechtigung für den vergünstigten Deutschlandticket Job Tarif zum Ende des Monats, in dem Ihr Arbeitsverhältnis endet. Der Vertrag über das Deutschlandticket besteht jedoch weiterhin. Ihr Ticket wird nach dem Ausscheiden aus dem Unternehmen automatisch auf ein reguläres Deutschlandticket umgestellt und läuft entsprechend weiter. Eine automatische Kündigung des Vertrags erfolgt daher nicht. Wenn Sie das Ticket nach Ihrem Ausscheiden aus dem Unternehmen nicht weiter nutzen möchten, müssen Sie den Vertrag rechtzeitig zum Ende des Monats kündigen, in dem Ihr Arbeitsverhältnis endet. Bitte beachten Sie dabei die geltenden Kündigungsfristen."
+    answer: "Wenn Sie aus dem Unternehmen ausscheiden, endet Ihre Berechtigung für das vergünstigte Deutschlandticket Job. Ihr Arbeitgeber meldet den Austritt, woraufhin das Jobticket gemäß den geltenden Kündigungsfristen beendet wird.\n\nSie haben anschließend die Möglichkeit, das Deutschlandticket als reguläres Abonnement zu nutzen oder ein anderes passendes Ticketangebot zu wählen."
+  },
+  {
+    target: "employee",
+    question: "Kann ich mit meinem Deutschlandticket Job weitere Personen mitnehmen?",
+    answer: "Nein. Das Deutschlandticket Job beinhaltet keine Mitnahmemöglichkeiten für weitere Personen, Fahrräder oder Hunde."
+  },
+  {
+    target: "employee",
+    question: "Kann ich mein Deutschlandticket Job an andere Personen übertragen?",
+    answer: "Nein. Das Deutschlandticket Job ist immer ein personengebundenes Ticket, da der Arbeitgeber bzw. das Unternehmen ausschließlich seinen Mitarbeitenden eine kostengünstige Mobilitätslösung anbieten möchte."
   }
 ];
 
@@ -134,8 +144,10 @@ export default function FAQ() {
                   </button>
                   
                   {isOpen && (
-                    <div className="px-6 pb-6 pt-2 bg-white text-slate-600 leading-relaxed border-t border-slate-50 mt-2">
-                      {faq.answer}
+                    <div className="px-6 pb-6 pt-2 bg-white text-slate-600 leading-relaxed border-t border-slate-50 mt-2 space-y-3">
+                      {faq.answer.split("\n\n").map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
                     </div>
                   )}
                 </div>

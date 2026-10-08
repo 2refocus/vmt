@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { Link } from "react-router"
 import { ArrowRight, Leaf, Train, PiggyBank, Smile, CheckCircle2, ChevronDown, Download, Share2, Mail, Linkedin } from "lucide-react"
 import { motion } from "motion/react"
 import { Button } from "../components/ui/button"
@@ -11,34 +10,46 @@ const EMPLOYEE_FAQS = [
   {
     question: "Wie erhalte ich mein Deutschlandticket Job?",
     answer:
-      "Sobald Ihr Arbeitgeber einen Rahmenvertrag für das Deutschlandticket Job mit einem Verkehrsunternehmen abgeschlossen hat, erhalten Sie von Ihrem Arbeitgeber – beispielsweise über die Personalabteilung – alle weiteren Informationen zur Bestellung und Ausgabe Ihres Tickets. Je nach ausgewähltem Verkehrsunternehmen erhalten Sie Ihr persönliches Deutschlandticket Job digital oder können es in einem Kundencenter erwerben.",
+      "Sobald Ihr Arbeitgeber einen Rahmenvertrag für das Deutschlandticket Job mit einem Verkehrsunternehmen abgeschlossen hat, erhalten Sie von Ihrem Arbeitgeber – beispielsweise über die Personalabteilung – alle weiteren Informationen zur Bestellung und Ausgabe Ihres Tickets.\n\nJe nach ausgewähltem Verkehrsunternehmen erhalten Sie Ihr persönliches Deutschlandticket Job digital, postalisch oder können es in einem Kundencenter erwerben.",
   },
   {
     question: "Ist das Ticket auch in der Freizeit nutzbar?",
     answer:
-      "Ja. Das Deutschlandticket Job können Sie rund um die Uhr und deutschlandweit für beliebig viele Fahrten im öffentlichen Nahverkehr nutzen. Es gilt in der 2. Klasse der teilnehmenden Nahverkehrszüge sowie in Bussen, Straßenbahnen und U-Bahnen der teilnehmenden Verkehrsverbünde und Verkehrsunternehmen. Ob für den Arbeitsweg, einen Ausflug am Wochenende oder während Ihres Urlaubs – das Ticket kann flexibel für private und berufliche Fahrten genutzt werden.",
+      "Ja. Das Deutschlandticket Job können Sie rund um die Uhr und deutschlandweit für beliebig viele Fahrten im öffentlichen Nahverkehr nutzen. Es gilt in der 2. Klasse der teilnehmenden Nahverkehrszüge sowie in Bussen, Straßenbahnen und U-Bahnen der teilnehmenden Verkehrsverbünde und Verkehrsunternehmen.\n\nOb für den Arbeitsweg, einen Ausflug am Wochenende oder während Ihres Urlaubs – das Ticket kann flexibel für private und berufliche Fahrten genutzt werden.",
   },
   {
     question: "Kann ich mein Deutschlandticket Job wieder kündigen?",
-    answer: "Ja. Das Deutschlandticket Job ist ein Abonnement, welches monatlich kündbar ist.",
+    answer:
+      "Ja. Das Deutschlandticket Job ist ein Abonnement, welches monatlich gekündigt werden kann. Die Kündigung ist bis zum 10. Kalendertag eines Monats schriftlich einzureichen.",
   },
   {
     question: "Was passiert, wenn ich das Unternehmen verlasse?",
     answer:
-      "Wenn Sie aus dem Unternehmen ausscheiden, endet Ihre Berechtigung für den vergünstigten Deutschlandticket Job Tarif zum Ende des Monats, in dem Ihr Arbeitsverhältnis endet. Der Vertrag über das Deutschlandticket besteht jedoch weiterhin. Ihr Ticket wird nach dem Ausscheiden aus dem Unternehmen automatisch auf ein reguläres Deutschlandticket umgestellt und läuft entsprechend weiter. Eine automatische Kündigung des Vertrags erfolgt daher nicht. Wenn Sie das Ticket nach Ihrem Ausscheiden aus dem Unternehmen nicht weiter nutzen möchten, müssen Sie den Vertrag rechtzeitig zum Ende des Monats kündigen, in dem Ihr Arbeitsverhältnis endet. Bitte beachten Sie dabei die geltenden Kündigungsfristen.",
+      "Wenn Sie aus dem Unternehmen ausscheiden, endet Ihre Berechtigung für das vergünstigte Deutschlandticket Job. Ihr Arbeitgeber meldet den Austritt, woraufhin das Jobticket gemäß den geltenden Kündigungsfristen beendet wird.\n\nSie haben anschließend die Möglichkeit, das Deutschlandticket als reguläres Abonnement zu nutzen oder ein anderes passendes Ticketangebot zu wählen.",
+  },
+  {
+    question: "Kann ich mit meinem Deutschlandticket Job weitere Personen mitnehmen?",
+    answer:
+      "Nein. Das Deutschlandticket Job beinhaltet keine Mitnahmemöglichkeiten für weitere Personen, Fahrräder oder Hunde.",
+  },
+  {
+    question: "Kann ich mein Deutschlandticket Job an andere Personen übertragen?",
+    answer:
+      "Nein. Das Deutschlandticket Job ist immer ein personengebundenes Ticket, da der Arbeitgeber bzw. das Unternehmen ausschließlich seinen Mitarbeitenden eine kostengünstige Mobilitätslösung anbieten möchte.",
   },
 ]
 
-const SHARE_URL = "https://das-kommt-gut-an.de/company"
-const SHARE_TEXT =
-  "Schau dir das Deutschlandticket Job an – ein attraktiver Benefit für Beschäftigte und Unternehmen:"
+const EMPLOYER_PITCH = `Hallo [Name],
+
+ich bin auf das Deutschlandticket Job aufmerksam geworden und würde das Angebot gerne nutzen. Der Arbeitgeber übernimmt dabei mindestens 25 % des regulären Ticketpreises. Zusätzlich gibt es 5 % Rabatt vom Verkehrsunternehmen, mit dem der Arbeitgeber den Vertrag abschließt.
+
+Vielleicht wäre das Deutschlandticket Job auch für uns interessant? Weitere Informationen zu den Vorteilen, Konditionen und nächsten Schritten finden Sie unter www.das-kommt-gut-an.de.`
 
 function buildShareLinks() {
-  const encodedUrl = encodeURIComponent(SHARE_URL)
-  const encodedText = encodeURIComponent(`${SHARE_TEXT} ${SHARE_URL}`)
+  const encodedText = encodeURIComponent(EMPLOYER_PITCH)
   return {
     whatsapp: `https://wa.me/?text=${encodedText}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    linkedin: `https://www.linkedin.com/feed/?shareActive=true&text=${encodedText}`,
     email: `mailto:?subject=${encodeURIComponent("Deutschlandticket Job")}&body=${encodedText}`,
   }
 }
@@ -48,8 +59,7 @@ async function handleNativeShare() {
     try {
       await navigator.share({
         title: "Deutschlandticket Job",
-        text: SHARE_TEXT,
-        url: SHARE_URL,
+        text: EMPLOYER_PITCH,
       })
     } catch {
       // user cancelled
@@ -60,6 +70,17 @@ async function handleNativeShare() {
 export default function Employee() {
   const shareLinks = buildShareLinks()
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
+  const [pitchCopied, setPitchCopied] = useState(false)
+
+  const copyPitch = async () => {
+    try {
+      await navigator.clipboard.writeText(EMPLOYER_PITCH)
+      setPitchCopied(true)
+      window.setTimeout(() => setPitchCopied(false), 2000)
+    } catch {
+      setPitchCopied(false)
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
@@ -247,19 +268,9 @@ export default function Employee() {
             <div className="hidden md:block absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
             
             {[
-              { step: "1", title: "Chef fragen", desc: "Sprich deine Personalabteilung oder deinen Arbeitgeber auf das Deutschlandticket Job an." },
-              { step: "2", title: "Vorteil sichern", desc: "Dein Arbeitgeber übernimmt mindestens 25 % des Ticketpreises. Zusätzlich gibt es 5 % Rabatt vom Verkehrsunternehmen auf das Deutschlandticket." },
-              {
-                step: "3",
-                title: "Losfahren",
-                desc: (
-                  <>
-                    Du erhältst dein Deutschlandticket Job über das Verkehrsunternehmen und kannst damit deutschlandweit
-                    <br />
-                    im Nah- & Regionalverkehr unterwegs&nbsp;sein.
-                  </>
-                ),
-              },
+              { step: "1", title: "Chef fragen", desc: "Du möchtest das Deutschlandticket Job nutzen? Sprich deine Personalabteilung oder deinen Arbeitgeber darauf an und zeig, welche Vorteile das Deutschlandticket Job für Beschäftigte und Unternehmen bietet." },
+              { step: "2", title: "Chef sichert Vorteile", desc: "Dein Arbeitgeber schließt einen Rahmenvertrag mit einem teilnehmenden Verkehrsunternehmen ab und ermöglicht dir damit den Zugang zum Deutschlandticket Job." },
+              { step: "3", title: "Ticket holen & losfahren", desc: "Hol dir dein Deutschlandticket Job und sei deutschlandweit im Nah- und Regionalverkehr unterwegs." },
             ].map((step, i) => (
               <div key={i} className="relative z-10 bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center">
                 <div className="w-12 h-12 bg-[#A3C410] text-[#003B79] rounded-full flex items-center justify-center font-bold text-xl mb-4 border-4 border-white shadow-sm">
@@ -301,8 +312,10 @@ export default function Employee() {
                     </div>
                   </button>
                   {isOpen && (
-                    <div className="px-4 pb-4 pt-0 pl-12 text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
-                      {faq.answer}
+                    <div className="px-4 pb-4 pt-0 pl-12 text-slate-600 leading-relaxed border-t border-slate-100 bg-white space-y-3">
+                      {faq.answer.split("\n\n").map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -312,16 +325,33 @@ export default function Employee() {
 
           <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-left">
             <h3 className="text-xl font-bold text-[#003B79] mb-4">Chef, wir müssen reden!</h3>
-            <p className="text-slate-600 mb-6">
-              Dein Unternehmen bietet das Deutschlandticket Job noch nicht an? Sprich das Thema einfach an und zeig, welche Vorteile das Deutschlandticket Job für Beschäftigte und Unternehmen bietet.
-            </p>
+            <div className="text-slate-600 mb-6 space-y-4">
+              <p>
+                Dein Arbeitgeber bietet das Deutschlandticket Job noch nicht an? Sprich deine Personalabteilung oder deinen Arbeitgeber einfach darauf an und zeig, welche Vorteile das Deutschlandticket Job für Beschäftigte und Unternehmen bietet.
+              </p>
+              <p>Mach die Ansprache einfach:</p>
+              <p>
+                Lade dir unseren Flyer herunter, nutze den vorbereiteten Text für deine Nachricht oder teile die Informationen direkt per E-Mail oder LinkedIn.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 mb-8">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                <p className="font-semibold text-[#003B79]">Textbaustein zur Ansprache des Arbeitgebers</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="border-[#003B79]/30 text-[#003B79] hover:bg-white shrink-0"
+                  onClick={copyPitch}
+                >
+                  {pitchCopied ? "Text kopiert" : "Text kopieren"}
+                </Button>
+              </div>
+              <p className="text-slate-700 whitespace-pre-line leading-relaxed">{EMPLOYER_PITCH}</p>
+            </div>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-8">
-              <Button className="bg-[#003B79] text-white hover:bg-[#003B79]/90" asChild>
-                <Link to="/company">
-                  Info-Seite für Arbeitgeber zeigen
-                </Link>
-              </Button>
               <Button
                 variant="outline"
                 className="border-[#003B79]/30 text-[#003B79] hover:bg-[#003B79]/5"
@@ -348,7 +378,7 @@ export default function Employee() {
                 }}
               >
                 <Download className="mr-2 w-4 h-4" />
-                Flyer für Arbeitgeber
+                Flyer für Unternehmen
               </Button>
             </div>
 
@@ -371,15 +401,15 @@ export default function Employee() {
                   </a>
                 </Button>
                 <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
-                  <a href={shareLinks.linkedin} target="_blank" rel="noreferrer">
-                    <Linkedin className="mr-2 w-4 h-4" />
-                    LinkedIn
-                  </a>
-                </Button>
-                <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
                   <a href={shareLinks.email}>
                     <Mail className="mr-2 w-4 h-4" />
                     E-Mail
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50" asChild>
+                  <a href={shareLinks.linkedin} target="_blank" rel="noreferrer">
+                    <Linkedin className="mr-2 w-4 h-4" />
+                    LinkedIn
                   </a>
                 </Button>
               </div>
